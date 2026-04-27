@@ -1,0 +1,87 @@
+{
+  "case_id": "case-01-reinvented-pilot-story",
+  "description": "REINVENTED · Pilot tier · pain/identity topic — expect story format, Mode A, Lever 3 review.",
+  "input": {
+    "brand_id": "REINVENTED",
+    "brand_voice_intake": {
+      "brand_id": "REINVENTED",
+      "voice_attributes": {
+        "tone": "operator-direct",
+        "register": "peer-to-peer",
+        "energy": "low-glow, high-conviction"
+      },
+      "messaging_pillars": [
+        "operator-truth-telling",
+        "systems-over-effort",
+        "identity-vs-business-separation",
+        "permission-to-redesign",
+        "reinvention-as-craft"
+      ],
+      "audience_definition": {
+        "primary": "Female operators, 35–50, $500K–$5M revenue",
+        "psychographic_pain": "Founder-dependent, exhausted, identity fused to business"
+      },
+      "do_say": ["operator", "system", "you built this", "trap", "reframe", "redesign"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "entity_firewall": ["Holdco Group", "Principal Holdco", "NPOX", "4821 Main", "SITE-C-BRAND", "SLN", "Retail Supply", "Nonprofit Leader A"],
+      "visual_canon": {
+        "palette": ["#1a1033", "#d4b996", "#ffffff"],
+        "wardrobe_rule": "earth tones, structured silhouette, no pattern noise",
+        "no_buildings": true
+      },
+      "audio_canon": {
+        "captions_color": "#6a3093",
+        "music_default": "low-tempo, minor-key, no trending TikTok beats"
+      },
+      "cta_library": [
+        { "type": "soft", "copy": "If this hit — the REINVENTED waitlist is open. Link in bio." },
+        { "type": "hard", "copy": "Apply for the next REINVENTED cohort. Link in bio." },
+        { "type": "none", "copy": "" }
+      ],
+      "platform_targets": ["Instagram Reels", "TikTok", "LinkedIn"]
+    },
+    "topic_signal": {
+      "topic": "Why operators burn out at 7-figure revenue",
+      "reason": "Trend Hunter flagged 4 viral posts in last 48h on operator burnout; community DM volume up 31% week-over-week",
+      "source": "trend_hunter",
+      "confidence": 0.78,
+      "competing_angles": [
+        "boundary work as productivity",
+        "delegation as self-respect",
+        "the cost of being needed"
+      ]
+    },
+    "tier_context": "Pilot",
+    "prior_briefs": [],
+    "manual_override": null,
+    "lever_state": 3,
+    "session_id": "ars-2026-04-27-001"
+  },
+  "expected_output_highlights": {
+    "structure.selected": "story",
+    "structure.duration_target_seconds": 55,
+    "structure.duration_min_max": [45, 75],
+    "production_mode": "A",
+    "tier": "Pilot",
+    "lever": 3,
+    "messaging_pillars_used_must_include": ["operator-truth-telling"],
+    "do_not_say_must_include": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+    "metadata.human_review_required": true,
+    "qc_warnings": "empty or absent",
+    "topic_drift_warning": false,
+    "no_entity_firewall_violations": true
+  },
+  "pass_criteria": [
+    "Output validates against output.schema.json (successBrief variant)",
+    "structure.selected == 'story'",
+    "production_mode == 'A'",
+    "tier == 'Pilot'",
+    "lever == 3",
+    "metadata.human_review_required === true",
+    "All 8 banned hustle terms present in do_not_say array verbatim",
+    "Zero references to Holdco Group / Principal / NPOX / 4821 / 6315 / SLN / Retail Supply / Nonprofit Leader A anywhere",
+    "structure.beats length is 5–7",
+    "First beat covers second range starting at 0",
+    "alt_hooks length >= 2"
+  ]
+}

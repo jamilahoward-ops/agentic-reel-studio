@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/brief-agent/output.schema.json",
+  "title": "ARS Brief Agent — Output (brief.json)",
+  "description": "Canonical brief.json contract emitted by the Brief Agent v1.0. Per spec §3.1 + Orchestration Blueprint §5.3.",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/successBrief" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+  "$defs": {
+    "successBrief": {
+      "type": "object",
+      "required": [
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "title_working",
+        "hook",
+        "core_promise",
+        "audience",
+        "structure",
+        "messaging_pillars_used",
+        "do_say",
+        "do_not_say",
+        "visual_direction",
+        "audio_direction",
+        "cta",
+        "platform_targets",
+        "qc_pre_flags",
+        "rationale",
+        "downstream_dependencies",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brand_id": { "type": "string", "minLength": 2 },
+        "tier": { "type": "string", "enum": ["Pilot", "Starter", "Pro", "Enterprise"] },
+        "lever": { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "created_at": { "type": "string", "format": "date-time" },
+        "session_id": { "type": "string" },
+        "title_working": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "hook": {
+          "type": "object",
+          "required": ["first_3_seconds", "alt_hooks", "delivery", "tone"],
+          "additionalProperties": false,
+          "properties": {
+            "first_3_seconds": { "type": "string", "minLength": 4, "maxLength": 220 },
+            "alt_hooks": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 4, "maxLength": 220 },
+              "minItems": 2,
+              "maxItems": 5
+            },
+            "delivery": { "type": "string", "minLength": 2 },
+            "tone": { "type": "string", "minLength": 2 }
+          }
+        },
+        "core_promise": { "type": "string", "minLength": 8, "maxLength": 320 },
+        "audience": {
+          "type": "object",
+          "required": ["primary", "psychographic_pain", "language_register"],
+          "additionalProperties": false,
+          "properties": {
+            "primary": { "type": "string", "minLength": 4 },
+            "psychographic_pain": { "type": "string", "minLength": 4 },
+            "language_register": { "type": "string", "minLength": 4 }
+          }
+        },
+        "structure": {
+          "type": "object",
+          "required": ["format", "selected", "beats", "duration_target_seconds", "duration_min", "duration_max"],
+          "additionalProperties": false,
+          "properties": {
+            "format": { "type": "string" },
+            "selected": {
+              "type": "string",
+              "enum": ["monologue", "listicle", "story", "data-reveal", "duet-style"]
+            },
+            "beats": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 7,
+              "items": {
+                "type": "object",
+                "required": ["second", "beat", "purpose"],
+                "additionalProperties": false,
+                "properties": {
+                  "second": { "type": "string", "pattern": "^[0-9]+(\\u2013|–|-)[0-9]+$" },
+                  "beat": { "type": "string", "minLength": 4 },
+                  "purpose": { "type": "string", "minLength": 3 }
+                }
+              }
+            },
+            "duration_target_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+            "duration_min": { "type": "integer", "minimum": 15, "maximum": 180 },
+            "duration_max": { "type": "integer", "minimum": 15, "maximum": 180 }
+          }
+        },
+        "messaging_pillars_used": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 },
+          "minItems": 3,
+          "maxItems": 5
+        },
+        "do_say": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 3
+        },
+        "do_not_say": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 8,
+          "description": "Must include the 8 banned hustle terms verbatim from Brand Voice Intake §6.2."
+        },
+        "visual_direction": {
+          "type": "object",
+          "required": ["setting", "wardrobe", "color_palette", "shot_list_hint", "no_buildings_rule"],
+          "additionalProperties": false,
+          "properties": {
+            "setting": { "type": "string", "minLength": 4 },
+            "wardrobe": { "type": "string", "minLength": 4 },
+            "color_palette": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+              "minItems": 1,
+              "maxItems": 6
+            },
+            "shot_list_hint": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 4 },
+              "minItems": 1
+            },
+            "no_buildings_rule": { "type": "string", "minLength": 6 }
+          }
+        },
+        "audio_direction": {
+          "type": "object",
+          "required": ["voice", "music_mood", "sfx_use", "captions"],
+          "additionalProperties": false,
+          "properties": {
+            "voice": { "type": "string" },
+            "music_mood": { "type": "string" },
+            "sfx_use": { "type": "string" },
+            "captions": { "type": "string" }
+          }
+        },
+        "cta": {
+          "type": "object",
+          "required": ["type", "selected", "copy", "placement"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string" },
+            "selected": { "type": "string", "enum": ["soft", "hard", "none"] },
+            "copy": { "type": "string" },
+            "placement": { "type": "string" }
+          }
+        },
+        "platform_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["platform", "aspect", "first_frame_text"],
+            "additionalProperties": false,
+            "properties": {
+              "platform": { "type": "string" },
+              "aspect": { "type": "string" },
+              "first_frame_text": { "type": "string" }
+            }
+          },
+          "minItems": 1
+        },
+        "qc_pre_flags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 3
+        },
+        "rationale": {
+          "type": "object",
+          "required": ["why_this_topic", "why_this_format", "why_this_hook"],
+          "additionalProperties": false,
+          "properties": {
+            "why_this_topic": { "type": "string", "minLength": 6 },
+            "why_this_format": { "type": "string", "minLength": 6 },
+            "why_this_hook": { "type": "string", "minLength": 6 }
+          }
+        },
+        "downstream_dependencies": {
+          "type": "object",
+          "required": ["script_agent", "storyboard_agent", "production_coord_agent"],
+          "additionalProperties": false,
+          "properties": {
+            "script_agent": { "type": "string" },
+            "storyboard_agent": { "type": "string" },
+            "production_coord_agent": { "type": "string" }
+          }
+        },
+        "topic_drift_warning": { "type": "boolean", "default": false },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "metadata": {
+          "type": "object",
+          "required": [
+            "agent_version",
+            "model_used",
+            "prompt_template_id",
+            "tokens_in",
+            "tokens_out",
+            "latency_ms",
+            "qc_score_predicted",
+            "human_review_required"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "agent_version": { "type": "string" },
+            "model_used": { "type": "string" },
+            "prompt_template_id": { "type": "string" },
+            "tokens_in": { "type": "integer", "minimum": 0 },
+            "tokens_out": { "type": "integer", "minimum": 0 },
+            "latency_ms": { "type": "integer", "minimum": 0 },
+            "qc_score_predicted": { "type": "number", "minimum": 0, "maximum": 1 },
+            "human_review_required": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "errorEnvelope": {
+      "type": "object",
+      "required": ["error", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "string",
+          "enum": [
+            "input_validation_failed",
+            "entity_firewall_breach",
+            "tier_constraint_violation",
+            "schema_invalid_after_retry",
+            "brief_agent_failed"
+          ]
+        },
+        "reason": { "type": "string" },
+        "topic": { "type": "string" },
+        "attempts": { "type": "integer", "minimum": 1 },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "field": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+INPUT:
+{input_json}
+
+Generate the brief.json per system prompt rules.
+
+Hard constraints (re-stated for the model):
+- Output JSON ONLY. No markdown, no commentary, no explanation outside the JSON object.
+- The output object must conform to the output.schema.json contract on disk.
+- If the topic_signal references the brand's entity_firewall list, return the errorEnvelope variant with error == "entity_firewall_breach" and DO NOT generate a brief body.
+- If tier_context is Pilot or Starter, production_mode must be "A". If the topic implies Mode B/C, note it in rationale.why_this_format and produce a Mode A treatment.
+- If topic_signal.confidence < 0.5, set topic_drift_warning to true, add a qc_warning string, and set metadata.human_review_required to true regardless of lever_state.
+- If lever_state == 3, metadata.human_review_required is always true.
+- The do_not_say array MUST include the 8 banned hustle terms verbatim from the brand_voice_intake.do_not_say list.
+- The visual_direction.no_buildings_rule field MUST be present and acknowledge the no-AI-buildings policy.
+
+Now emit the brief.json.

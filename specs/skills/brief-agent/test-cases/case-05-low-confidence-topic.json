@@ -1,0 +1,47 @@
+{
+  "case_id": "case-05-low-confidence-topic",
+  "description": "Low-confidence topic test — confidence < 0.5. Expect topic_drift_warning + qc_warnings + human_review_required regardless of Lever.",
+  "input": {
+    "brand_id": "REINVENTED",
+    "brand_voice_intake": {
+      "brand_id": "REINVENTED",
+      "voice_attributes": { "tone": "operator-direct", "register": "peer-to-peer", "energy": "low-glow, high-conviction" },
+      "messaging_pillars": ["operator-truth-telling", "systems-over-effort", "identity-vs-business-separation", "permission-to-redesign", "reinvention-as-craft"],
+      "audience_definition": { "primary": "Female operators, 35–50", "psychographic_pain": "Founder-dependent" },
+      "do_say": ["operator", "system", "redesign"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "entity_firewall": ["Holdco Group", "Principal Holdco", "NPOX", "4821 Main", "SITE-C-BRAND", "SLN", "Retail Supply", "Nonprofit Leader A"],
+      "visual_canon": { "palette": ["#1a1033", "#d4b996", "#ffffff"], "wardrobe_rule": "earth tones, structured silhouette", "no_buildings": true },
+      "audio_canon": { "captions_color": "#6a3093", "music_default": "low-tempo, minor-key" },
+      "cta_library": [{ "type": "soft", "copy": "REINVENTED waitlist — link in bio." }],
+      "platform_targets": ["Instagram Reels", "TikTok", "LinkedIn"]
+    },
+    "topic_signal": {
+      "topic": "Random meme template trending on TikTok this week",
+      "reason": "Trend Hunter low-confidence ping; format unclear; may not align with REINVENTED voice",
+      "source": "trend_hunter",
+      "confidence": 0.34,
+      "competing_angles": ["meme adaptation", "ironic operator take", "skip — not on-brand"]
+    },
+    "tier_context": "Starter",
+    "prior_briefs": [],
+    "manual_override": null,
+    "lever_state": 1,
+    "session_id": "ars-2026-04-27-005"
+  },
+  "expected_output_highlights": {
+    "topic_drift_warning": true,
+    "metadata.human_review_required": true,
+    "qc_warnings_must_include": "topic_signal.confidence below 0.5 threshold — consider rejecting topic and re-running Trend Hunter",
+    "production_mode": "A",
+    "tier": "Starter"
+  },
+  "pass_criteria": [
+    "Output validates against output.schema.json successBrief (NOT errorEnvelope — low confidence is a warning, not a reject)",
+    "topic_drift_warning === true",
+    "metadata.human_review_required === true even though Lever 1 (full autonomy) is the default — low confidence overrides lever state",
+    "qc_warnings array contains a string referencing the sub-0.5 confidence threshold",
+    "Brief is still generated (operator can override the warning) — does NOT halt",
+    "production_mode == 'A' (Starter tier)"
+  ]
+}

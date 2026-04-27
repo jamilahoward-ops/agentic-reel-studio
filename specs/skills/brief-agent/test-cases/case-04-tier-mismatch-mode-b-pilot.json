@@ -1,0 +1,47 @@
+{
+  "case_id": "case-04-tier-mismatch-mode-b-pilot",
+  "description": "Tier constraint test — Pilot tier requested AI-generated reel (Mode B). Expect production_mode forced back to A with rationale note.",
+  "input": {
+    "brand_id": "REINVENTED",
+    "brand_voice_intake": {
+      "brand_id": "REINVENTED",
+      "voice_attributes": { "tone": "operator-direct", "register": "peer-to-peer", "energy": "low-glow, high-conviction" },
+      "messaging_pillars": ["operator-truth-telling", "systems-over-effort", "identity-vs-business-separation", "permission-to-redesign", "reinvention-as-craft"],
+      "audience_definition": { "primary": "Female operators, 35–50", "psychographic_pain": "Founder-dependent" },
+      "do_say": ["operator", "system", "redesign", "morning"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "entity_firewall": ["Holdco Group", "Principal Holdco", "NPOX", "4821 Main", "SITE-C-BRAND", "SLN", "Retail Supply", "Nonprofit Leader A"],
+      "visual_canon": { "palette": ["#1a1033", "#d4b996", "#ffffff"], "wardrobe_rule": "earth tones, structured silhouette", "no_buildings": true },
+      "audio_canon": { "captions_color": "#6a3093", "music_default": "low-tempo, minor-key" },
+      "cta_library": [{ "type": "soft", "copy": "REINVENTED waitlist — link in bio." }],
+      "platform_targets": ["Instagram Reels", "TikTok", "LinkedIn"]
+    },
+    "topic_signal": {
+      "topic": "AI-generated reel of an operator's morning routine",
+      "reason": "User asked for fully AI-animated treatment to test mode flexibility",
+      "source": "operator_override",
+      "confidence": 0.7,
+      "competing_angles": ["fully AI animated", "live-action morning routine", "voiceover-over-broll"]
+    },
+    "tier_context": "Pilot",
+    "prior_briefs": [],
+    "manual_override": "Use AI-generated visuals if tier permits.",
+    "lever_state": 3,
+    "session_id": "ars-2026-04-27-004"
+  },
+  "expected_output_highlights": {
+    "production_mode": "A",
+    "tier": "Pilot",
+    "rationale.why_this_format_must_mention": "Pilot tier locks Mode A; AI-generated treatment deferred",
+    "structure.selected_likely": "story",
+    "metadata.human_review_required": true
+  },
+  "pass_criteria": [
+    "Output validates against output.schema.json successBrief",
+    "production_mode == 'A' (NOT 'B' — tier constraint enforced)",
+    "rationale.why_this_format explicitly notes that Mode B was requested but rejected because Pilot tier locks Mode A",
+    "Suggests an equivalent live-action treatment for the same topic",
+    "No tier_constraint_violation error envelope emitted (this is a soft enforcement — Brief Agent corrects tier in-band, not via reject)",
+    "All 8 banned hustle terms present in do_not_say verbatim"
+  ]
+}

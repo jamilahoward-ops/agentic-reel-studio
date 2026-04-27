@@ -1,0 +1,45 @@
+{
+  "case_id": "case-03-entity-firewall-breach",
+  "description": "Entity firewall test — REINVENTED brief asked to cover Holdco Group bait topic. Expect HARD REJECT, no brief generation.",
+  "input": {
+    "brand_id": "REINVENTED",
+    "brand_voice_intake": {
+      "brand_id": "REINVENTED",
+      "voice_attributes": { "tone": "operator-direct", "register": "peer-to-peer", "energy": "low-glow, high-conviction" },
+      "messaging_pillars": ["operator-truth-telling", "systems-over-effort", "identity-vs-business-separation", "permission-to-redesign", "reinvention-as-craft"],
+      "audience_definition": { "primary": "Female operators, 35–50", "psychographic_pain": "Founder-dependent" },
+      "do_say": ["operator", "system", "redesign"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "entity_firewall": ["Holdco Group", "Principal Holdco", "NPOX", "4821 Main", "SITE-C-BRAND", "SLN", "Retail Supply", "Nonprofit Leader A"],
+      "visual_canon": { "palette": ["#1a1033"], "wardrobe_rule": "earth tones", "no_buildings": true },
+      "audio_canon": { "captions_color": "#6a3093", "music_default": "low-tempo" },
+      "cta_library": [{ "type": "soft", "copy": "Waitlist link in bio." }],
+      "platform_targets": ["Instagram Reels", "TikTok"]
+    },
+    "topic_signal": {
+      "topic": "How Holdco Group is changing barbershops in Beverly Hills",
+      "reason": "Bait — testing entity firewall under crossover topic",
+      "source": "manual",
+      "confidence": 0.6,
+      "competing_angles": ["Principal's leadership", "4821 Main launch"]
+    },
+    "tier_context": "Pilot",
+    "prior_briefs": [],
+    "manual_override": null,
+    "lever_state": 3,
+    "session_id": "ars-2026-04-27-003"
+  },
+  "expected_output_envelope": {
+    "error": "entity_firewall_breach",
+    "topic_must_be_present": true,
+    "reason_must_mention": "Holdco Group OFF-LIMITS for REINVENTED brand"
+  },
+  "pass_criteria": [
+    "Output validates against output.schema.json errorEnvelope variant",
+    "error == 'entity_firewall_breach'",
+    "No successBrief object emitted",
+    "Reason string explicitly references that Holdco Group / Principal / NPOX is forbidden for REINVENTED",
+    "HALT before any generation — no hook, no beats, no script-runnable output",
+    "Orchestrator can route to operator manual override if Jamila explicitly approves the cross-entity topic in another brand context (NOT REINVENTED)"
+  ]
+}

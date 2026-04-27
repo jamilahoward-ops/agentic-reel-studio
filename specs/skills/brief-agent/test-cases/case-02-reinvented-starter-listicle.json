@@ -1,0 +1,68 @@
+{
+  "case_id": "case-02-reinvented-starter-listicle",
+  "description": "REINVENTED · Starter tier · how-to topic with 3 prior story-format briefs — expect listicle format due to diversification rule.",
+  "input": {
+    "brand_id": "REINVENTED",
+    "brand_voice_intake": {
+      "brand_id": "REINVENTED",
+      "voice_attributes": { "tone": "operator-direct", "register": "peer-to-peer", "energy": "low-glow, high-conviction" },
+      "messaging_pillars": [
+        "operator-truth-telling",
+        "systems-over-effort",
+        "identity-vs-business-separation",
+        "permission-to-redesign",
+        "reinvention-as-craft"
+      ],
+      "audience_definition": {
+        "primary": "Female operators, 35–50, $500K–$5M revenue",
+        "psychographic_pain": "Founder-dependent, no systems, every decision still on her desk"
+      },
+      "do_say": ["operator", "system", "automate", "delegate", "redesign"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "entity_firewall": ["Holdco Group", "Principal Holdco", "NPOX", "4821 Main", "SITE-C-BRAND", "SLN", "Retail Supply", "Nonprofit Leader A"],
+      "visual_canon": { "palette": ["#1a1033", "#d4b996", "#ffffff"], "wardrobe_rule": "earth tones, structured silhouette", "no_buildings": true },
+      "audio_canon": { "captions_color": "#6a3093", "music_default": "low-tempo, minor-key" },
+      "cta_library": [
+        { "type": "soft", "copy": "If this hit — the REINVENTED waitlist is open. Link in bio." }
+      ],
+      "platform_targets": ["Instagram Reels", "TikTok", "LinkedIn"]
+    },
+    "topic_signal": {
+      "topic": "5 systems every $1M operator should automate before hiring another person",
+      "reason": "Common DM theme this week — operators asking what to automate vs what to delegate",
+      "source": "manual",
+      "confidence": 0.85,
+      "competing_angles": ["delegation vs automation", "what to fire first", "the cheap-tools stack"]
+    },
+    "tier_context": "Starter",
+    "prior_briefs": [
+      { "brief_id": "brief-REINVENTED-2026-04-22-001", "structure": { "selected": "story" } },
+      { "brief_id": "brief-REINVENTED-2026-04-23-001", "structure": { "selected": "story" } },
+      { "brief_id": "brief-REINVENTED-2026-04-24-001", "structure": { "selected": "story" } },
+      { "brief_id": "brief-REINVENTED-2026-04-25-001", "structure": { "selected": "monologue" } },
+      { "brief_id": "brief-REINVENTED-2026-04-26-001", "structure": { "selected": "story" } }
+    ],
+    "manual_override": null,
+    "lever_state": 3,
+    "session_id": "ars-2026-04-27-002"
+  },
+  "expected_output_highlights": {
+    "structure.selected": "listicle",
+    "structure.duration_target_seconds_range": [60, 70],
+    "production_mode": "A",
+    "tier": "Starter",
+    "lever": 3,
+    "structure.beats_count_range": [6, 7],
+    "rationale.why_this_format_must_mention": "format diversification (4 of last 5 were story/monologue)",
+    "metadata.human_review_required": true
+  },
+  "pass_criteria": [
+    "Output validates against output.schema.json successBrief",
+    "structure.selected == 'listicle' (NOT story — prior_briefs forced diversification)",
+    "production_mode == 'A' (Starter tier locks Mode A)",
+    "structure.beats length 5–7 with intro + items + close pattern",
+    "duration_target_seconds within [60, 70]",
+    "All 8 banned hustle terms present in do_not_say verbatim",
+    "rationale.why_this_format references prior_briefs analysis"
+  ]
+}
