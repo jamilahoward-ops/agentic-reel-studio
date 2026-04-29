@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/script-agent/input.schema.json",
+  "title": "ARS Script Agent — Input",
+  "description": "Validates the input shape consumed by the ARS Script Agent v1.0. Per spec §2.3.",
+  "type": "object",
+  "required": ["brief", "session_id", "lever_state"],
+  "additionalProperties": false,
+  "properties": {
+    "brief": {
+      "description": "Brief Agent v1.0 output object. Either successBrief variant (consumed normally) OR errorEnvelope variant (Script Agent must halt with brief_not_success at Step 1). Polymorphism is intentional — schema-level acceptance of both lets the runtime branch run cleanly.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "successBrief — required fields below; full validation against brief-agent/output.schema.json successBrief variant happens at runtime.",
+          "required": [
+            "brief_id",
+            "brand_id",
+            "tier",
+            "lever",
+            "production_mode",
+            "title_working",
+            "hook",
+            "structure",
+            "do_say",
+            "do_not_say",
+            "visual_direction",
+            "audio_direction",
+            "cta",
+            "platform_targets"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "errorEnvelope — emitted by Brief Agent when upstream validation failed. Script Agent halts with brief_not_success.",
+          "required": ["error", "reason"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": [
+                "input_validation_failed",
+                "entity_firewall_breach",
+                "tier_constraint_violation",
+                "schema_invalid_after_retry",
+                "brief_agent_failed"
+              ]
+            },
+            "reason": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "prior_scripts": {
+      "type": "array",
+      "description": "Up to 5 most recent script.json objects for this brand. Oldest first.",
+      "items": { "type": "object" },
+      "maxItems": 5
+    },
+    "style_overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "swap_words": {
+          "type": "object",
+          "description": "Operator-supplied word swaps (key = original, value = replacement). Cannot collide with brief.do_not_say (banned terms cannot be swapped IN).",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "force_register": {
+          "type": ["string", "null"],
+          "enum": ["peer-to-peer", "mentor", "reporter", null]
+        },
+        "explicit_taglines": {
+          "type": ["array", "null"],
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "ad_lib_allowed": { "type": "boolean" }
+      }
+    },
+    "talent_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["speaker_id"],
+      "properties": {
+        "speaker_id": { "type": "string", "minLength": 2 },
+        "max_words_per_minute": { "type": "integer", "minimum": 100, "maximum": 220 },
+        "preferred_sentence_length_words": { "type": "integer", "minimum": 4, "maximum": 30 },
+        "ad_lib_allowed": { "type": "boolean" },
+        "vocal_range": { "type": "string" },
+        "regionalisms_allowed": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "session_id": { "type": "string", "minLength": 4 },
+    "lever_state": { "type": "integer", "enum": [1, 2, 3] }
+  }
+}

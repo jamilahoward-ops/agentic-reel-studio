@@ -1,0 +1,110 @@
+{
+  "case_id": "case-04-tier-mismatch-mode-c-on-pilot",
+  "purpose": "Reject branch — brief specifies Mode C on Pilot tier (Brief Agent should have caught this; Script Agent re-validates as defense in depth). Expect tier_constraint_violation.",
+  "expected_branch": "errorEnvelope",
+  "expected_error": "tier_constraint_violation",
+  "input": {
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-29-099",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "C",
+      "created_at": "2026-04-29T07:00:00Z",
+      "session_id": "ars-2026-04-29-099",
+      "title_working": "Cinematic Identity Reset",
+      "hook": {
+        "first_3_seconds": "Identity is the only thing operators never reset on time.",
+        "alt_hooks": [
+          "You changed the company. You forgot to change the operator.",
+          "Your strategy outgrew you. Your identity didn't catch up."
+        ],
+        "delivery": "direct-to-camera",
+        "tone": "clinical-warm"
+      },
+      "core_promise": "Operators reset their identity the same way they reset a system — on a cadence, with data.",
+      "audience": {
+        "primary": "Operators 35–55 mid-pivot",
+        "psychographic_pain": "Identity drift, ghost-of-old-self",
+        "language_register": "operator-to-operator, peer"
+      },
+      "structure": {
+        "format": "monologue",
+        "selected": "monologue",
+        "beats": [
+          { "second": "0-3", "beat": "Hook — verbatim opener", "purpose": "stop scroll" },
+          { "second": "3-18", "beat": "Naming the drift", "purpose": "make the invisible visible" },
+          { "second": "18-32", "beat": "The cadence reframe", "purpose": "introduce the audit lens" },
+          { "second": "32-46", "beat": "The proof beat", "purpose": "cite the data signal" },
+          { "second": "46-51", "beat": "Reframe close", "purpose": "consolidate the principle" },
+          { "second": "51-55", "beat": "CTA — link in bio", "purpose": "soft close" }
+        ],
+        "duration_target_seconds": 55,
+        "duration_min": 50,
+        "duration_max": 60
+      },
+      "messaging_pillars_used": ["identity-on-purpose", "system-over-self", "audit-as-method"],
+      "do_say": ["operator", "identity", "audit", "cadence", "reset", "data"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "Cinematic — multi-location, soft color grade",
+        "wardrobe": "wardrobe change between scenes",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+        "shot_list_hint": [
+          "wide cinematic interior — gallery",
+          "macro detail — hand on notebook",
+          "medium close-up — face-on reframe",
+          "establishing interior — neutral hallway"
+        ],
+        "no_buildings_rule": "Interior framing only across all scenes."
+      },
+      "audio_direction": {
+        "voice": "operator-conversational, slower pace",
+        "music_mood": "cinematic-lift",
+        "sfx_use": "minimal — single foley accent",
+        "captions": "bold-yellow-jamila"
+      },
+      "cta": {
+        "type": "soft",
+        "selected": "soft",
+        "copy": "When your identity needs an audit, the link in bio is where I work it with operators.",
+        "placement": "final 4 seconds"
+      },
+      "platform_targets": [
+        { "platform": "instagram-reels", "aspect": "9:16", "first_frame_text": "RESET YOUR IDENTITY" },
+        { "platform": "tiktok", "aspect": "9:16", "first_frame_text": "you forgot to update the operator" },
+        { "platform": "linkedin-video", "aspect": "1:1", "first_frame_text": "Identity Drift Is The Real Operator Risk" }
+      ],
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "rationale": {
+        "why_this_topic": "High-saliency identity reframe across the operator audience.",
+        "why_this_format": "Monologue — Pilot tier reads as concentrated; cinematic mode misaligned but topic is right.",
+        "why_this_hook": "Single-line clinical statement, contrarian frame, ≤14 words."
+      },
+      "downstream_dependencies": {
+        "script_agent": "Inflate beats into 6–8 lines; verbatim hook; CTA in final 4–6s.",
+        "storyboard_agent": "Translate visual_direction into shot frames per line.",
+        "production_coord_agent": "Source b-roll per source_hint; schedule shoot."
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "brief-agent-v1-prompt-2026-04-29",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.82,
+        "human_review_required": true
+      }
+    },
+    "session_id": "ars-2026-04-29-004",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "errorEnvelope",
+    "error_eq": "tier_constraint_violation",
+    "reason_contains": ["Mode C", "Pilot", "Enterprise"],
+    "field_eq_or_contains": "production_mode",
+    "no_partial_script_emitted": true
+  }
+}

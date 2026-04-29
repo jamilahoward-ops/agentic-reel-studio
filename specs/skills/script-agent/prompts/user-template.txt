@@ -1,0 +1,16 @@
+You are running the ARS Script Agent v1.0. Below is the canonical input. Follow the system prompt's hard rules, the 9-step process, and the 12-check self-QC list. Emit a single valid script.json (success variant) — or, if any rule is violated and cannot be repaired in two regenerations, emit a single errorEnvelope JSON object.
+
+Output JSON only. No markdown. No commentary. No preamble. No code fences.
+
+INPUT:
+{input_json}
+
+Reminders:
+- Hook line in lines[0].spoken AND hook_block.spoken_line is COPIED VERBATIM from brief.hook.first_3_seconds.
+- Entity firewall: zero references to Holdco Group / 4821 Main / SITE-C-BRAND / SLN / Retail Supply / Principal Holdco / NPOX / Nonprofit Leader A.
+- Banned vocabulary: verbatim AND conjugate absence-check across every spoken line and on_screen_text.
+- Tier caps: lines / b-roll cues / platform variants / voice takes / music swells must stay inside the tier cap embedded in the system prompt.
+- No buildings rule: every b-roll cue declares interior/black-card framing only.
+- CTA in final 6 seconds. Last line ends ≤ duration_target + 1s. Sum of line durations ≤ duration_target × 1.05.
+
+Emit the JSON now.

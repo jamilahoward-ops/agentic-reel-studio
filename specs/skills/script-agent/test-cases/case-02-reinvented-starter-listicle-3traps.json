@@ -1,0 +1,139 @@
+{
+  "case_id": "case-02-reinvented-starter-listicle-3traps",
+  "purpose": "Starter tier, listicle format. Validates format-driven line allocation, tier caps still at 8, hook diversification check via prior_scripts.",
+  "expected_branch": "successScript",
+  "input": {
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-29-007",
+      "brand_id": "REINVENTED",
+      "tier": "Starter",
+      "lever": 3,
+      "production_mode": "A",
+      "created_at": "2026-04-29T07:00:00Z",
+      "session_id": "ars-2026-04-29-007",
+      "title_working": "3 Traps That Break Operators At 7 Figures",
+      "hook": {
+        "first_3_seconds": "Three traps break most operators between six and seven figures. Number two will sting.",
+        "alt_hooks": [
+          "If you're stuck under seven figures, one of these three traps is on you.",
+          "Seven-figure operators don't outwork the trap. They name it."
+        ],
+        "delivery": "direct-to-camera, list-energy",
+        "tone": "clinical-warm"
+      },
+      "core_promise": "Name the three operator traps that compound under pressure so you can audit out before they cost you a year.",
+      "audience": {
+        "primary": "Operators 35–55 between 500K and 2M ARR",
+        "psychographic_pain": "Plateau, false-velocity, decision fatigue",
+        "language_register": "operator-to-operator, peer, list-tight"
+      },
+      "structure": {
+        "format": "listicle",
+        "selected": "listicle",
+        "beats": [
+          { "second": "0-3", "beat": "Hook — verbatim opener", "purpose": "stop scroll, promise the count" },
+          { "second": "3-15", "beat": "Trap 1 — over-investing in your own labor", "purpose": "name first trap with one example" },
+          { "second": "15-28", "beat": "Trap 2 — confusing speed with progress", "purpose": "the sting beat" },
+          { "second": "28-42", "beat": "Trap 3 — refusing to fire the version of you that got here", "purpose": "the identity trap" },
+          { "second": "42-51", "beat": "The audit reframe", "purpose": "tie three traps into one operating principle" },
+          { "second": "51-55", "beat": "CTA — link in bio", "purpose": "soft close" }
+        ],
+        "duration_target_seconds": 55,
+        "duration_min": 50,
+        "duration_max": 60
+      },
+      "messaging_pillars_used": ["operator-led leadership", "system-over-self", "audit-as-method"],
+      "do_say": ["operator", "trap", "audit", "system", "fire", "version", "identity"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "REINVENTED home studio interior, neutral",
+        "wardrobe": "black turtleneck, gold studs",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF"],
+        "shot_list_hint": [
+          "face-on hook with text-card overlay '3 TRAPS'",
+          "list-counter motion — 1 / 2 / 3 lower-third",
+          "interior cut to operator-at-desk metaphor (no face)",
+          "CTA face-on"
+        ],
+        "no_buildings_rule": "Interior only. Black-card hook. No skyline, no aspirational buildings."
+      },
+      "audio_direction": {
+        "voice": "operator-list-energy",
+        "music_mood": "low-tension building, steady",
+        "sfx_use": "tick on each trap reveal, soft whoosh on reframe",
+        "captions": "bold-yellow-jamila"
+      },
+      "cta": {
+        "type": "soft",
+        "selected": "soft",
+        "copy": "If you can name your trap, the link in bio is where we audit out of it.",
+        "placement": "final 4 seconds"
+      },
+      "platform_targets": [
+        { "platform": "instagram-reels", "aspect": "9:16", "first_frame_text": "3 TRAPS UNDER 7 FIGURES" },
+        { "platform": "tiktok", "aspect": "9:16", "first_frame_text": "3 traps. one of them is yours." },
+        { "platform": "linkedin-video", "aspect": "1:1", "first_frame_text": "3 Traps That Stall 7-Figure Operators" }
+      ],
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "rationale": {
+        "why_this_topic": "Listicle format reads operator-tactical; pairs with the recent burnout story.",
+        "why_this_format": "Listicle — last 5 briefs were 1 story, 2 listicle, 1 monologue, 1 data-reveal. Two listicles is at cap; this is the diversification edge case the Script Agent must respect.",
+        "why_this_hook": "Number anchor + 'sting' tease drives retention to mid-reel."
+      },
+      "downstream_dependencies": {
+        "script_agent": "Three trap beats → 3 lines minimum, plus hook + reframe + CTA = 6–8 lines. Counter-graphic on each trap.",
+        "storyboard_agent": "Lower-third counter motion graphic spec.",
+        "production_coord_agent": "Single shoot day; b-roll archive eligible."
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "brief-agent-v1-prompt-2026-04-29",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.84,
+        "human_review_required": true
+      }
+    },
+    "prior_scripts": [
+      {
+        "script_id": "script-REINVENTED-2026-04-22-001",
+        "lines": [{ "line_id": "L1", "pace_marker": "fast-open", "emphasis_words": ["seven figures", "warning sign"] }]
+      },
+      {
+        "script_id": "script-REINVENTED-2026-04-24-002",
+        "lines": [{ "line_id": "L1", "pace_marker": "fast-open", "emphasis_words": ["plateau", "year"] }]
+      }
+    ],
+    "talent_profile": {
+      "speaker_id": "REINVENTED-Jamila-v1",
+      "max_words_per_minute": 165,
+      "preferred_sentence_length_words": 13,
+      "ad_lib_allowed": false,
+      "vocal_range": "alto-warm",
+      "regionalisms_allowed": ["LA-vernacular"]
+    },
+    "session_id": "ars-2026-04-29-002",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "successScript",
+    "tier": "Starter",
+    "production_mode": "A",
+    "lines_count_min": 6,
+    "lines_count_max": 8,
+    "broll_cues_max": 3,
+    "platform_variants_count": 3,
+    "voice_take_count": 2,
+    "music_swells_max": 1,
+    "captions_burn_in_required": true,
+    "hook_block_spoken_line_eq": "Three traps break most operators between six and seven figures. Number two will sting.",
+    "lines_0_spoken_eq": "Three traps break most operators between six and seven figures. Number two will sting.",
+    "cta_block_second_start_min": 49,
+    "diversify_opener": "pace_marker should NOT be 'fast-open' if 3+ of last 5 already used it",
+    "no_banned_vocab": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+    "no_entity_firewall_breach": ["Holdco", "Principal", "NPOX", "4821", "6315", "SLN", "Retail Supply", "Nonprofit Leader A"],
+    "every_broll_has_no_buildings_rule": true
+  }
+}

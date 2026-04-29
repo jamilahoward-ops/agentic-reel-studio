@@ -1,0 +1,128 @@
+{
+  "case_id": "case-01-reinvented-pilot-burnout-story",
+  "purpose": "Happy path — Pilot tier, story format, 55s, full QC pass. Validates the canonical Mode A flow.",
+  "expected_branch": "successScript",
+  "input": {
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "created_at": "2026-04-27T07:00:00Z",
+      "session_id": "ars-2026-04-27-001",
+      "title_working": "The 7-Figure Burnout Trap",
+      "hook": {
+        "first_3_seconds": "You hit seven figures and now you can't sleep. That's not success — that's a warning sign.",
+        "alt_hooks": [
+          "She crossed seven figures and broke. The receipts are in her cortisol.",
+          "Seven figures. No sleep. That math doesn't add up to a win."
+        ],
+        "delivery": "direct-to-camera",
+        "tone": "clinical-warm"
+      },
+      "core_promise": "Burnout at the top is a system failure, not a character flaw — and operators can audit out of it.",
+      "audience": {
+        "primary": "Operators 35–55 running 7–8 figure businesses",
+        "psychographic_pain": "Sleep loss, identity collapse, fear of slowing down",
+        "language_register": "operator-to-operator, peer, clinical-warm"
+      },
+      "structure": {
+        "format": "story",
+        "selected": "story",
+        "beats": [
+          { "second": "0-3", "beat": "Hook — verbatim opener", "purpose": "stop scroll, name the problem" },
+          { "second": "3-15", "beat": "Setup — the operator who hit it and broke", "purpose": "earn permission with a true story" },
+          { "second": "15-28", "beat": "Tension — the lie operators tell themselves about burnout", "purpose": "name the unspoken belief" },
+          { "second": "28-42", "beat": "Reframe — burnout is a system failure", "purpose": "reposition the problem" },
+          { "second": "42-51", "beat": "Proof — what the audit reveals", "purpose": "back the reframe" },
+          { "second": "51-55", "beat": "CTA — link in bio for operators", "purpose": "soft close, low-friction next step" }
+        ],
+        "duration_target_seconds": 55,
+        "duration_min": 50,
+        "duration_max": 60
+      },
+      "messaging_pillars_used": ["operator-led leadership", "system-over-self", "identity-on-purpose"],
+      "do_say": ["operator", "system", "audit", "rebuild", "identity", "sleep", "data"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "REINVENTED home studio interior, neutral",
+        "wardrobe": "ivory knit, gold hoops, no logo",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+        "shot_list_hint": [
+          "face-on hook delivery, 50mm, soft key",
+          "operator-at-desk-3am metaphor cut, blue light, no face visible",
+          "reframe close-up — eyes only",
+          "CTA face-on, hands gestural"
+        ],
+        "no_buildings_rule": "Interior framing only. Black-card text option for hook. No external skyline, no aspirational buildings."
+      },
+      "audio_direction": {
+        "voice": "operator-conversational, clinical-warm",
+        "music_mood": "low-tension to mid-resolve",
+        "sfx_use": "minimal — whoosh@hook-end, soft-click@reframe, tone-down@close",
+        "captions": "bold-yellow-jamila"
+      },
+      "cta": {
+        "type": "soft",
+        "selected": "soft",
+        "copy": "If this hits, the link in bio is where I work this out with operators like you.",
+        "placement": "final 4 seconds"
+      },
+      "platform_targets": [
+        { "platform": "instagram-reels", "aspect": "9:16", "first_frame_text": "7-FIGURE BURNOUT IS NOT A FLEX" },
+        { "platform": "tiktok", "aspect": "9:16", "first_frame_text": "she hit 7 figures and broke" },
+        { "platform": "linkedin-video", "aspect": "1:1", "first_frame_text": "Seven figures. No sleep. Warning sign." }
+      ],
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "rationale": {
+        "why_this_topic": "Burnout-at-the-top is the highest-converting reframe across REINVENTED's last 5 reels.",
+        "why_this_format": "Story beats earn permission before reframe; format dedupe allows story (last 5: 1 story, 2 listicle, 1 monologue, 1 data-reveal).",
+        "why_this_hook": "Numerical anchor + contrarian reframe + 14 words. Tests well in operator audience."
+      },
+      "downstream_dependencies": {
+        "script_agent": "Inflate beats into 6–8 lines; verbatim hook; CTA in final 4–6s.",
+        "storyboard_agent": "Translate visual_direction into shot frames per line.",
+        "production_coord_agent": "Source b-roll per source_hint; schedule face-on shoot in REINVENTED home studio."
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "brief-agent-v1-prompt-2026-04-27",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.88,
+        "human_review_required": true
+      }
+    },
+    "talent_profile": {
+      "speaker_id": "REINVENTED-Jamila-v1",
+      "max_words_per_minute": 165,
+      "preferred_sentence_length_words": 14,
+      "ad_lib_allowed": false,
+      "vocal_range": "alto-warm",
+      "regionalisms_allowed": ["LA-vernacular"]
+    },
+    "session_id": "ars-2026-04-29-001",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "successScript",
+    "tier": "Pilot",
+    "production_mode": "A",
+    "lines_count_min": 5,
+    "lines_count_max": 8,
+    "broll_cues_max": 3,
+    "platform_variants_count": 3,
+    "voice_take_count": 2,
+    "music_swells_max": 1,
+    "captions_burn_in_required": true,
+    "hook_block_spoken_line_eq": "You hit seven figures and now you can't sleep. That's not success — that's a warning sign.",
+    "lines_0_spoken_eq": "You hit seven figures and now you can't sleep. That's not success — that's a warning sign.",
+    "cta_block_second_start_min": 49,
+    "no_banned_vocab": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+    "no_entity_firewall_breach": ["Holdco", "Principal", "NPOX", "4821", "6315", "SLN", "Retail Supply", "Nonprofit Leader A"],
+    "every_broll_has_no_buildings_rule": true
+  }
+}

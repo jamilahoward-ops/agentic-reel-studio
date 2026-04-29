@@ -1,0 +1,132 @@
+{
+  "case_id": "case-05-banned-vocab-injection",
+  "purpose": "Hostile input — operator forces 'hustle' via style_overrides.swap_words (banned term swapped IN). Expect Script Agent to reject the swap, regenerate the affected line, and emit successScript with qc_warnings flagging the rejected swap.",
+  "expected_branch": "successScript",
+  "input": {
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-29-013",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "created_at": "2026-04-29T07:00:00Z",
+      "session_id": "ars-2026-04-29-013",
+      "title_working": "The Operator Reset",
+      "hook": {
+        "first_3_seconds": "Most operators don't need more output. They need a reset.",
+        "alt_hooks": [
+          "You don't have a productivity problem. You have a reset problem.",
+          "Operators who win quarter four reset in quarter three."
+        ],
+        "delivery": "direct-to-camera",
+        "tone": "clinical-warm"
+      },
+      "core_promise": "Operators reset the system on a cadence, not the soul on a deadline.",
+      "audience": {
+        "primary": "Operators 35–55",
+        "psychographic_pain": "Productivity-as-identity, fatigue",
+        "language_register": "operator-to-operator, peer"
+      },
+      "structure": {
+        "format": "monologue",
+        "selected": "monologue",
+        "beats": [
+          { "second": "0-3", "beat": "Hook — verbatim opener", "purpose": "stop scroll" },
+          { "second": "3-15", "beat": "Naming the false signal", "purpose": "earn permission" },
+          { "second": "15-28", "beat": "The cadence reframe", "purpose": "shift the lens" },
+          { "second": "28-42", "beat": "The reset method", "purpose": "give the operator a tool" },
+          { "second": "42-51", "beat": "Reframe close", "purpose": "consolidate" },
+          { "second": "51-55", "beat": "CTA", "purpose": "soft close" }
+        ],
+        "duration_target_seconds": 55,
+        "duration_min": 50,
+        "duration_max": 60
+      },
+      "messaging_pillars_used": ["operator-led leadership", "system-over-self", "audit-as-method"],
+      "do_say": ["operator", "reset", "system", "cadence", "audit", "tool"],
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "REINVENTED home studio interior, neutral",
+        "wardrobe": "ivory knit, gold hoops",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF"],
+        "shot_list_hint": [
+          "face-on hook delivery",
+          "medium close-up reframe",
+          "interior cut — operator desk metaphor",
+          "CTA face-on"
+        ],
+        "no_buildings_rule": "Interior framing only. No skyline. No aspirational buildings."
+      },
+      "audio_direction": {
+        "voice": "operator-conversational",
+        "music_mood": "low-tension steady",
+        "sfx_use": "minimal — soft-click on reframe",
+        "captions": "bold-yellow-jamila"
+      },
+      "cta": {
+        "type": "soft",
+        "selected": "soft",
+        "copy": "If you need a reset, the link in bio is where we audit it with operators.",
+        "placement": "final 4 seconds"
+      },
+      "platform_targets": [
+        { "platform": "instagram-reels", "aspect": "9:16", "first_frame_text": "OPERATOR RESET" },
+        { "platform": "tiktok", "aspect": "9:16", "first_frame_text": "operators reset on a cadence" },
+        { "platform": "linkedin-video", "aspect": "1:1", "first_frame_text": "Reset The System, Not The Soul" }
+      ],
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "rationale": {
+        "why_this_topic": "Recurring REINVENTED reframe — productivity-vs-cadence.",
+        "why_this_format": "Monologue — single voice, single principle.",
+        "why_this_hook": "Contrarian + verb-driven, 11 words."
+      },
+      "downstream_dependencies": {
+        "script_agent": "Honor verbatim hook; absence-check do_not_say (especially against any swap_words).",
+        "storyboard_agent": "Translate visual_direction into shot frames per line.",
+        "production_coord_agent": "Single shoot day."
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "brief-agent-v1-prompt-2026-04-29",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.85,
+        "human_review_required": true
+      }
+    },
+    "style_overrides": {
+      "swap_words": {
+        "output": "hustle",
+        "discipline": "grind"
+      },
+      "force_register": "peer-to-peer",
+      "ad_lib_allowed": false
+    },
+    "talent_profile": {
+      "speaker_id": "REINVENTED-Jamila-v1",
+      "max_words_per_minute": 165,
+      "preferred_sentence_length_words": 14,
+      "ad_lib_allowed": false,
+      "vocal_range": "alto-warm",
+      "regionalisms_allowed": ["LA-vernacular"]
+    },
+    "session_id": "ars-2026-04-29-005",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "successScript",
+    "tier": "Pilot",
+    "production_mode": "A",
+    "lines_count_min": 5,
+    "lines_count_max": 8,
+    "platform_variants_count": 3,
+    "captions_burn_in_required": true,
+    "hook_block_spoken_line_eq": "Most operators don't need more output. They need a reset.",
+    "lines_0_spoken_eq": "Most operators don't need more output. They need a reset.",
+    "no_banned_vocab_anywhere": ["hustle", "hustling", "hustled", "grind", "grinding", "grinded"],
+    "qc_warnings_must_include_one_of": ["style_override_swap_rejected", "banned_vocab_swap_rejected", "swap_words_collision"],
+    "human_review_required": true
+  }
+}

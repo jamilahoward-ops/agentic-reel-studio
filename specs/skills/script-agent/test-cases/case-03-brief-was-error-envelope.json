@@ -1,0 +1,24 @@
+{
+  "case_id": "case-03-brief-was-error-envelope",
+  "purpose": "Reject branch — input.brief is an errorEnvelope (Brief Agent failed upstream). Expect Script Agent to halt with brief_not_success.",
+  "expected_branch": "errorEnvelope",
+  "expected_error": "brief_not_success",
+  "input": {
+    "brief": {
+      "error": "entity_firewall_breach",
+      "reason": "Topic signal drifted to 4821 Main — refused upstream.",
+      "topic": "Beverly Hills flagship salon suite launch",
+      "attempts": 1,
+      "qc_warnings": []
+    },
+    "session_id": "ars-2026-04-29-003",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "errorEnvelope",
+    "error_eq": "brief_not_success",
+    "reason_contains": ["brief", "errorEnvelope"],
+    "attempts_min": 1,
+    "no_partial_script_emitted": true
+  }
+}

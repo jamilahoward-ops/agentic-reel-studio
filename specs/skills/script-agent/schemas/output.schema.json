@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/script-agent/output.schema.json",
+  "title": "ARS Script Agent — Output (script.json)",
+  "description": "Canonical script.json contract emitted by the Script Agent v1.0. Per spec §3.1 + Orchestration Blueprint.",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/successScript" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+  "$defs": {
+    "successScript": {
+      "type": "object",
+      "required": [
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "title_working",
+        "duration_target_seconds",
+        "duration_min",
+        "duration_max",
+        "estimated_word_count",
+        "hook_block",
+        "lines",
+        "broll_plan",
+        "captions",
+        "audio_track",
+        "platform_variants",
+        "on_screen_text_blocks",
+        "cta_block",
+        "rationale",
+        "qc_pre_flags",
+        "qc_warnings",
+        "downstream_dependencies",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "script_id": {
+          "type": "string",
+          "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brand_id": { "type": "string", "minLength": 2 },
+        "tier": { "type": "string", "enum": ["Pilot", "Starter", "Pro", "Enterprise"] },
+        "lever": { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "created_at": { "type": "string", "format": "date-time" },
+        "session_id": { "type": "string", "minLength": 4 },
+        "title_working": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "duration_target_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "duration_min": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "duration_max": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "estimated_word_count": { "type": "integer", "minimum": 30, "maximum": 800 },
+        "hook_block": {
+          "type": "object",
+          "required": ["spoken_line", "first_frame_text", "delivery_note", "duration_seconds", "cps_target"],
+          "additionalProperties": false,
+          "properties": {
+            "spoken_line": { "type": "string", "minLength": 4, "maxLength": 220 },
+            "first_frame_text": { "type": "string", "minLength": 2, "maxLength": 60 },
+            "delivery_note": { "type": "string", "minLength": 4 },
+            "duration_seconds": { "type": "number", "minimum": 1.5, "maximum": 5.0 },
+            "cps_target": { "type": "number", "minimum": 8, "maximum": 25 }
+          }
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "required": [
+              "line_id",
+              "second_start",
+              "second_end",
+              "beat_id",
+              "spoken",
+              "delivery",
+              "pace_marker",
+              "emphasis_words",
+              "broll_cue",
+              "music_cue",
+              "caption_style"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "line_id": { "type": "string", "pattern": "^L\\d+$" },
+              "second_start": { "type": "number", "minimum": 0 },
+              "second_end": { "type": "number", "minimum": 0 },
+              "beat_id": { "type": "string", "pattern": "^B\\d+$" },
+              "spoken": { "type": "string", "minLength": 2 },
+              "on_screen_text": { "type": ["string", "null"] },
+              "delivery": { "type": "string", "minLength": 2 },
+              "pace_marker": {
+                "type": "string",
+                "enum": ["fast-open", "even", "build", "drop", "swell", "close-fast", "close-soft"]
+              },
+              "emphasis_words": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "broll_cue": { "type": "string" },
+              "music_cue": { "type": "string" },
+              "sfx_cue": { "type": ["string", "null"] },
+              "caption_style": { "type": "string", "minLength": 2 }
+            }
+          }
+        },
+        "broll_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "cue_id",
+              "second_start",
+              "second_end",
+              "description",
+              "source_hint",
+              "no_buildings_rule",
+              "alt_options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "cue_id": { "type": "string", "pattern": "^BR\\d+$" },
+              "second_start": { "type": "number", "minimum": 0 },
+              "second_end": { "type": "number", "minimum": 0 },
+              "description": { "type": "string", "minLength": 6 },
+              "source_hint": {
+                "type": "string",
+                "enum": ["stock", "shot-this-week", "archive", "operator-original"]
+              },
+              "no_buildings_rule": { "type": "string", "minLength": 6 },
+              "alt_options": { "type": "integer", "minimum": 0, "maximum": 6 }
+            }
+          }
+        },
+        "captions": {
+          "type": "object",
+          "required": [
+            "style",
+            "max_chars_per_line",
+            "max_lines_on_screen",
+            "burn_in_required",
+            "language",
+            "auto_punctuation",
+            "censor_profile"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "style": { "type": "string", "minLength": 2 },
+            "max_chars_per_line": { "type": "integer", "minimum": 12, "maximum": 32 },
+            "max_lines_on_screen": { "type": "integer", "minimum": 1, "maximum": 3 },
+            "burn_in_required": { "type": "boolean" },
+            "language": { "type": "string", "minLength": 2 },
+            "auto_punctuation": { "type": "boolean" },
+            "censor_profile": { "type": "string", "minLength": 4 }
+          }
+        },
+        "audio_track": {
+          "type": "object",
+          "required": [
+            "voice_take_count",
+            "voice_pacing",
+            "music_intent",
+            "music_swells",
+            "sfx_inventory",
+            "vo_only_acceptable",
+            "duck_under_speech_db"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "voice_take_count": { "type": "integer", "minimum": 1, "maximum": 4 },
+            "voice_pacing": { "type": "string", "minLength": 4 },
+            "music_intent": { "type": "string", "minLength": 4 },
+            "music_swells": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": ["second_start", "second_end", "intent"],
+                "additionalProperties": false,
+                "properties": {
+                  "second_start": { "type": "number", "minimum": 0 },
+                  "second_end": { "type": "number", "minimum": 0 },
+                  "intent": { "type": "string", "minLength": 3 }
+                }
+              }
+            },
+            "sfx_inventory": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 2 }
+            },
+            "vo_only_acceptable": { "type": "boolean" },
+            "duck_under_speech_db": { "type": "number", "minimum": -24, "maximum": -9 }
+          }
+        },
+        "platform_variants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "platform",
+              "aspect",
+              "duration_seconds",
+              "hook_first_frame",
+              "first_3s_optimization",
+              "caption_burn"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "platform": {
+                "type": "string",
+                "enum": ["instagram-reels", "tiktok", "linkedin-video", "youtube-shorts", "x-video", "youtube-long"]
+              },
+              "aspect": {
+                "type": "string",
+                "enum": ["9:16", "1:1", "16:9", "4:5"]
+              },
+              "duration_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+              "hook_first_frame": { "type": "string", "minLength": 3, "maxLength": 80 },
+              "first_3s_optimization": { "type": "string", "minLength": 6 },
+              "caption_burn": { "type": "boolean" }
+            }
+          }
+        },
+        "on_screen_text_blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["second_start", "second_end", "text", "size", "anchor"],
+            "additionalProperties": false,
+            "properties": {
+              "second_start": { "type": "number", "minimum": 0 },
+              "second_end": { "type": "number", "minimum": 0 },
+              "text": { "type": "string", "minLength": 1, "maxLength": 60 },
+              "size": { "type": "string", "enum": ["S", "M", "L", "XL"] },
+              "anchor": {
+                "type": "string",
+                "enum": ["center", "upper-third", "lower-third", "left-third", "right-third"]
+              }
+            }
+          }
+        },
+        "cta_block": {
+          "type": "object",
+          "required": ["type", "spoken_line", "on_screen_text", "duration_seconds", "second_start", "second_end"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "type": "string", "enum": ["soft", "hard", "none"] },
+            "spoken_line": { "type": "string" },
+            "on_screen_text": { "type": "string", "maxLength": 60 },
+            "duration_seconds": { "type": "number", "minimum": 0, "maximum": 8 },
+            "second_start": { "type": "number", "minimum": 0 },
+            "second_end": { "type": "number", "minimum": 0 }
+          }
+        },
+        "rationale": {
+          "type": "object",
+          "required": ["why_this_pacing", "why_this_first_frame", "why_this_broll_density"],
+          "additionalProperties": false,
+          "properties": {
+            "why_this_pacing": { "type": "string", "minLength": 6 },
+            "why_this_first_frame": { "type": "string", "minLength": 6 },
+            "why_this_broll_density": { "type": "string", "minLength": 6 }
+          }
+        },
+        "qc_pre_flags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 3
+        },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "downstream_dependencies": {
+          "type": "object",
+          "required": ["storyboard_agent", "production_coord_agent", "edit_agent"],
+          "additionalProperties": false,
+          "properties": {
+            "storyboard_agent": { "type": "string", "minLength": 6 },
+            "production_coord_agent": { "type": "string", "minLength": 6 },
+            "edit_agent": { "type": "string", "minLength": 6 }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": [
+            "agent_version",
+            "model_used",
+            "prompt_template_id",
+            "tokens_in",
+            "tokens_out",
+            "latency_ms",
+            "qc_score_predicted",
+            "human_review_required",
+            "iteration_count"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "agent_version": { "type": "string" },
+            "model_used": { "type": "string" },
+            "prompt_template_id": { "type": "string" },
+            "tokens_in": { "type": "integer", "minimum": 0 },
+            "tokens_out": { "type": "integer", "minimum": 0 },
+            "latency_ms": { "type": "integer", "minimum": 0 },
+            "qc_score_predicted": { "type": "number", "minimum": 0, "maximum": 1 },
+            "human_review_required": { "type": "boolean" },
+            "iteration_count": { "type": "integer", "minimum": 1, "maximum": 5 }
+          }
+        }
+      }
+    },
+    "errorEnvelope": {
+      "type": "object",
+      "required": ["error", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "string",
+          "enum": [
+            "input_validation_failed",
+            "entity_firewall_breach",
+            "tier_constraint_violation",
+            "duration_overflow",
+            "banned_vocab_leaked",
+            "schema_invalid_after_retry",
+            "script_agent_failed",
+            "talent_profile_out_of_range",
+            "brief_not_success"
+          ]
+        },
+        "reason": { "type": "string", "minLength": 4 },
+        "field": { "type": "string" },
+        "attempts": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
