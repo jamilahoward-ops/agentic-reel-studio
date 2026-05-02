@@ -1,0 +1,33 @@
+{
+  "case_id": "case-03-script-was-error-envelope",
+  "purpose": "Reject path — Script Agent returned errorEnvelope upstream. Storyboard Agent must halt at Step 1 with script_not_success.",
+  "expected_branch": "errorEnvelope",
+  "input": {
+    "script": {
+      "error": "banned_vocab_leaked",
+      "reason": "Script Agent failed to remove 'hustle' from line L3 after 2 regen attempts",
+      "field": "lines[2].spoken",
+      "attempts": 3,
+      "qc_warnings": ["banned_vocab_persistent_after_retry"]
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-05-01-003",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "no_buildings_rule": "Interior framing only."
+      }
+    },
+    "session_id": "ars-2026-05-02-003",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "errorEnvelope",
+    "error_eq": "script_not_success",
+    "reason_min_length": 4,
+    "attempts_min": 1,
+    "attempts_max": 5,
+    "must_not_emit_storyboard": true
+  }
+}

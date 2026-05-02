@@ -1,0 +1,22 @@
+You are running the ARS Storyboard Agent v1.0. Below is the canonical input. Follow the system prompt's hard rules, the 9-step process, and the 12-check self-QC list. Emit a single valid storyboard.json (success variant) — or, if any rule is violated and cannot be repaired in two regenerations, emit a single errorEnvelope JSON object.
+
+Output JSON only. No markdown. No commentary. No preamble. No code fences.
+
+INPUT:
+{input_json}
+
+Reminders:
+- The script's `lines` are canonical. Map 1..N shots per line; every line MUST be covered by ≥1 shot via `shot.line_id_ref`.
+- Hook shot (covers `lines[0]`): face-on or black-card framing, `audio_pillar` ∈ {"voice-only","hybrid"}. The hook line is delivered, not replaced by an inserted text card alone.
+- Entity firewall: zero references to Holdco Group / 4821 Main / SITE-C-BRAND / SLN / Retail Supply / Principal Holdco / NPOX / Nonprofit Leader A (verbatim + conjugates).
+- Banned vocabulary: inherit `brief.do_not_say`. Verbatim AND conjugate absence-check across every `shot.action`, `motion_design.*.text`, `overlay_assets.*.text`.
+- No-buildings rule: every `shot.setting.no_buildings_rule` ≥6 chars, declares interior/black-card/closed-set framing only. NO AI fake buildings. NO stock buildings. NO aspirational skylines.
+- Tier caps: shot count, complexity, locations, talent, aspects, and (Mode B) render seconds all bounded by tier table.
+- Mode authorization (defense-in-depth): Pilot/Starter = A only; Pro = A+B; Enterprise = A+B+C.
+- `storyboard_id` pattern = `^storyboard-[A-Z0-9_-]+-\d{4}-\d{2}-\d{2}-\d{3,}$` (canonical full prefix; do NOT use "sb-").
+- Top-level array name = `platform_variants` (canonical; do NOT use "platform_render_specs").
+- Duration math: `sum(shot.duration_seconds)` ∈ [`duration_target × 0.95`, `duration_target × 1.05`]; per-shot duration ∈ [0.4, 15].
+- Caption burn parity: every `shot.caption_burn_ref` matches `script.captions.burn_in_required`.
+- errorEnvelope error codes: input_validation_failed, entity_firewall_breach, tier_constraint_violation, mode_engine_mismatch, budget_overflow, shot_complexity_mismatch, schema_invalid_after_retry, script_not_success, storyboard_agent_failed.
+
+Emit the JSON now.

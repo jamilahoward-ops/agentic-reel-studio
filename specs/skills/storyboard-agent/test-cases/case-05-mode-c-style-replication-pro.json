@@ -1,0 +1,120 @@
+{
+  "case_id": "case-05-mode-c-style-replication-pro",
+  "purpose": "Defense-in-depth — Mode C is Enterprise-only; Pro tier requesting Mode C must be rejected with tier_constraint_violation. Brief and Script should have caught it; Storyboard is third-line firewall.",
+  "expected_branch": "errorEnvelope",
+  "input": {
+    "script": {
+      "script_id": "script-REINVENTED-2026-05-02-005",
+      "brief_id": "brief-REINVENTED-2026-05-01-005",
+      "brand_id": "REINVENTED",
+      "tier": "Pro",
+      "lever": 3,
+      "production_mode": "C",
+      "created_at": "2026-05-02T07:00:00Z",
+      "session_id": "ars-2026-05-02-005",
+      "title_working": "Style replication of competitor reel",
+      "duration_target_seconds": 45,
+      "duration_min": 40,
+      "duration_max": 50,
+      "estimated_word_count": 110,
+      "hook_block": {
+        "spoken_line": "I rebuilt this top-performing reel in our voice. Same structure, our story.",
+        "first_frame_text": "STYLE REPLICATION TEST",
+        "delivery_note": "direct-to-camera",
+        "duration_seconds": 3.0,
+        "cps_target": 16
+      },
+      "lines": [
+        { "line_id": "L1", "second_start": 0, "second_end": 3, "beat_id": "B1", "spoken": "I rebuilt this top-performing reel in our voice. Same structure, our story.", "delivery": "direct-to-camera", "pace_marker": "fast-open", "emphasis_words": ["rebuilt", "story"], "broll_cue": "face-on hook", "music_cue": "pad", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L2", "second_start": 3, "second_end": 18, "beat_id": "B2", "spoken": "The cadence works because the audience expectation is set in the first three seconds.", "delivery": "monologue", "pace_marker": "even", "emphasis_words": ["cadence", "expectation"], "broll_cue": "side-by-side reference compare", "music_cue": "pad", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L3", "second_start": 18, "second_end": 35, "beat_id": "B3", "spoken": "Replication is not theft when the system is the lesson and your story is the substance.", "delivery": "monologue", "pace_marker": "build", "emphasis_words": ["system", "substance"], "broll_cue": "split-screen", "music_cue": "swell", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L4", "second_start": 35, "second_end": 45, "beat_id": "B4", "spoken": "Save this reel. Audit your last three. Then build yours.", "delivery": "direct-to-camera", "pace_marker": "close-soft", "emphasis_words": ["audit", "build"], "broll_cue": "face-on", "music_cue": "pad fade", "caption_style": "bold-yellow-jamila" }
+      ],
+      "broll_plan": [
+        { "cue_id": "BR1", "second_start": 5, "second_end": 11, "description": "Side-by-side reference frame compare, abstract not-faces", "source_hint": "operator-original", "no_buildings_rule": "interior comparison frame — no skyline", "alt_options": 2 },
+        { "cue_id": "BR2", "second_start": 20, "second_end": 32, "description": "Split-screen with pacing markers, ivory background", "source_hint": "operator-original", "no_buildings_rule": "interior framing — no exterior", "alt_options": 2 }
+      ],
+      "captions": {
+        "style": "bold-yellow-jamila",
+        "max_chars_per_line": 22,
+        "max_lines_on_screen": 2,
+        "burn_in_required": false,
+        "language": "en-US",
+        "auto_punctuation": true,
+        "censor_profile": "operator-clean"
+      },
+      "audio_track": {
+        "voice_take_count": 3,
+        "voice_pacing": "even, ~160 wpm",
+        "music_intent": "minimal-pad",
+        "music_swells": [
+          { "second_start": 18, "second_end": 22, "intent": "transition into reframe" },
+          { "second_start": 33, "second_end": 35, "intent": "cta lift" }
+        ],
+        "sfx_inventory": ["pad-low"],
+        "vo_only_acceptable": false,
+        "duck_under_speech_db": -12
+      },
+      "platform_variants": [
+        { "platform": "instagram-reels", "aspect": "9:16", "duration_seconds": 45, "hook_first_frame": "STYLE REPLICATION TEST", "first_3s_optimization": "high-contrast first frame", "caption_burn": false },
+        { "platform": "tiktok", "aspect": "9:16", "duration_seconds": 45, "hook_first_frame": "rebuilt this in our voice", "first_3s_optimization": "lowercase native text", "caption_burn": false },
+        { "platform": "linkedin-video", "aspect": "1:1", "duration_seconds": 45, "hook_first_frame": "Style replication test — same structure, our story", "first_3s_optimization": "title-case framing", "caption_burn": false },
+        { "platform": "youtube-shorts", "aspect": "9:16", "duration_seconds": 45, "hook_first_frame": "Style Replication Test", "first_3s_optimization": "burned caption ON for shorts", "caption_burn": true }
+      ],
+      "on_screen_text_blocks": [
+        { "second_start": 0.2, "second_end": 2.6, "text": "STYLE REPLICATION TEST", "size": "L", "anchor": "center" }
+      ],
+      "cta_block": {
+        "type": "soft",
+        "spoken_line": "Save this reel. Audit your last three. Then build yours.",
+        "on_screen_text": "SAVE · AUDIT · BUILD",
+        "duration_seconds": 4.0,
+        "second_start": 41,
+        "second_end": 45
+      },
+      "rationale": {
+        "why_this_pacing": "Match-cadence to source reel",
+        "why_this_first_frame": "Replication framing",
+        "why_this_broll_density": "2 cues — Pro tier headroom, but minimal for test"
+      },
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "qc_warnings": [],
+      "downstream_dependencies": {
+        "storyboard_agent": "Should reject — Mode C not authorized on Pro",
+        "production_coord_agent": "n/a",
+        "edit_agent": "n/a"
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "script-agent-v1-prompt",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.5,
+        "human_review_required": true,
+        "iteration_count": 1
+      }
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-05-01-005",
+      "brand_id": "REINVENTED",
+      "tier": "Pro",
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "no_buildings_rule": "Interior framing only. Black-card text option for hook. No external skyline, no aspirational buildings."
+      }
+    },
+    "mode_c_reference_url": "https://example.com/reference-reel-12345",
+    "session_id": "ars-2026-05-02-005",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "errorEnvelope",
+    "error_eq": "tier_constraint_violation",
+    "reason_must_mention": ["Mode C", "Enterprise"],
+    "attempts_min": 1,
+    "attempts_max": 5,
+    "must_not_emit_storyboard": true
+  }
+}

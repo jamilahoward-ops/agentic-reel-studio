@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/storyboard-agent/input.schema.json",
+  "title": "ARS Storyboard Agent — Input",
+  "description": "Validates the input shape consumed by the ARS Storyboard Agent v1.0. Per Storyboard Agent SPEC §2 + Cross-SPEC Consistency Review §3 (canonical names).",
+  "type": "object",
+  "required": ["script", "brief", "session_id", "lever_state"],
+  "additionalProperties": false,
+  "properties": {
+    "script": {
+      "description": "Script Agent v1.0 output object. Either successScript variant (consumed normally) OR errorEnvelope variant (Storyboard Agent must halt with script_not_success at Step 1). Polymorphism is intentional — schema-level acceptance of both lets the runtime branch run cleanly.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "successScript — required fields below; full validation against script-agent/output.schema.json successScript variant happens at runtime.",
+          "required": [
+            "script_id",
+            "brief_id",
+            "brand_id",
+            "tier",
+            "lever",
+            "production_mode",
+            "duration_target_seconds",
+            "hook_block",
+            "lines",
+            "broll_plan",
+            "captions",
+            "audio_track",
+            "platform_variants",
+            "cta_block"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "errorEnvelope — emitted by Script Agent when upstream validation failed. Storyboard Agent halts with script_not_success.",
+          "required": ["error", "reason"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": [
+                "input_validation_failed",
+                "entity_firewall_breach",
+                "tier_constraint_violation",
+                "duration_overflow",
+                "banned_vocab_leaked",
+                "schema_invalid_after_retry",
+                "script_agent_failed",
+                "talent_profile_out_of_range",
+                "brief_not_success"
+              ]
+            },
+            "reason": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "brief": {
+      "type": "object",
+      "description": "Pass-through Brief Agent output (denormalized for self-containment). Storyboard reads do_not_say + visual_direction.no_buildings_rule from this object directly rather than re-deriving from script. Polymorphic accept matches script field — but in practice the orchestrator only passes successBrief here when script is also successScript.",
+      "required": ["brief_id", "brand_id"]
+    },
+    "prior_storyboards": {
+      "type": "array",
+      "description": "Up to 5 most recent storyboard.json objects for this brand. Oldest first. Used for opener-shot rotation, camera-movement diversification, and color-grade variance.",
+      "items": { "type": "object" },
+      "maxItems": 5
+    },
+    "production_constraints": {
+      "type": "object",
+      "description": "Optional Mode A constraints — locations, talent, equipment tier, budget minutes, weather window.",
+      "additionalProperties": false,
+      "properties": {
+        "available_locations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 },
+          "maxItems": 6
+        },
+        "available_talent": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 },
+          "maxItems": 4
+        },
+        "equipment_tier": { "type": "string", "enum": ["S", "M", "L"] },
+        "budget_minutes": { "type": "integer", "minimum": 0, "maximum": 600 },
+        "weather_window": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "start_date": { "type": "string", "format": "date" },
+            "end_date": { "type": "string", "format": "date" }
+          }
+        }
+      }
+    },
+    "mode_b_engine_profile": {
+      "type": "object",
+      "description": "Required only when script.production_mode == 'B'. Specifies the AI video model the Storyboard targets so ai_render_plan can be tier-aware.",
+      "additionalProperties": false,
+      "required": ["model_id", "max_clip_duration_s", "aspect_ratios_supported"],
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "enum": [
+            "runway-gen-3",
+            "pika-1.5",
+            "luma-dream-machine",
+            "flux-pro-1.1",
+            "kling-1.6",
+            "higgsfield-genie-v1"
+          ]
+        },
+        "max_clip_duration_s": { "type": "number", "minimum": 1, "maximum": 30 },
+        "aspect_ratios_supported": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["9:16", "1:1", "16:9", "4:5"] }
+        },
+        "style_token_lib": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 }
+        }
+      }
+    },
+    "mode_c_reference_url": {
+      "type": ["string", "null"],
+      "description": "Required only when script.production_mode == 'C'. URL of the source reel whose style is being replicated.",
+      "format": "uri"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 4
+    },
+    "lever_state": { "type": "integer", "enum": [1, 2, 3] }
+  }
+}

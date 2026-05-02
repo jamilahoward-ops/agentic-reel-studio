@@ -1,0 +1,147 @@
+{
+  "case_id": "case-01-reinvented-pilot-burnout-storyboard",
+  "purpose": "Happy path — Pilot tier, story format, 55s, Mode A, 8 shots covering 6 lines, single shoot day, full QC pass. Validates the canonical Mode A flow.",
+  "expected_branch": "successStoryboard",
+  "input": {
+    "script": {
+      "script_id": "script-REINVENTED-2026-04-29-001",
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "created_at": "2026-04-29T07:00:00Z",
+      "session_id": "ars-2026-04-29-001",
+      "title_working": "The 7-Figure Burnout Trap",
+      "duration_target_seconds": 55,
+      "duration_min": 50,
+      "duration_max": 60,
+      "estimated_word_count": 145,
+      "hook_block": {
+        "spoken_line": "You hit seven figures and now you can't sleep. That's not success — that's a warning sign.",
+        "first_frame_text": "7-FIGURE BURNOUT IS NOT A FLEX",
+        "delivery_note": "direct-to-camera, clinical-warm, 50mm",
+        "duration_seconds": 3.0,
+        "cps_target": 16
+      },
+      "lines": [
+        { "line_id": "L1", "second_start": 0, "second_end": 3, "beat_id": "B1", "spoken": "You hit seven figures and now you can't sleep. That's not success — that's a warning sign.", "delivery": "direct-to-camera", "pace_marker": "fast-open", "emphasis_words": ["sleep", "warning"], "broll_cue": "face-on hook", "music_cue": "low pad enter", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L2", "second_start": 3, "second_end": 15, "beat_id": "B2", "spoken": "I worked with an operator who crossed seven figures and broke. The receipts were in her cortisol, not her P&L.", "delivery": "monologue", "pace_marker": "even", "emphasis_words": ["operator", "cortisol"], "broll_cue": "operator-at-desk-3am cut", "music_cue": "pad continues", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L3", "second_start": 15, "second_end": 28, "beat_id": "B3", "spoken": "Operators tell themselves the body will catch up. The body keeps the score and the score is the audit.", "delivery": "monologue", "pace_marker": "build", "emphasis_words": ["body", "audit"], "broll_cue": "close-up eyes only", "music_cue": "swell start", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L4", "second_start": 28, "second_end": 42, "beat_id": "B4", "spoken": "Burnout at the top is a system failure, not a character flaw. The fix is not more discipline — it's a rebuilt system.", "delivery": "direct-to-camera", "pace_marker": "drop", "emphasis_words": ["system", "rebuilt"], "broll_cue": "back to face-on", "music_cue": "pad", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L5", "second_start": 42, "second_end": 51, "beat_id": "B5", "spoken": "When we audit, we find the same three leaks: identity entangled with revenue, calendar without recovery, decisions without data.", "delivery": "direct-to-camera", "pace_marker": "even", "emphasis_words": ["leaks", "data"], "broll_cue": "face-on", "music_cue": "pad", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L6", "second_start": 51, "second_end": 55, "beat_id": "B6", "spoken": "If this hits, the link in bio is where I work this out with operators like you.", "delivery": "direct-to-camera", "pace_marker": "close-soft", "emphasis_words": ["link", "operators"], "broll_cue": "face-on, hands gestural", "music_cue": "pad fade", "caption_style": "bold-yellow-jamila" }
+      ],
+      "broll_plan": [
+        { "cue_id": "BR1", "second_start": 3, "second_end": 9, "description": "Operator alone at desk, blue laptop glow, 3am clock visible, no face", "source_hint": "shot-this-week", "no_buildings_rule": "interior only — desk corner, no window framing, no exterior view", "alt_options": 2 },
+        { "cue_id": "BR2", "second_start": 18, "second_end": 22, "description": "Eyes-only macro close-up, soft amber backlight", "source_hint": "shot-this-week", "no_buildings_rule": "interior macro — face only, no environmental context", "alt_options": 2 },
+        { "cue_id": "BR3", "second_start": 30, "second_end": 36, "description": "Hands turning a journal page slowly, ringed fingers, ivory page", "source_hint": "shot-this-week", "no_buildings_rule": "interior tabletop — no skyline, no window", "alt_options": 2 }
+      ],
+      "captions": {
+        "style": "bold-yellow-jamila",
+        "max_chars_per_line": 22,
+        "max_lines_on_screen": 2,
+        "burn_in_required": true,
+        "language": "en-US",
+        "auto_punctuation": true,
+        "censor_profile": "operator-clean"
+      },
+      "audio_track": {
+        "voice_take_count": 2,
+        "voice_pacing": "clinical-warm, ~155 wpm",
+        "music_intent": "low-pad-with-single-swell",
+        "music_swells": [
+          { "second_start": 26, "second_end": 30, "intent": "underscore reframe entry" }
+        ],
+        "sfx_inventory": ["soft-paper-turn", "amber-room-tone"],
+        "vo_only_acceptable": false,
+        "duck_under_speech_db": -12
+      },
+      "platform_variants": [
+        { "platform": "instagram-reels", "aspect": "9:16", "duration_seconds": 55, "hook_first_frame": "7-FIGURE BURNOUT IS NOT A FLEX", "first_3s_optimization": "high-contrast first frame, burned caption ON", "caption_burn": true },
+        { "platform": "tiktok", "aspect": "9:16", "duration_seconds": 55, "hook_first_frame": "she hit 7 figures and broke", "first_3s_optimization": "lowercase native text, burned caption ON", "caption_burn": true },
+        { "platform": "linkedin-video", "aspect": "1:1", "duration_seconds": 55, "hook_first_frame": "Seven figures. No sleep. Warning sign.", "first_3s_optimization": "professional sentence-case framing, burned caption ON", "caption_burn": true }
+      ],
+      "on_screen_text_blocks": [
+        { "second_start": 0.2, "second_end": 2.6, "text": "7-FIGURE BURNOUT IS NOT A FLEX", "size": "L", "anchor": "center" },
+        { "second_start": 28.5, "second_end": 31.5, "text": "SYSTEM FAILURE, NOT YOU", "size": "L", "anchor": "center" },
+        { "second_start": 51.2, "second_end": 54.6, "text": "LINK IN BIO → OPERATOR AUDIT", "size": "M", "anchor": "lower-third" }
+      ],
+      "cta_block": {
+        "type": "soft",
+        "spoken_line": "If this hits, the link in bio is where I work this out with operators like you.",
+        "on_screen_text": "LINK IN BIO → OPERATOR AUDIT",
+        "duration_seconds": 4.0,
+        "second_start": 51,
+        "second_end": 55
+      },
+      "rationale": {
+        "why_this_pacing": "Clinical-warm operator pacing keeps wpm under 165 and gives reframe room",
+        "why_this_first_frame": "Numerical anchor + contrarian reframe lands in 3s",
+        "why_this_broll_density": "3 cues only — Pilot tier cap; hook stays face-on for verbatim delivery"
+      },
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "qc_warnings": [],
+      "downstream_dependencies": {
+        "storyboard_agent": "8 shots covering 6 lines; face-on hook; CTA shot at 51-55s",
+        "production_coord_agent": "Single-day shoot, REINVENTED home studio interior",
+        "edit_agent": "Burned captions REQUIRED on all variants"
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "script-agent-v1-prompt",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.86,
+        "human_review_required": true,
+        "iteration_count": 1
+      }
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "REINVENTED home studio interior, neutral",
+        "wardrobe": "ivory knit, gold hoops, no logo",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+        "no_buildings_rule": "Interior framing only. Black-card text option for hook. No external skyline, no aspirational buildings."
+      }
+    },
+    "production_constraints": {
+      "available_locations": ["REINVENTED home studio"],
+      "available_talent": ["REINVENTED-Jamila-v1"],
+      "equipment_tier": "M",
+      "budget_minutes": 90,
+      "weather_window": { "start_date": "2026-05-04", "end_date": "2026-05-06" }
+    },
+    "session_id": "ars-2026-05-02-001",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "successStoryboard",
+    "tier": "Pilot",
+    "production_mode": "A",
+    "storyboard_id_pattern": "^storyboard-REINVENTED-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+    "total_shots_min": 6,
+    "total_shots_max": 8,
+    "shot_complexity_disallow": ["complex", "hero"],
+    "locked_aspect_ratios_count_max": 3,
+    "shoot_logistics_required": true,
+    "ai_render_plan_null": true,
+    "replication_recipe_null": true,
+    "every_shot_has_no_buildings_rule": true,
+    "every_shot_caption_burn_ref_true": true,
+    "shot_0_audio_pillar_includes_voice": ["voice-only", "hybrid"],
+    "color_grade_palette_hex": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+    "every_line_id_covered": ["L1", "L2", "L3", "L4", "L5", "L6"],
+    "no_banned_vocab": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+    "no_entity_firewall_breach": ["Holdco", "Principal", "NPOX", "4821", "6315", "SLN", "Retail Supply", "Nonprofit Leader A"],
+    "duration_sum_min_seconds": 52.25,
+    "duration_sum_max_seconds": 57.75,
+    "metadata_agent_id": "storyboard-agent"
+  }
+}

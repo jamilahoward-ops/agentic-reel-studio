@@ -1,0 +1,552 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/storyboard-agent/output.schema.json",
+  "title": "ARS Storyboard Agent — Output (storyboard.json)",
+  "description": "Canonical storyboard.json contract emitted by the Storyboard Agent v1.0. Per Storyboard SPEC §3.1 + Cross-SPEC Consistency Review §3 (canonical naming map). Notable canonical changes from drift SPEC: (a) storyboard_id pattern uses full 'storyboard-' prefix, NOT 'sb-'; (b) platform_variants name (NOT platform_render_specs).",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/successStoryboard" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+  "$defs": {
+    "successStoryboard": {
+      "type": "object",
+      "required": [
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "duration_target_seconds",
+        "total_shots",
+        "locked_aspect_ratios",
+        "shots",
+        "transitions",
+        "color_grade",
+        "motion_design",
+        "overlay_assets",
+        "audio_sync_map",
+        "platform_variants",
+        "budget_estimate",
+        "rationale",
+        "qc_pre_flags",
+        "qc_warnings",
+        "downstream_dependencies",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "storyboard_id": {
+          "type": "string",
+          "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+          "description": "Canonical storyboard identifier. Full prefix 'storyboard-' (NOT 'sb-' abbreviation per Cross-SPEC Consistency Review §3 drift #4)."
+        },
+        "script_id": {
+          "type": "string",
+          "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brand_id": { "type": "string", "minLength": 2 },
+        "tier": { "type": "string", "enum": ["Pilot", "Starter", "Pro", "Enterprise"] },
+        "lever": { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "created_at": { "type": "string", "format": "date-time" },
+        "session_id": { "type": "string", "minLength": 4 },
+        "duration_target_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots": { "type": "integer", "minimum": 6, "maximum": 24 },
+        "locked_aspect_ratios": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["9:16", "1:1", "16:9", "4:5"] }
+        },
+        "shots": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 24,
+          "items": { "$ref": "#/$defs/shotObject" }
+        },
+        "transitions": {
+          "type": "array",
+          "description": "Length must equal shots.length - 1. Each transition describes the cut between shot[i] and shot[i+1].",
+          "items": {
+            "type": "object",
+            "required": ["from_shot_id", "to_shot_id", "kind", "duration_seconds"],
+            "additionalProperties": false,
+            "properties": {
+              "from_shot_id": { "type": "string", "pattern": "^S\\d+$" },
+              "to_shot_id": { "type": "string", "pattern": "^S\\d+$" },
+              "kind": {
+                "type": "string",
+                "enum": ["cut", "dissolve", "whip", "match-cut", "fade-to-black", "fade-from-black", "morph"]
+              },
+              "duration_seconds": { "type": "number", "minimum": 0, "maximum": 1.5 },
+              "rationale": { "type": "string" }
+            }
+          }
+        },
+        "color_grade": {
+          "type": "object",
+          "required": ["preset_id", "palette_hex", "saturation_drift_pct", "contrast_curve"],
+          "additionalProperties": false,
+          "properties": {
+            "preset_id": { "type": "string", "minLength": 2 },
+            "palette_hex": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 6,
+              "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+            },
+            "saturation_drift_pct": { "type": "number", "minimum": -10, "maximum": 10 },
+            "contrast_curve": { "type": "string", "enum": ["soft", "neutral", "punchy", "filmic"] }
+          }
+        },
+        "motion_design": {
+          "type": "object",
+          "required": ["entries"],
+          "additionalProperties": false,
+          "properties": {
+            "entries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["motion_id", "kind", "second_start", "second_end"],
+                "additionalProperties": false,
+                "properties": {
+                  "motion_id": { "type": "string", "minLength": 2 },
+                  "kind": {
+                    "type": "string",
+                    "enum": ["lower-third", "kinetic-text", "counter", "callout-box", "ticker", "transition-overlay"]
+                  },
+                  "text": { "type": ["string", "null"], "maxLength": 80 },
+                  "second_start": { "type": "number", "minimum": 0 },
+                  "second_end": { "type": "number", "minimum": 0 },
+                  "anchor": {
+                    "type": "string",
+                    "enum": ["upper-third", "center", "lower-third", "left-third", "right-third"]
+                  },
+                  "tier_required": {
+                    "type": ["string", "null"],
+                    "enum": ["Pilot", "Starter", "Pro", "Enterprise", null]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "overlay_assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["asset_id", "kind", "second_start", "second_end"],
+            "additionalProperties": false,
+            "properties": {
+              "asset_id": { "type": "string", "minLength": 2 },
+              "kind": {
+                "type": "string",
+                "enum": ["brand-mark", "logo-lockup", "watermark", "first-frame-burn", "cta-burn", "social-handle"]
+              },
+              "text": { "type": ["string", "null"], "maxLength": 60 },
+              "second_start": { "type": "number", "minimum": 0 },
+              "second_end": { "type": "number", "minimum": 0 },
+              "platform_variant_ref": {
+                "type": ["string", "null"],
+                "enum": ["instagram-reels", "tiktok", "linkedin-video", "youtube-shorts", "x-video", "youtube-long", null]
+              }
+            }
+          }
+        },
+        "audio_sync_map": {
+          "type": "object",
+          "required": ["voice_pillar_shot_ids", "music_swell_shot_ids", "duck_under_speech_db"],
+          "additionalProperties": false,
+          "properties": {
+            "voice_pillar_shot_ids": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^S\\d+$" }
+            },
+            "music_swell_shot_ids": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^S\\d+$" },
+              "maxItems": 3
+            },
+            "duck_under_speech_db": { "type": "number", "minimum": -24, "maximum": -9 }
+          }
+        },
+        "platform_variants": {
+          "type": "array",
+          "description": "Canonical name (NOT platform_render_specs per Cross-SPEC §3 drift #2). Mirrors Script Agent platform_variants but adds shot-level render hints.",
+          "minItems": 1,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["platform", "aspect", "render_seconds_target", "crop_strategy"],
+            "additionalProperties": false,
+            "properties": {
+              "platform": {
+                "type": "string",
+                "enum": ["instagram-reels", "tiktok", "linkedin-video", "youtube-shorts", "x-video", "youtube-long"]
+              },
+              "aspect": { "type": "string", "enum": ["9:16", "1:1", "16:9", "4:5"] },
+              "render_seconds_target": { "type": "integer", "minimum": 15, "maximum": 180 },
+              "crop_strategy": {
+                "type": "string",
+                "enum": ["center-safe", "subject-track", "rule-of-thirds-respect", "manual-key-shot"]
+              },
+              "first_frame_overlay_ref": { "type": ["string", "null"] },
+              "caption_burn": { "type": "boolean" }
+            }
+          }
+        },
+        "shoot_logistics": {
+          "type": ["object", "null"],
+          "description": "Required when production_mode == 'A'. Null otherwise.",
+          "additionalProperties": false,
+          "properties": {
+            "primary_location": { "type": "string", "minLength": 2 },
+            "alt_locations": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 2 }
+            },
+            "talent_assignments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["talent_id", "role"],
+                "additionalProperties": false,
+                "properties": {
+                  "talent_id": { "type": "string" },
+                  "role": { "type": "string" }
+                }
+              }
+            },
+            "equipment_list": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "wardrobe": { "type": "string" },
+            "call_sheet_summary": { "type": "string" },
+            "weather_window": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "start_date": { "type": "string", "format": "date" },
+                "end_date": { "type": "string", "format": "date" }
+              }
+            }
+          }
+        },
+        "ai_render_plan": {
+          "type": ["object", "null"],
+          "description": "Required when production_mode == 'B'. Null otherwise.",
+          "additionalProperties": false,
+          "properties": {
+            "model_id": {
+              "type": "string",
+              "enum": [
+                "runway-gen-3",
+                "pika-1.5",
+                "luma-dream-machine",
+                "flux-pro-1.1",
+                "kling-1.6",
+                "higgsfield-genie-v1"
+              ]
+            },
+            "shot_assignments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["shot_id", "model_prompt", "render_seconds"],
+                "additionalProperties": false,
+                "properties": {
+                  "shot_id": { "type": "string", "pattern": "^S\\d+$" },
+                  "model_prompt": { "type": "string", "minLength": 6 },
+                  "negative_prompt": { "type": ["string", "null"] },
+                  "seed": { "type": ["integer", "null"], "minimum": 0 },
+                  "render_seconds": { "type": "number", "minimum": 0.5, "maximum": 30 },
+                  "aspect": { "type": "string", "enum": ["9:16", "1:1", "16:9", "4:5"] }
+                }
+              }
+            },
+            "total_render_seconds": { "type": "number", "minimum": 0 }
+          }
+        },
+        "replication_recipe": {
+          "type": ["object", "null"],
+          "description": "Required when production_mode == 'C'. Null otherwise.",
+          "additionalProperties": false,
+          "properties": {
+            "source_url": { "type": "string", "format": "uri" },
+            "offset_map": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["source_offset_s", "shot_id"],
+                "additionalProperties": false,
+                "properties": {
+                  "source_offset_s": { "type": "number", "minimum": 0 },
+                  "shot_id": { "type": "string", "pattern": "^S\\d+$" },
+                  "style_match_target": { "type": "string" }
+                }
+              }
+            },
+            "gap_filler_shots": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^S\\d+$" }
+            }
+          }
+        },
+        "budget_estimate": {
+          "type": "object",
+          "required": ["shoot_minutes", "render_seconds", "asset_count"],
+          "additionalProperties": false,
+          "properties": {
+            "shoot_minutes": { "type": "number", "minimum": 0 },
+            "render_seconds": { "type": "number", "minimum": 0 },
+            "asset_count": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "rationale": {
+          "type": "object",
+          "required": ["why_shot_count", "why_transitions", "why_color_grade"],
+          "additionalProperties": false,
+          "properties": {
+            "why_shot_count": { "type": "string", "minLength": 6 },
+            "why_transitions": { "type": "string", "minLength": 6 },
+            "why_color_grade": { "type": "string", "minLength": 6 }
+          }
+        },
+        "qc_pre_flags": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "type": "string", "minLength": 4 }
+        },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "downstream_dependencies": {
+          "type": "object",
+          "required": ["production_coord_agent", "edit_agent", "qc_agent"],
+          "additionalProperties": false,
+          "properties": {
+            "production_coord_agent": { "type": "string", "minLength": 6 },
+            "edit_agent": { "type": "string", "minLength": 6 },
+            "qc_agent": { "type": "string", "minLength": 6 }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": [
+            "agent_id",
+            "agent_version",
+            "model_used",
+            "prompt_template_id",
+            "tokens_in",
+            "tokens_out",
+            "latency_ms",
+            "qc_score_predicted",
+            "human_review_required",
+            "iteration_count"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "agent_id": { "type": "string", "enum": ["storyboard-agent"] },
+            "agent_version": { "type": "string" },
+            "model_used": { "type": "string" },
+            "prompt_template_id": { "type": "string" },
+            "tokens_in": { "type": "integer", "minimum": 0 },
+            "tokens_out": { "type": "integer", "minimum": 0 },
+            "latency_ms": { "type": "integer", "minimum": 0 },
+            "qc_score_predicted": { "type": "number", "minimum": 0, "maximum": 1 },
+            "human_review_required": { "type": "boolean" },
+            "iteration_count": { "type": "integer", "minimum": 1, "maximum": 5 },
+            "parent_chain": {
+              "type": ["object", "null"],
+              "additionalProperties": false,
+              "properties": {
+                "brief_id": { "type": "string" },
+                "script_id": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "shotObject": {
+      "type": "object",
+      "required": [
+        "shot_id",
+        "line_id_ref",
+        "second_start",
+        "second_end",
+        "duration_seconds",
+        "shot_type",
+        "camera_movement",
+        "framing_anchor",
+        "subject",
+        "setting",
+        "action",
+        "caption_burn_ref",
+        "audio_pillar",
+        "duck_under_speech_db_inherit",
+        "shot_complexity",
+        "budget_minutes_est",
+        "alt_options",
+        "qc_per_shot"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "shot_id": { "type": "string", "pattern": "^S\\d+$" },
+        "line_id_ref": { "type": "string", "pattern": "^L\\d+$" },
+        "second_start": { "type": "number", "minimum": 0 },
+        "second_end": { "type": "number", "minimum": 0 },
+        "duration_seconds": { "type": "number", "minimum": 0.4, "maximum": 15 },
+        "shot_type": {
+          "type": "string",
+          "enum": ["ECU", "CU", "MCU", "MS", "MLS", "LS", "XLS", "insert", "cutaway", "aerial", "POV", "OTS", "two-shot"]
+        },
+        "camera_movement": {
+          "type": "string",
+          "enum": [
+            "static",
+            "pan",
+            "tilt",
+            "dolly-in",
+            "dolly-out",
+            "truck",
+            "crane",
+            "handheld",
+            "gimbal-orbit",
+            "whip-pan",
+            "push-in",
+            "pull-back"
+          ]
+        },
+        "focal_length_mm": {
+          "type": ["integer", "null"],
+          "enum": [16, 24, 35, 50, 85, 135, null]
+        },
+        "lens_aperture": { "type": ["string", "null"] },
+        "framing_anchor": {
+          "type": "string",
+          "enum": [
+            "rule-of-thirds-left",
+            "rule-of-thirds-right",
+            "centered",
+            "negative-space-left",
+            "negative-space-right",
+            "symmetric"
+          ]
+        },
+        "subject": {
+          "type": "object",
+          "required": ["who", "wardrobe", "expression", "posture"],
+          "additionalProperties": false,
+          "properties": {
+            "who": { "type": "string", "minLength": 2 },
+            "wardrobe": { "type": "string" },
+            "expression": { "type": "string" },
+            "posture": { "type": "string" }
+          }
+        },
+        "setting": {
+          "type": "object",
+          "required": ["location_type", "palette_hex", "lighting_intent", "no_buildings_rule"],
+          "additionalProperties": false,
+          "properties": {
+            "location_type": { "type": "string", "minLength": 2 },
+            "palette_hex": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+            },
+            "lighting_intent": { "type": "string", "minLength": 4 },
+            "no_buildings_rule": { "type": "string", "minLength": 6 }
+          }
+        },
+        "action": { "type": "string", "minLength": 6 },
+        "on_screen_text_ref": { "type": ["string", "null"] },
+        "caption_burn_ref": { "type": "boolean" },
+        "motion_overlay_ref": { "type": ["string", "null"] },
+        "audio_pillar": {
+          "type": "string",
+          "enum": ["voice-only", "music-bed", "sfx-accent", "silence", "hybrid"]
+        },
+        "duck_under_speech_db_inherit": { "type": "boolean" },
+        "ai_render_hints": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "model": { "type": "string" },
+            "seed": { "type": ["integer", "null"], "minimum": 0 },
+            "style_token": { "type": "string" },
+            "prompt_seed": { "type": "string" }
+          }
+        },
+        "style_replication_hint": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "source_offset_s": { "type": "number", "minimum": 0 },
+            "style_match_target": { "type": "string" }
+          }
+        },
+        "shot_complexity": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex", "hero"]
+        },
+        "budget_minutes_est": { "type": "number", "minimum": 0 },
+        "alt_options": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "qc_per_shot": {
+          "type": "object",
+          "required": ["ban_drift_check", "no_buildings_check", "tier_complexity_check"],
+          "additionalProperties": false,
+          "properties": {
+            "ban_drift_check": { "type": "boolean" },
+            "no_buildings_check": { "type": "boolean" },
+            "tier_complexity_check": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "errorEnvelope": {
+      "type": "object",
+      "required": ["error", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Canonical 9-code error namespace per Storyboard SPEC §3.3 + Cross-SPEC §3.8.",
+          "enum": [
+            "input_validation_failed",
+            "entity_firewall_breach",
+            "tier_constraint_violation",
+            "mode_engine_mismatch",
+            "budget_overflow",
+            "shot_complexity_mismatch",
+            "schema_invalid_after_retry",
+            "script_not_success",
+            "storyboard_agent_failed"
+          ]
+        },
+        "reason": { "type": "string", "minLength": 4 },
+        "field": { "type": "string" },
+        "attempts": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

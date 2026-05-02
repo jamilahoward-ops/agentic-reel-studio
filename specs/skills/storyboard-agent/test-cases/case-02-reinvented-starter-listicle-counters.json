@@ -1,0 +1,164 @@
+{
+  "case_id": "case-02-reinvented-starter-listicle-counters",
+  "purpose": "Listicle — Starter tier, 8 shots covering 5 lines, validates 1.5x line:shot ratio for counter beats. Mode A. Validates motion_design counters wiring + opener rotation when prior_storyboards has matching dolly-in opener.",
+  "expected_branch": "successStoryboard",
+  "input": {
+    "script": {
+      "script_id": "script-REINVENTED-2026-05-02-002",
+      "brief_id": "brief-REINVENTED-2026-05-01-002",
+      "brand_id": "REINVENTED",
+      "tier": "Starter",
+      "lever": 3,
+      "production_mode": "A",
+      "created_at": "2026-05-02T07:00:00Z",
+      "session_id": "ars-2026-05-02-002",
+      "title_working": "3 Traps Operators Walk Into At 8 Figures",
+      "duration_target_seconds": 50,
+      "duration_min": 45,
+      "duration_max": 55,
+      "estimated_word_count": 130,
+      "hook_block": {
+        "spoken_line": "Three traps every operator walks into between seven and eight figures. Trap one is the one nobody flags.",
+        "first_frame_text": "3 TRAPS AT THE TOP",
+        "delivery_note": "direct-to-camera, even, 50mm",
+        "duration_seconds": 3.0,
+        "cps_target": 17
+      },
+      "lines": [
+        { "line_id": "L1", "second_start": 0, "second_end": 3, "beat_id": "B1", "spoken": "Three traps every operator walks into between seven and eight figures. Trap one is the one nobody flags.", "delivery": "direct-to-camera", "pace_marker": "fast-open", "emphasis_words": ["traps", "nobody"], "broll_cue": "face-on hook", "music_cue": "tick start", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L2", "second_start": 3, "second_end": 18, "beat_id": "B2", "spoken": "Trap one — confusing pace with progress. The calendar fills, the metrics stall, and the body pays the bill.", "delivery": "list-item-1", "pace_marker": "build", "emphasis_words": ["pace", "progress"], "broll_cue": "calendar fill macro", "music_cue": "counter beat 1", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L3", "second_start": 18, "second_end": 32, "beat_id": "B3", "spoken": "Trap two — confusing the team's loyalty for the team's clarity. Loyal teams without clarity build the wrong thing fast.", "delivery": "list-item-2", "pace_marker": "build", "emphasis_words": ["loyalty", "clarity"], "broll_cue": "team huddle macro, no faces", "music_cue": "counter beat 2", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L4", "second_start": 32, "second_end": 46, "beat_id": "B4", "spoken": "Trap three — confusing your identity with the entity. The entity can fail. You cannot afford to fail with it.", "delivery": "list-item-3", "pace_marker": "drop", "emphasis_words": ["identity", "entity"], "broll_cue": "journal page turn, ringed hand", "music_cue": "counter beat 3", "caption_style": "bold-yellow-jamila" },
+        { "line_id": "L5", "second_start": 46, "second_end": 50, "beat_id": "B5", "spoken": "Pick the trap that just hit you and tell me in the comments. Audit yourself before the market does.", "delivery": "direct-to-camera", "pace_marker": "close-soft", "emphasis_words": ["audit", "comments"], "broll_cue": "face-on, hands gestural", "music_cue": "tick fade", "caption_style": "bold-yellow-jamila" }
+      ],
+      "broll_plan": [
+        { "cue_id": "BR1", "second_start": 5, "second_end": 11, "description": "Calendar grid filling on a tablet, finger taps, ivory tabletop", "source_hint": "shot-this-week", "no_buildings_rule": "interior tabletop — no skyline, no window framing", "alt_options": 2 },
+        { "cue_id": "BR2", "second_start": 22, "second_end": 28, "description": "Three pairs of hands around a journal, no faces visible, soft amber light", "source_hint": "shot-this-week", "no_buildings_rule": "interior closed-set — no exterior, no buildings", "alt_options": 2 },
+        { "cue_id": "BR3", "second_start": 36, "second_end": 42, "description": "Slow journal page turn, gold pen rest beside, ivory page", "source_hint": "shot-this-week", "no_buildings_rule": "interior tabletop only — no environmental context", "alt_options": 2 }
+      ],
+      "captions": {
+        "style": "bold-yellow-jamila",
+        "max_chars_per_line": 22,
+        "max_lines_on_screen": 2,
+        "burn_in_required": true,
+        "language": "en-US",
+        "auto_punctuation": true,
+        "censor_profile": "operator-clean"
+      },
+      "audio_track": {
+        "voice_take_count": 2,
+        "voice_pacing": "even, ~158 wpm",
+        "music_intent": "tick-counter-with-single-swell",
+        "music_swells": [
+          { "second_start": 32, "second_end": 36, "intent": "underscore trap 3 entry" }
+        ],
+        "sfx_inventory": ["counter-tick", "page-turn-soft"],
+        "vo_only_acceptable": false,
+        "duck_under_speech_db": -12
+      },
+      "platform_variants": [
+        { "platform": "instagram-reels", "aspect": "9:16", "duration_seconds": 50, "hook_first_frame": "3 TRAPS AT THE TOP", "first_3s_optimization": "high-contrast first frame, burned caption ON", "caption_burn": true },
+        { "platform": "tiktok", "aspect": "9:16", "duration_seconds": 50, "hook_first_frame": "3 traps no one flags", "first_3s_optimization": "lowercase native text, burned caption ON", "caption_burn": true },
+        { "platform": "linkedin-video", "aspect": "1:1", "duration_seconds": 50, "hook_first_frame": "Three Traps Between 7 and 8 Figures", "first_3s_optimization": "title-case framing, burned caption ON", "caption_burn": true }
+      ],
+      "on_screen_text_blocks": [
+        { "second_start": 0.2, "second_end": 2.6, "text": "3 TRAPS AT THE TOP", "size": "L", "anchor": "center" },
+        { "second_start": 4.0, "second_end": 8.0, "text": "TRAP 1 — PACE ≠ PROGRESS", "size": "M", "anchor": "lower-third" },
+        { "second_start": 19.0, "second_end": 23.0, "text": "TRAP 2 — LOYALTY ≠ CLARITY", "size": "M", "anchor": "lower-third" },
+        { "second_start": 33.0, "second_end": 37.0, "text": "TRAP 3 — YOU ≠ ENTITY", "size": "M", "anchor": "lower-third" },
+        { "second_start": 46.5, "second_end": 49.5, "text": "AUDIT YOURSELF", "size": "L", "anchor": "center" }
+      ],
+      "cta_block": {
+        "type": "soft",
+        "spoken_line": "Pick the trap that just hit you and tell me in the comments. Audit yourself before the market does.",
+        "on_screen_text": "AUDIT YOURSELF",
+        "duration_seconds": 4.0,
+        "second_start": 46,
+        "second_end": 50
+      },
+      "rationale": {
+        "why_this_pacing": "Listicle counter beats need 1.5x line:shot ratio for visual counter cadence",
+        "why_this_first_frame": "Numerical hook + scarcity language",
+        "why_this_broll_density": "3 cues — Starter tier cap; one cue per trap"
+      },
+      "qc_pre_flags": ["entity_firewall_passed", "do_not_say_loaded", "no_buildings_rule_set", "tier_caps_loaded"],
+      "qc_warnings": [],
+      "downstream_dependencies": {
+        "storyboard_agent": "8 shots covering 5 lines (1.6x ratio for listicle); 3 counter motion-design entries",
+        "production_coord_agent": "Single-day shoot, REINVENTED home studio interior",
+        "edit_agent": "Burned captions REQUIRED; counter motion overlays at trap 1/2/3"
+      },
+      "metadata": {
+        "agent_version": "1.0",
+        "model_used": "claude-opus-4-6",
+        "prompt_template_id": "script-agent-v1-prompt",
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "latency_ms": 0,
+        "qc_score_predicted": 0.84,
+        "human_review_required": true,
+        "iteration_count": 1
+      }
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-05-01-002",
+      "brand_id": "REINVENTED",
+      "tier": "Starter",
+      "do_not_say": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+      "visual_direction": {
+        "setting": "REINVENTED home studio interior, neutral",
+        "wardrobe": "ivory knit, gold hoops, no logo",
+        "color_palette": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+        "no_buildings_rule": "Interior framing only. Black-card text option for hook. No external skyline, no aspirational buildings."
+      }
+    },
+    "prior_storyboards": [
+      {
+        "storyboard_id": "storyboard-REINVENTED-2026-04-26-001",
+        "shots": [
+          { "shot_id": "S1", "shot_type": "MCU", "camera_movement": "dolly-in", "duration_seconds": 3 }
+        ]
+      },
+      {
+        "storyboard_id": "storyboard-REINVENTED-2026-04-28-001",
+        "shots": [
+          { "shot_id": "S1", "shot_type": "MCU", "camera_movement": "dolly-in", "duration_seconds": 3 }
+        ]
+      },
+      {
+        "storyboard_id": "storyboard-REINVENTED-2026-04-30-001",
+        "shots": [
+          { "shot_id": "S1", "shot_type": "MCU", "camera_movement": "dolly-in", "duration_seconds": 3 }
+        ]
+      }
+    ],
+    "production_constraints": {
+      "available_locations": ["REINVENTED home studio"],
+      "available_talent": ["REINVENTED-Jamila-v1"],
+      "equipment_tier": "M",
+      "budget_minutes": 75
+    },
+    "session_id": "ars-2026-05-02-002",
+    "lever_state": 3
+  },
+  "expected_output_highlights": {
+    "branch": "successStoryboard",
+    "tier": "Starter",
+    "production_mode": "A",
+    "total_shots_min": 6,
+    "total_shots_max": 8,
+    "shot_complexity_disallow": ["complex", "hero"],
+    "shoot_logistics_required": true,
+    "every_shot_has_no_buildings_rule": true,
+    "every_shot_caption_burn_ref_true": true,
+    "shot_0_shot_type_not_eq": "MCU",
+    "shot_0_camera_movement_not_eq": "dolly-in",
+    "qc_warnings_includes": ["opener_shot_type_rotation_enforced"],
+    "every_line_id_covered": ["L1", "L2", "L3", "L4", "L5"],
+    "motion_design_counter_count_min": 3,
+    "no_banned_vocab": ["girlboss", "hustle", "grind", "boss babe", "millionaire mindset", "8-figure", "luxury", "elevate"],
+    "duration_sum_min_seconds": 47.5,
+    "duration_sum_max_seconds": 52.5,
+    "metadata_agent_id": "storyboard-agent"
+  }
+}
