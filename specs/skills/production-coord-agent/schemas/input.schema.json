@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/production-coord-agent/input.schema.json",
+  "title": "ARS Production Coord Agent — Input",
+  "description": "Validates the input shape consumed by the ARS Production Coord Agent v1.0. Authored from Production Coord Agent SPEC §2 (LOCKED 5/3/2026 — Day 14 Rest Day) against Cross-SPEC Consistency Review §3 canon. Polymorphic storyboard accept (success | errorEnvelope) lets the runtime branch cleanly with a Step-1 halt on storyboard_not_success.",
+  "type": "object",
+  "required": [
+    "storyboard",
+    "brief",
+    "script",
+    "session_id",
+    "lever_state",
+    "production_mode"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "storyboard": {
+      "description": "Storyboard Agent v1.0 output object. Either successStoryboard variant (consumed normally) OR errorEnvelope variant — Production Coord Agent must halt with storyboard_not_success at Step 1. Polymorphic accept follows the same Cross-SPEC §3.8 pattern as Script→Storyboard.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "successStoryboard — required-field signature; full validation against storyboard-agent/output.schema.json successStoryboard variant happens at runtime.",
+          "required": [
+            "storyboard_id",
+            "script_id",
+            "brief_id",
+            "brand_id",
+            "tier",
+            "lever",
+            "production_mode",
+            "duration_target_seconds",
+            "shots",
+            "platform_variants"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "errorEnvelope — emitted by Storyboard Agent when upstream validation failed. Production Coord Agent halts with storyboard_not_success.",
+          "required": ["error", "reason"],
+          "properties": {
+            "error": {
+              "type": "string",
+              "enum": [
+                "input_validation_failed",
+                "entity_firewall_breach",
+                "tier_constraint_violation",
+                "buildings_rule_violation",
+                "schema_invalid_after_retry",
+                "storyboard_agent_failed",
+                "shot_count_overflow",
+                "shot_count_underflow",
+                "script_not_success"
+              ]
+            },
+            "reason": { "type": "string", "minLength": 4 }
+          }
+        }
+      ]
+    },
+    "brief": {
+      "type": "object",
+      "description": "Pass-through Brief Agent successBrief output (denormalized for self-containment). Production Coord re-reads do_not_say + entity-firewall vocab here for 4th defense-in-depth pass without re-calling the Brief Agent.",
+      "required": ["brief_id", "brand_id", "tier"]
+    },
+    "script": {
+      "type": "object",
+      "description": "Pass-through Script Agent successScript output (denormalized for self-containment). Provides script_id audit context for parent_chain metadata + line-level reference for shoot blocking.",
+      "required": ["script_id", "brand_id"]
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "Orchestrator-assigned. Carried into output metadata.parent_chain."
+    },
+    "lever_state": {
+      "type": "integer",
+      "enum": [1, 2, 3],
+      "description": "3 = full human approval, 2 = sampled, 1 = full autonomy."
+    },
+    "production_mode": {
+      "type": "string",
+      "enum": ["A", "B", "C"],
+      "description": "Inherited from brief. Re-validated against tier as 4th defense-in-depth pass."
+    },
+    "videographer_registry": {
+      "type": "array",
+      "description": "Mode A only — available shooters with day-rates, equipment tier, and calendar windows.",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["videographer_id", "day_rate_usd", "equipment_tier"],
+        "additionalProperties": false,
+        "properties": {
+          "videographer_id": { "type": "string", "minLength": 2 },
+          "day_rate_usd": { "type": "number", "minimum": 0, "maximum": 5000 },
+          "equipment_tier": { "type": "string", "enum": ["S", "M", "L"] },
+          "calendar_availability": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "date": { "type": "string", "format": "date" },
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "start_local": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+                      "end_local": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "location_proximity_miles": { "type": "number", "minimum": 0, "maximum": 500 },
+          "prior_reels_for_brand": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "talent_registry": {
+      "type": "array",
+      "description": "Mode A only — speakers/on-camera people. v1.0 = single-talent (Jamila for REINVENTED). Multi-talent v1.1+.",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["talent_id"],
+        "additionalProperties": false,
+        "properties": {
+          "talent_id": { "type": "string", "minLength": 2 },
+          "wpm_baseline": { "type": "number", "minimum": 60, "maximum": 220 },
+          "availability_calendar": {
+            "type": "array",
+            "items": { "type": "string", "format": "date" }
+          }
+        }
+      }
+    },
+    "location_registry": {
+      "type": "array",
+      "description": "Mode A only — interior/closed-set locations. no_buildings_compliant_bool surfaces the brand-firewall constraint at registry level.",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "required": ["location_id", "no_buildings_compliant_bool"],
+        "additionalProperties": false,
+        "properties": {
+          "location_id": { "type": "string", "minLength": 2 },
+          "address_internal_note": { "type": "string", "maxLength": 200 },
+          "no_buildings_compliant_bool": { "type": "boolean" },
+          "permit_required_bool": { "type": "boolean" },
+          "last_used_at": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "equipment_inventory": {
+      "type": "array",
+      "description": "Mode A only — gear keyed by equipment tier (S/M/L). Owned vs. rentable.",
+      "items": {
+        "type": "object",
+        "required": ["item", "owned_or_rent", "equipment_tier"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string", "minLength": 2 },
+          "quantity": { "type": "integer", "minimum": 0 },
+          "owned_or_rent": { "type": "string", "enum": ["owned", "rent"] },
+          "rental_vendor": { "type": ["string", "null"] },
+          "rental_cost_usd": { "type": ["number", "null"], "minimum": 0 },
+          "equipment_tier": { "type": "string", "enum": ["S", "M", "L"] }
+        }
+      }
+    },
+    "weather_api_handle": {
+      "type": ["string", "null"],
+      "description": "Mode A only — opaque forecast lookup id. v1.0 expects pre-fetched forecast values via the orchestrator; the agent does not call external APIs."
+    },
+    "ai_render_quotas": {
+      "type": "object",
+      "description": "Mode B only — remaining render seconds per engine.",
+      "additionalProperties": false,
+      "properties": {
+        "runway":     { "type": "number", "minimum": 0 },
+        "pika":       { "type": "number", "minimum": 0 },
+        "luma":       { "type": "number", "minimum": 0 },
+        "flux":       { "type": "number", "minimum": 0 },
+        "kling":      { "type": "number", "minimum": 0 },
+        "higgsfield": { "type": "number", "minimum": 0 }
+      }
+    },
+    "style_token_lib": {
+      "type": "array",
+      "description": "Mode B only — REINVENTED-specific style tokens cached for prompt-seed binding.",
+      "items": { "type": "string", "minLength": 2 }
+    },
+    "cost_floor_per_reel": {
+      "type": ["number", "null"],
+      "description": "Mode B only — internal cost ceiling per Pricing Model 4/25 §6 margin floor 5×.",
+      "minimum": 0
+    },
+    "mode_c_reference_cache": {
+      "type": "array",
+      "description": "Mode C only — pre-downloaded reference frames keyed by source_url + offset_s. Cache hit avoids re-download.",
+      "items": {
+        "type": "object",
+        "required": ["source_url", "offset_s", "cache_handle"],
+        "additionalProperties": false,
+        "properties": {
+          "source_url": { "type": "string", "format": "uri" },
+          "offset_s":   { "type": "number", "minimum": 0 },
+          "frame_count":{ "type": "integer", "minimum": 1 },
+          "cache_handle": { "type": "string", "minLength": 2 }
+        }
+      }
+    },
+    "style_match_thresholds": {
+      "type": "object",
+      "description": "Mode C only — minimum acceptance scores per axis for replication match.",
+      "additionalProperties": false,
+      "properties": {
+        "color":    { "type": "number", "minimum": 0, "maximum": 1 },
+        "framing":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "movement": { "type": "number", "minimum": 0, "maximum": 1 },
+        "wardrobe": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "prior_production_plans": {
+      "type": "array",
+      "description": "Up to 5 most recent production_plan.json objects for this brand. Oldest first. Used for vendor rotation, cost-baseline drift detection, and time-baseline learning.",
+      "maxItems": 5,
+      "items": { "type": "object" }
+    },
+    "escalation_contacts": {
+      "type": "object",
+      "description": "Operator on-call, billing approver, vendor contacts for Mode A bookings.",
+      "additionalProperties": false,
+      "properties": {
+        "operator_on_call_id":    { "type": "string", "minLength": 2 },
+        "billing_approver_id":    { "type": "string", "minLength": 2 },
+        "external_vendor_ids":    { "type": "array", "items": { "type": "string", "minLength": 2 } }
+      }
+    }
+  }
+}

@@ -1,0 +1,722 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/production-coord-agent/output.schema.json",
+  "title": "ARS Production Coord Agent — Output (production_plan.json)",
+  "description": "Validates the polymorphic output of the ARS Production Coord Agent v1.0 — either successProductionPlan or errorEnvelope. Authored from Production Coord Agent SPEC §3 (LOCKED 5/3/2026 — Day 14 Rest Day) against Cross-SPEC Consistency Review §3 canon. Mutual-exclusivity rule on mode_a_plan / mode_b_plan / mode_c_plan is enforced via oneOf branches.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successProductionPlan" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "Canonical error envelope shape per Cross-SPEC §3.8. ≥4-char reason, no banned vocab, no entity refs (validated at content layer, not schema).",
+      "required": ["error", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "string",
+          "enum": [
+            "input_validation_failed",
+            "entity_firewall_breach",
+            "tier_constraint_violation",
+            "storyboard_not_success",
+            "schema_invalid_after_retry",
+            "production_coord_agent_failed",
+            "resource_unavailable",
+            "render_quota_exhausted",
+            "reference_unreachable",
+            "weather_window_violation",
+            "cost_floor_breach"
+          ]
+        },
+        "reason":   { "type": "string", "minLength": 4 },
+        "field":    { "type": "string" },
+        "attempts": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 }
+        }
+      }
+    },
+
+    "successProductionPlan": {
+      "type": "object",
+      "description": "Successful execution plan. Exactly one of mode_a_plan / mode_b_plan / mode_c_plan is non-null per the mutual-exclusivity rule (SPEC §3.1).",
+      "required": [
+        "production_plan_id",
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "status",
+        "duration_target_seconds",
+        "total_shots",
+        "platform_variants",
+        "mode_a_plan",
+        "mode_b_plan",
+        "mode_c_plan",
+        "budget_reservation",
+        "execution_window",
+        "escalation_path",
+        "handoff_targets",
+        "rationale",
+        "qc_pre_flags",
+        "qc_warnings",
+        "downstream_dependencies",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+          "description": "Canonical full-prefix per Cross-SPEC §3 — `productionplan-` not abbreviated."
+        },
+        "storyboard_id": { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "script_id":     { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brief_id":      { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":          { "type": "string", "enum": ["Pilot", "Starter", "Pro", "Enterprise"] },
+        "lever":         { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "session_id":    { "type": "string", "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "status":        { "type": "string", "enum": ["ready", "pending_approval", "blocked"] },
+        "duration_target_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots":   { "type": "integer", "minimum": 1 },
+        "platform_variants": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "enum": ["instagram_reels", "tiktok", "youtube_shorts", "linkedin"] }
+        },
+
+        "mode_a_plan": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/modeAPlan" }
+          ]
+        },
+        "mode_b_plan": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/modeBPlan" }
+          ]
+        },
+        "mode_c_plan": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/modeCPlan" }
+          ]
+        },
+
+        "budget_reservation":      { "$ref": "#/$defs/budgetReservation" },
+        "execution_window":        { "$ref": "#/$defs/executionWindow" },
+        "escalation_path":         {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/escalationEntry" }
+        },
+        "handoff_targets": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/handoffTarget" }
+        },
+        "rationale":               { "$ref": "#/$defs/rationale" },
+        "qc_pre_flags": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]+$" }
+        },
+        "qc_warnings": {
+          "type": "array",
+          "description": "Empty array valid; non-empty ⇒ metadata.human_review_required: true.",
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "downstream_dependencies": { "$ref": "#/$defs/downstreamDependencies" },
+        "metadata":                { "$ref": "#/$defs/metadata" }
+      },
+
+      "allOf": [
+        {
+          "description": "Mutual exclusivity: exactly one of mode_a_plan / mode_b_plan / mode_c_plan non-null (SPEC §3.1).",
+          "oneOf": [
+            {
+              "properties": {
+                "production_mode": { "const": "A" },
+                "mode_a_plan": { "type": "object" },
+                "mode_b_plan": { "type": "null" },
+                "mode_c_plan": { "type": "null" }
+              },
+              "required": ["mode_a_plan"]
+            },
+            {
+              "properties": {
+                "production_mode": { "const": "B" },
+                "mode_a_plan": { "type": "null" },
+                "mode_b_plan": { "type": "object" },
+                "mode_c_plan": { "type": "null" }
+              },
+              "required": ["mode_b_plan"]
+            },
+            {
+              "properties": {
+                "production_mode": { "const": "C" },
+                "mode_a_plan": { "type": "null" },
+                "mode_b_plan": { "type": "null" },
+                "mode_c_plan": { "type": "object" }
+              },
+              "required": ["mode_c_plan"]
+            }
+          ]
+        }
+      ]
+    },
+
+    "modeAPlan": {
+      "type": "object",
+      "description": "Live shoot plan — call sheet, talent + location bookings, equipment, crew, schedule, b-roll, weather, insurance.",
+      "required": [
+        "call_sheet",
+        "talent_bookings",
+        "location_bookings",
+        "equipment_list",
+        "crew",
+        "shoot_schedule",
+        "b_roll_acquisition_plan",
+        "weather_check",
+        "insurance_status",
+        "total_estimated_minutes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "call_sheet": {
+          "type": "object",
+          "required": ["shoot_date", "call_time_local", "wrap_target_local", "timezone", "location_primary_id", "talent_summary", "crew_summary"],
+          "additionalProperties": false,
+          "properties": {
+            "shoot_date":        { "type": "string", "format": "date" },
+            "call_time_local":   { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+            "wrap_target_local": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+            "timezone":          { "type": "string", "minLength": 3 },
+            "location_primary_id": { "type": "string", "minLength": 2 },
+            "talent_summary": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["talent_id", "role"],
+                "additionalProperties": false,
+                "properties": {
+                  "talent_id": { "type": "string", "minLength": 2 },
+                  "role":      { "type": "string", "minLength": 2 }
+                }
+              }
+            },
+            "crew_summary": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["role", "person_id"],
+                "additionalProperties": false,
+                "properties": {
+                  "role":      { "type": "string", "minLength": 2 },
+                  "person_id": { "type": "string", "minLength": 2 }
+                }
+              }
+            }
+          }
+        },
+        "talent_bookings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["talent_id", "role", "confirmed_bool", "contact_method"],
+            "additionalProperties": false,
+            "properties": {
+              "talent_id":      { "type": "string", "minLength": 2 },
+              "role":           { "type": "string", "minLength": 2 },
+              "confirmed_bool": { "type": "boolean" },
+              "contact_method": { "type": "string", "enum": ["sms", "email", "phone", "in_person", "calendar_invite"] },
+              "confirmation_received_at": { "type": ["string", "null"], "format": "date-time" }
+            }
+          }
+        },
+        "location_bookings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["location_id", "no_buildings_compliant_bool", "permit_required_bool", "permit_status", "indoor_outdoor"],
+            "additionalProperties": false,
+            "properties": {
+              "location_id":                   { "type": "string", "minLength": 2 },
+              "address_internal_note":         { "type": "string", "maxLength": 200 },
+              "no_buildings_compliant_bool":   { "type": "boolean" },
+              "permit_required_bool":          { "type": "boolean" },
+              "permit_status":                 { "type": "string", "enum": ["not_required", "pending", "approved", "denied"] },
+              "indoor_outdoor":                { "type": "string", "enum": ["indoor", "outdoor", "hybrid"] }
+            }
+          }
+        },
+        "equipment_list": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["item", "quantity", "owned_or_rent", "equipment_tier_required"],
+            "additionalProperties": false,
+            "properties": {
+              "item":                    { "type": "string", "minLength": 2 },
+              "quantity":                { "type": "integer", "minimum": 1 },
+              "owned_or_rent":           { "type": "string", "enum": ["owned", "rent"] },
+              "rental_vendor":           { "type": ["string", "null"] },
+              "rental_cost_usd":         { "type": ["number", "null"], "minimum": 0 },
+              "equipment_tier_required": { "type": "string", "enum": ["S", "M", "L"] }
+            }
+          }
+        },
+        "crew": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["role", "person_id", "day_rate_usd", "confirmed_bool"],
+            "additionalProperties": false,
+            "properties": {
+              "role":            { "type": "string", "minLength": 2 },
+              "person_id":       { "type": "string", "minLength": 2 },
+              "day_rate_usd":    { "type": "number", "minimum": 0 },
+              "confirmed_bool":  { "type": "boolean" },
+              "scope_notes":     { "type": "string", "maxLength": 300 }
+            }
+          }
+        },
+        "shoot_schedule": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["block_start_local", "block_end_local", "shots_covered_by_shot_id", "setup_minutes", "shoot_minutes", "breakdown_minutes"],
+            "additionalProperties": false,
+            "properties": {
+              "block_start_local": { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+              "block_end_local":   { "type": "string", "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+              "shots_covered_by_shot_id": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "pattern": "^shot-\\d{1,3}$" }
+              },
+              "setup_minutes":     { "type": "integer", "minimum": 0 },
+              "shoot_minutes":     { "type": "integer", "minimum": 0 },
+              "breakdown_minutes": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "b_roll_acquisition_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "source", "license_status"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":        { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "source":         { "type": "string", "enum": ["stock", "shot-this-week", "archive", "user-licensed"] },
+              "source_handle":  { "type": "string", "minLength": 2 },
+              "cost_estimate_usd": { "type": "number", "minimum": 0 },
+              "license_status": { "type": "string", "enum": ["cleared", "pending", "fair_use", "licensed", "not_required"] }
+            }
+          }
+        },
+        "weather_check": {
+          "type": "object",
+          "required": ["window_start_local", "window_end_local", "forecast_summary", "precipitation_probability", "go_no_go_threshold"],
+          "additionalProperties": false,
+          "properties": {
+            "window_start_local":         { "type": "string" },
+            "window_end_local":           { "type": "string" },
+            "forecast_summary":           { "type": "string", "maxLength": 200 },
+            "precipitation_probability":  { "type": "number", "minimum": 0, "maximum": 1 },
+            "go_no_go_threshold":         { "type": "number", "minimum": 0, "maximum": 1 },
+            "contingency_notes":          { "type": "string", "maxLength": 300 }
+          }
+        },
+        "insurance_status": {
+          "type": "object",
+          "required": ["production_insured_bool", "policy_type"],
+          "additionalProperties": false,
+          "properties": {
+            "production_insured_bool": { "type": "boolean" },
+            "certificate_url":         { "type": ["string", "null"], "format": "uri" },
+            "policy_type":             { "type": "string", "enum": ["per-shoot", "umbrella", "none"] }
+          }
+        },
+        "total_estimated_minutes": { "type": "integer", "minimum": 1, "maximum": 720 }
+      }
+    },
+
+    "modeBPlan": {
+      "type": "object",
+      "description": "AI generation plan — render queue, engine assignments, seed strategy, upscale, style consistency anchor.",
+      "required": [
+        "render_queue",
+        "engine_assignments_summary",
+        "total_render_seconds",
+        "total_render_cost_usd",
+        "seed_strategy",
+        "upscale_pipeline",
+        "style_consistency_anchor",
+        "post_render_qc_seed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "render_queue": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "engine_id", "model_id", "prompt_seed", "aspect", "duration_s", "render_seconds_estimated", "render_cost_usd_estimated", "quota_reserved_bool"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":                    { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "engine_id":                  { "type": "string", "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield"] },
+              "model_id":                   { "type": "string", "minLength": 2 },
+              "prompt_seed":                { "type": "string", "minLength": 10 },
+              "style_token":                { "type": ["string", "null"] },
+              "aspect":                     { "type": "string", "enum": ["9:16", "1:1", "16:9", "4:5"] },
+              "duration_s":                 { "type": "number", "minimum": 1, "maximum": 30 },
+              "render_seconds_estimated":   { "type": "number", "minimum": 0 },
+              "render_cost_usd_estimated":  { "type": "number", "minimum": 0 },
+              "quota_reserved_bool":        { "type": "boolean" },
+              "fallback_engine_id":         { "type": ["string", "null"], "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", null] }
+            }
+          }
+        },
+        "engine_assignments_summary": {
+          "type": "object",
+          "required": ["by_engine"],
+          "additionalProperties": false,
+          "properties": {
+            "by_engine": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "runway":     { "type": "integer", "minimum": 0 },
+                "pika":       { "type": "integer", "minimum": 0 },
+                "luma":       { "type": "integer", "minimum": 0 },
+                "flux":       { "type": "integer", "minimum": 0 },
+                "kling":      { "type": "integer", "minimum": 0 },
+                "higgsfield": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        "total_render_seconds":  { "type": "integer", "minimum": 0 },
+        "total_render_cost_usd": { "type": "number",  "minimum": 0 },
+        "seed_strategy":         { "type": "string", "enum": ["locked", "randomized", "hybrid"] },
+        "upscale_pipeline": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["target_resolution", "upscaler", "added_cost_usd"],
+              "additionalProperties": false,
+              "properties": {
+                "target_resolution": { "type": "string", "pattern": "^\\d{3,5}x\\d{3,5}$" },
+                "upscaler":          { "type": "string", "minLength": 2 },
+                "added_cost_usd":    { "type": "number", "minimum": 0 }
+              }
+            }
+          ]
+        },
+        "style_consistency_anchor": {
+          "type": "object",
+          "required": ["anchor_shot_id", "anchor_seed", "downstream_shots_inheriting"],
+          "additionalProperties": false,
+          "properties": {
+            "anchor_shot_id":              { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+            "anchor_seed":                 { "type": "string", "minLength": 4 },
+            "downstream_shots_inheriting": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^shot-\\d{1,3}$" }
+            }
+          }
+        },
+        "post_render_qc_seed": {
+          "type": "object",
+          "required": ["qc_agent_handle", "per_shot_acceptance_threshold"],
+          "additionalProperties": false,
+          "properties": {
+            "qc_agent_handle":               { "type": "string", "minLength": 2 },
+            "per_shot_acceptance_threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+
+    "modeCPlan": {
+      "type": "object",
+      "description": "Style replication plan — reference pulls, match targets, gap-filler shots, IP clearance, validator handle.",
+      "required": [
+        "reference_pulls",
+        "style_match_targets",
+        "gap_filler_shots",
+        "ip_clearance",
+        "replication_validator_handle"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reference_pulls": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "source_url", "offset_s", "frame_count", "downloaded_bool", "cache_handle"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":        { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "source_url":     { "type": "string", "format": "uri" },
+              "offset_s":       { "type": "number", "minimum": 0 },
+              "frame_count":    { "type": "integer", "minimum": 1 },
+              "downloaded_bool":{ "type": "boolean" },
+              "cache_handle":   { "type": "string", "minLength": 2 }
+            }
+          }
+        },
+        "style_match_targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "match_axes", "threshold_score", "validator"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":         { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "match_axes": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "enum": ["color", "framing", "movement", "wardrobe"] }
+              },
+              "threshold_score": { "type": "number", "minimum": 0, "maximum": 1 },
+              "validator":       { "type": "string", "enum": ["model", "human"] }
+            }
+          }
+        },
+        "gap_filler_shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "reason", "filler_strategy"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":         { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "reason":          { "type": "string", "enum": ["no_source_coverage", "legal_concern", "aspect_mismatch"] },
+              "filler_strategy": { "type": "string", "enum": ["shoot-fresh", "ai-generate", "stock"] }
+            }
+          }
+        },
+        "ip_clearance": {
+          "type": "object",
+          "required": ["source_owner_known_bool", "license_status"],
+          "additionalProperties": false,
+          "properties": {
+            "source_owner_known_bool": { "type": "boolean" },
+            "license_status":          { "type": "string", "enum": ["fair_use", "licensed", "cleared", "pending"] },
+            "legal_notes":             { "type": "string", "maxLength": 500 },
+            "reviewed_by":             { "type": ["string", "null"] }
+          }
+        },
+        "replication_validator_handle": { "type": "string", "minLength": 2 }
+      }
+    },
+
+    "budgetReservation": {
+      "type": "object",
+      "required": [
+        "total_minutes",
+        "total_cost_usd",
+        "per_shot_cost_breakdown",
+        "tier_ceiling_usd",
+        "ceiling_utilization_pct",
+        "over_ceiling_bool"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_minutes":  { "type": "integer", "minimum": 0 },
+        "total_cost_usd": { "type": "number",  "minimum": 0 },
+        "per_shot_cost_breakdown": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "cost_usd", "cost_category"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":       { "type": "string", "pattern": "^shot-\\d{1,3}$" },
+              "cost_usd":      { "type": "number", "minimum": 0 },
+              "cost_category": { "type": "string", "enum": ["shoot", "render", "reference", "edit", "insurance", "misc"] }
+            }
+          }
+        },
+        "tier_ceiling_usd":         { "type": "number", "minimum": 0 },
+        "ceiling_utilization_pct":  { "type": "number", "minimum": 0, "maximum": 1.20 },
+        "over_ceiling_bool":        { "type": "boolean" }
+      }
+    },
+
+    "executionWindow": {
+      "type": "object",
+      "required": [
+        "earliest_start",
+        "latest_finish",
+        "tier_max_lead_time_days",
+        "blackout_dates",
+        "buffer_days"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "earliest_start":          { "type": "string", "format": "date-time" },
+        "latest_finish":           { "type": "string", "format": "date-time" },
+        "tier_max_lead_time_days": { "type": "integer", "enum": [3, 5, 7] },
+        "blackout_dates": {
+          "type": "array",
+          "items": { "type": "string", "format": "date" }
+        },
+        "buffer_days": { "type": "integer", "minimum": 0, "maximum": 5 }
+      }
+    },
+
+    "escalationEntry": {
+      "type": "object",
+      "required": [
+        "primary_resource_id",
+        "primary_resource_type",
+        "failure_mode",
+        "fallback_1",
+        "fallback_2",
+        "fallback_3"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "primary_resource_id":   { "type": "string", "minLength": 2 },
+        "primary_resource_type": { "type": "string", "enum": ["videographer", "location", "talent", "engine", "reference_url"] },
+        "failure_mode":          { "type": "string", "enum": ["unavailable", "over_budget", "quota_exhausted", "unreachable", "weather_blocked"] },
+        "fallback_1": { "$ref": "#/$defs/fallbackOrNull" },
+        "fallback_2": { "$ref": "#/$defs/fallbackOrNull" },
+        "fallback_3": { "$ref": "#/$defs/fallbackOrNull" }
+      }
+    },
+
+    "fallbackOrNull": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["primary_resource_id", "primary_resource_type"],
+          "additionalProperties": false,
+          "properties": {
+            "primary_resource_id":   { "type": "string", "minLength": 2 },
+            "primary_resource_type": { "type": "string", "enum": ["videographer", "location", "talent", "engine", "reference_url"] }
+          }
+        }
+      ]
+    },
+
+    "handoffTarget": {
+      "type": "object",
+      "required": ["agent", "payload_ref", "trigger_at"],
+      "additionalProperties": false,
+      "properties": {
+        "agent":       { "type": "string", "enum": ["ai-video-gen", "style-replication", "live-shoot", "edit-agent", "qc-agent"] },
+        "payload_ref": { "type": "string", "pattern": "^[a-z_][a-z0-9_]*(\\.[a-z_][a-z0-9_]*)*$" },
+        "trigger_at":  { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "rationale": {
+      "type": "object",
+      "required": ["window_choice_reason", "budget_reason"],
+      "additionalProperties": false,
+      "properties": {
+        "vendor_choice_reason": { "type": "string", "maxLength": 300 },
+        "engine_choice_reason": { "type": "string", "maxLength": 300 },
+        "source_choice_reason": { "type": "string", "maxLength": 300 },
+        "window_choice_reason": { "type": "string", "maxLength": 300, "minLength": 4 },
+        "budget_reason":        { "type": "string", "maxLength": 300, "minLength": 4 }
+      }
+    },
+
+    "downstreamDependencies": {
+      "type": "object",
+      "required": [
+        "ai_video_gen_required",
+        "style_replication_required",
+        "live_shoot_required",
+        "edit_agent_required",
+        "qc_agent_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ai_video_gen_required":      { "type": "boolean" },
+        "style_replication_required": { "type": "boolean" },
+        "live_shoot_required":        { "type": "boolean" },
+        "edit_agent_required":        { "type": "boolean", "const": true },
+        "qc_agent_required":          { "type": "boolean", "const": true }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "description": "Canonical metadata block per Cross-SPEC §3.9. parent_chain carries brief→script→storyboard ids.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "model_used",
+        "prompt_template_id",
+        "tokens_in",
+        "tokens_out",
+        "latency_ms",
+        "qc_score_predicted",
+        "human_review_required",
+        "iteration_count",
+        "parent_chain"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":              { "type": "string", "const": "production-coord-agent" },
+        "agent_version":         { "type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$" },
+        "model_used":            { "type": "string", "minLength": 4 },
+        "prompt_template_id":    { "type": "string", "const": "production-coord-agent-v1-prompt" },
+        "tokens_in":             { "type": "integer", "minimum": 0 },
+        "tokens_out":            { "type": "integer", "minimum": 0 },
+        "latency_ms":            { "type": "integer", "minimum": 0 },
+        "qc_score_predicted":    { "type": "number", "minimum": 0, "maximum": 1 },
+        "human_review_required": { "type": "boolean" },
+        "iteration_count":       { "type": "integer", "minimum": 1, "maximum": 5 },
+        "parent_chain": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" }
+          ],
+          "items": false
+        }
+      }
+    }
+  }
+}
