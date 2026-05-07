@@ -1,0 +1,71 @@
+{
+  "case_id": "case-02-reinvented-pro-mode-b-render-queue",
+  "purpose": "Happy path — Pro tier, Mode B AI render queue. 8 shots, runway primary engine + pika fallback, 60s render budget, style-anchor seed locked from shots[0]. Validates mode_b_plan populated, mode_a_plan / mode_c_plan = null, total_render_seconds ≤ 60.",
+  "expected_branch": "successProductionPlan",
+  "expected_mode_populated": "mode_b_plan",
+  "input": {
+    "storyboard": {
+      "storyboard_id": "storyboard-REINVENTED-2026-05-02-002",
+      "script_id": "script-REINVENTED-2026-04-29-002",
+      "brief_id": "brief-REINVENTED-2026-04-27-002",
+      "brand_id": "REINVENTED",
+      "tier": "Pro",
+      "lever": 2,
+      "production_mode": "B",
+      "duration_target_seconds": 50,
+      "shots": [
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-001", "line_id_ref": "L1", "shot_type": "medium", "duration_seconds": 4.0, "budget_minutes_est": 7 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-002", "line_id_ref": "L2", "shot_type": "insert", "duration_seconds": 6.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-003", "line_id_ref": "L3", "shot_type": "close", "duration_seconds": 6.0, "budget_minutes_est": 7 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-004", "line_id_ref": "L3", "shot_type": "insert", "duration_seconds": 6.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-005", "line_id_ref": "L4", "shot_type": "medium", "duration_seconds": 10.0, "budget_minutes_est": 9 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-006", "line_id_ref": "L5", "shot_type": "medium", "duration_seconds": 9.0, "budget_minutes_est": 7 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-007", "line_id_ref": "L6", "shot_type": "medium", "duration_seconds": 5.0, "budget_minutes_est": 5 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-002-008", "line_id_ref": "L6", "shot_type": "insert", "duration_seconds": 4.0, "budget_minutes_est": 4 }
+      ],
+      "platform_variants": [
+        { "platform": "instagram_reels", "aspect": "9:16" },
+        { "platform": "tiktok", "aspect": "9:16" },
+        { "platform": "youtube_shorts", "aspect": "9:16" }
+      ]
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-27-002",
+      "brand_id": "REINVENTED",
+      "tier": "Pro",
+      "do_not_say": ["girl boss", "hustle culture", "grind", "boss babe"],
+      "visual_direction": {
+        "no_buildings_rule": "interior only — no skyline, no exterior framing"
+      }
+    },
+    "script": {
+      "script_id": "script-REINVENTED-2026-04-29-002",
+      "brand_id": "REINVENTED"
+    },
+    "session_id": "ars-2026-05-07-002",
+    "lever_state": 2,
+    "production_mode": "B",
+    "ai_render_quotas": {
+      "runway": 1800,
+      "pika": 1200,
+      "luma": 600,
+      "flux": 0,
+      "kling": 0,
+      "higgsfield": 0
+    },
+    "style_token_lib": [
+      "operator-clinical-warm",
+      "amber-key-soft-fill",
+      "interior-no-skyline",
+      "violet-rim-light",
+      "ivory-paper-texture"
+    ],
+    "cost_floor_per_reel": 400,
+    "prior_production_plans": [],
+    "escalation_contacts": {
+      "operator_on_call_id": "ops-jamila",
+      "billing_approver_id": "billing-jamila",
+      "external_vendor_ids": []
+    }
+  }
+}

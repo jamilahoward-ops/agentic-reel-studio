@@ -1,0 +1,25 @@
+{
+  "case_id": "case-03-storyboard-was-error-envelope",
+  "purpose": "Predecessor failed — Storyboard Agent emitted errorEnvelope (input_validation_failed). Production Coord Agent MUST halt at Step 1 with storyboard_not_success. Do NOT synthesize a plan from a failed predecessor.",
+  "expected_branch": "errorEnvelope",
+  "expected_error_code": "storyboard_not_success",
+  "input": {
+    "storyboard": {
+      "error": "input_validation_failed",
+      "reason": "script.lines[3] missing line_id required field — schema rejected at Step 1 of Storyboard Agent v1.0"
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girl boss", "hustle culture"]
+    },
+    "script": {
+      "script_id": "script-REINVENTED-2026-04-29-001",
+      "brand_id": "REINVENTED"
+    },
+    "session_id": "ars-2026-05-07-003",
+    "lever_state": 3,
+    "production_mode": "A"
+  }
+}

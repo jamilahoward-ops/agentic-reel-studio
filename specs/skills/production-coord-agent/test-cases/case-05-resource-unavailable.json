@@ -1,0 +1,90 @@
+{
+  "case_id": "case-05-resource-unavailable",
+  "purpose": "Pilot tier, Mode A. Storyboard requires shoot inside the next 7-day tier lead-time. Videographer registry has only 2 entries and BOTH are unavailable in that window (calendar shows next-month dates only). Talent registry empty. No fallback path. Agent MUST emit resource_unavailable errorEnvelope, NOT ship an aspirational plan. Demonstrates SPEC §2.6 #3 + Hard Rule #9 (resource availability).",
+  "expected_branch": "errorEnvelope",
+  "expected_error_code": "resource_unavailable",
+  "input": {
+    "storyboard": {
+      "storyboard_id": "storyboard-REINVENTED-2026-05-05-009",
+      "script_id": "script-REINVENTED-2026-05-04-009",
+      "brief_id": "brief-REINVENTED-2026-05-03-009",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "duration_target_seconds": 52,
+      "shots": [
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-001", "line_id_ref": "L1", "shot_type": "medium", "duration_seconds": 3.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-002", "line_id_ref": "L2", "shot_type": "insert", "duration_seconds": 6.0, "budget_minutes_est": 7 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-003", "line_id_ref": "L3", "shot_type": "close", "duration_seconds": 7.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-004", "line_id_ref": "L4", "shot_type": "medium", "duration_seconds": 12.0, "budget_minutes_est": 10 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-005", "line_id_ref": "L5", "shot_type": "medium", "duration_seconds": 9.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-006", "line_id_ref": "L6", "shot_type": "medium", "duration_seconds": 5.0, "budget_minutes_est": 5 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-007", "line_id_ref": "L6", "shot_type": "insert", "duration_seconds": 5.0, "budget_minutes_est": 5 },
+        { "shot_id": "shot-REINVENTED-2026-05-05-009-008", "line_id_ref": "L6", "shot_type": "insert", "duration_seconds": 5.0, "budget_minutes_est": 5 }
+      ],
+      "platform_variants": [
+        { "platform": "instagram_reels", "aspect": "9:16" }
+      ]
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-05-03-009",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girl boss", "hustle culture"],
+      "visual_direction": {
+        "no_buildings_rule": "interior only — no skyline, no exterior framing"
+      }
+    },
+    "script": {
+      "script_id": "script-REINVENTED-2026-05-04-009",
+      "brand_id": "REINVENTED"
+    },
+    "session_id": "ars-2026-05-07-005",
+    "lever_state": 3,
+    "production_mode": "A",
+    "videographer_registry": [
+      {
+        "videographer_id": "vg-malik-edwards",
+        "day_rate_usd": 350,
+        "equipment_tier": "S",
+        "calendar_availability": [
+          { "date": "2026-06-15", "windows": [{ "start_local": "08:00", "end_local": "14:00" }] },
+          { "date": "2026-06-22", "windows": [{ "start_local": "08:00", "end_local": "14:00" }] }
+        ],
+        "location_proximity_miles": 8,
+        "prior_reels_for_brand": 2
+      },
+      {
+        "videographer_id": "vg-toni-okafor",
+        "day_rate_usd": 380,
+        "equipment_tier": "S",
+        "calendar_availability": [
+          { "date": "2026-07-04", "windows": [{ "start_local": "10:00", "end_local": "18:00" }] }
+        ],
+        "location_proximity_miles": 14,
+        "prior_reels_for_brand": 0
+      }
+    ],
+    "talent_registry": [],
+    "location_registry": [
+      {
+        "location_id": "loc-reinvented-studio",
+        "address_internal_note": "REINVENTED interior studio (closed-set, no exterior windows in frame)",
+        "no_buildings_compliant_bool": true,
+        "permit_required_bool": false,
+        "last_used_at": "2026-04-22"
+      }
+    ],
+    "equipment_inventory": [
+      { "item": "Sony A7S III body", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "S" }
+    ],
+    "weather_api_handle": "nws-snapshot-2026-05-12",
+    "prior_production_plans": [],
+    "escalation_contacts": {
+      "operator_on_call_id": "ops-jamila",
+      "billing_approver_id": "billing-jamila",
+      "external_vendor_ids": ["vg-malik-edwards", "vg-toni-okafor"]
+    }
+  }
+}

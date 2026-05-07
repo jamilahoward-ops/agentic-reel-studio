@@ -1,0 +1,96 @@
+{
+  "case_id": "case-01-reinvented-pilot-mode-a-shoot-day",
+  "purpose": "Happy path — Pilot tier, Mode A live shoot, REINVENTED studio, single shoot day, Jamila talent, low-cost b-roll. Validates successProductionPlan end-to-end with mode_a_plan populated and mode_b_plan / mode_c_plan = null.",
+  "expected_branch": "successProductionPlan",
+  "expected_mode_populated": "mode_a_plan",
+  "input": {
+    "storyboard": {
+      "storyboard_id": "storyboard-REINVENTED-2026-05-02-001",
+      "script_id": "script-REINVENTED-2026-04-29-001",
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "duration_target_seconds": 55,
+      "shots": [
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-001", "line_id_ref": "L1", "shot_type": "medium", "framing_anchor": "face-on", "duration_seconds": 3.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-002", "line_id_ref": "L2", "shot_type": "insert", "framing_anchor": "objects", "duration_seconds": 6.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-003", "line_id_ref": "L3", "shot_type": "close", "framing_anchor": "face-on", "duration_seconds": 7.0, "budget_minutes_est": 10 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-004", "line_id_ref": "L3", "shot_type": "insert", "framing_anchor": "hands", "duration_seconds": 6.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-005", "line_id_ref": "L4", "shot_type": "medium", "framing_anchor": "face-on", "duration_seconds": 14.0, "budget_minutes_est": 10 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-006", "line_id_ref": "L5", "shot_type": "medium", "framing_anchor": "face-on", "duration_seconds": 9.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-007", "line_id_ref": "L6", "shot_type": "medium", "framing_anchor": "face-on", "duration_seconds": 4.0, "budget_minutes_est": 4 },
+        { "shot_id": "shot-REINVENTED-2026-05-02-001-008", "line_id_ref": "L6", "shot_type": "insert", "framing_anchor": "hands", "duration_seconds": 6.0, "budget_minutes_est": 4 }
+      ],
+      "platform_variants": [
+        { "platform": "instagram_reels", "aspect": "9:16" },
+        { "platform": "tiktok", "aspect": "9:16" }
+      ]
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-27-001",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girl boss", "hustle culture", "grind", "boss babe"],
+      "visual_direction": {
+        "no_buildings_rule": "interior only — no skyline, no exterior framing"
+      }
+    },
+    "script": {
+      "script_id": "script-REINVENTED-2026-04-29-001",
+      "brand_id": "REINVENTED"
+    },
+    "session_id": "ars-2026-05-07-001",
+    "lever_state": 3,
+    "production_mode": "A",
+    "videographer_registry": [
+      {
+        "videographer_id": "vg-malik-edwards",
+        "day_rate_usd": 350,
+        "equipment_tier": "S",
+        "calendar_availability": [
+          { "date": "2026-05-12", "windows": [{ "start_local": "08:00", "end_local": "14:00" }] },
+          { "date": "2026-05-13", "windows": [{ "start_local": "08:00", "end_local": "14:00" }] }
+        ],
+        "location_proximity_miles": 8,
+        "prior_reels_for_brand": 2
+      },
+      {
+        "videographer_id": "vg-toni-okafor",
+        "day_rate_usd": 400,
+        "equipment_tier": "S",
+        "calendar_availability": [
+          { "date": "2026-05-12", "windows": [{ "start_local": "10:00", "end_local": "18:00" }] }
+        ],
+        "location_proximity_miles": 14,
+        "prior_reels_for_brand": 0
+      }
+    ],
+    "talent_registry": [
+      { "talent_id": "talent-jamila", "wpm_baseline": 145, "availability_calendar": ["2026-05-12", "2026-05-13"] }
+    ],
+    "location_registry": [
+      {
+        "location_id": "loc-reinvented-studio",
+        "address_internal_note": "REINVENTED interior studio (closed-set, no exterior windows in frame)",
+        "no_buildings_compliant_bool": true,
+        "permit_required_bool": false,
+        "last_used_at": "2026-04-22"
+      }
+    ],
+    "equipment_inventory": [
+      { "item": "Sony A7S III body", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "S" },
+      { "item": "50mm prime lens", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "S" },
+      { "item": "Lavalier mic", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "S" },
+      { "item": "LED panel", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "S" }
+    ],
+    "weather_api_handle": "nws-snapshot-2026-05-12",
+    "prior_production_plans": [],
+    "escalation_contacts": {
+      "operator_on_call_id": "ops-jamila",
+      "billing_approver_id": "billing-jamila",
+      "external_vendor_ids": ["vg-malik-edwards", "vg-toni-okafor"]
+    }
+  }
+}

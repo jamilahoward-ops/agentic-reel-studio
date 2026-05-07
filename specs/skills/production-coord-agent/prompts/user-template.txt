@@ -1,0 +1,123 @@
+# ARS Production Coord Agent — User Message Template (v1.0)
+#
+# Paste the system prompt from SKILL.md verbatim, then send the JSON below as the user message.
+# Replace ALL <ALL_CAPS_PLACEHOLDERS>. Validate against schemas/input.schema.json BEFORE invoking Opus 4.6.
+
+{
+  "storyboard": {
+    "storyboard_id": "storyboard-<BRAND>-YYYY-MM-DD-NNN",
+    "script_id": "script-<BRAND>-YYYY-MM-DD-NNN",
+    "brief_id": "brief-<BRAND>-YYYY-MM-DD-NNN",
+    "brand_id": "<BRAND>",
+    "tier": "Pilot|Starter|Pro|Enterprise",
+    "lever": 3,
+    "production_mode": "A|B|C",
+    "duration_target_seconds": 55,
+    "shots": [
+      {
+        "shot_id": "shot-<BRAND>-YYYY-MM-DD-NNN-001",
+        "line_id_ref": "L1",
+        "shot_type": "<medium|close|wide|insert>",
+        "camera_movement": "<static|dolly-in|gimbal-orbit|whip>",
+        "focal_length_mm": 50,
+        "framing_anchor": "<face-on|hands|objects|wide-room>",
+        "subject": { "who": "<TALENT_ID>", "wardrobe": "<...>", "expression": "<...>", "posture": "<...>" },
+        "setting": {
+          "location_type": "<interior_studio|black_card|closed_set>",
+          "palette_hex": ["#1A1033", "#F8F4FF", "#A044FF", "#FFD700"],
+          "lighting_intent": "<soft_key|hard_back|amber>",
+          "no_buildings_rule": "interior only — no skyline, no exterior framing"
+        },
+        "action": "<≤14 words present-tense action verb>",
+        "shot_complexity": "<simple|moderate|complex|hero>",
+        "duration_seconds": 3.0,
+        "audio_pillar": "<voice-only|hybrid|voice+music-bed>",
+        "caption_burn_ref": true,
+        "budget_minutes_est": 8
+      }
+    ],
+    "platform_variants": [
+      { "platform": "instagram_reels", "aspect": "9:16" },
+      { "platform": "tiktok", "aspect": "9:16" }
+    ]
+  },
+  "brief": {
+    "brief_id": "brief-<BRAND>-YYYY-MM-DD-NNN",
+    "brand_id": "<BRAND>",
+    "tier": "Pilot|Starter|Pro|Enterprise",
+    "do_not_say": ["<banned vocab 1>", "<banned vocab 2>"],
+    "visual_direction": {
+      "no_buildings_rule": "interior only — no skyline, no exterior framing"
+    }
+  },
+  "script": {
+    "script_id": "script-<BRAND>-YYYY-MM-DD-NNN",
+    "brand_id": "<BRAND>"
+  },
+  "session_id": "ars-YYYY-MM-DD-NNN",
+  "lever_state": 3,
+  "production_mode": "A|B|C",
+
+  "videographer_registry": [
+    {
+      "videographer_id": "vg-<HANDLE>",
+      "day_rate_usd": 350,
+      "equipment_tier": "S",
+      "calendar_availability": [
+        { "date": "YYYY-MM-DD", "windows": [{ "start_local": "08:00", "end_local": "14:00" }] }
+      ],
+      "location_proximity_miles": 8,
+      "prior_reels_for_brand": 2
+    }
+  ],
+  "talent_registry": [
+    { "talent_id": "talent-<HANDLE>", "wpm_baseline": 145, "availability_calendar": ["YYYY-MM-DD"] }
+  ],
+  "location_registry": [
+    {
+      "location_id": "loc-<HANDLE>",
+      "address_internal_note": "<short internal note ≤200 chars>",
+      "no_buildings_compliant_bool": true,
+      "permit_required_bool": false,
+      "last_used_at": "YYYY-MM-DD"
+    }
+  ],
+  "equipment_inventory": [
+    { "item": "Sony FX3 body", "quantity": 1, "owned_or_rent": "owned", "rental_vendor": null, "rental_cost_usd": null, "equipment_tier": "M" }
+  ],
+  "weather_api_handle": "nws-snapshot-YYYY-MM-DD",
+
+  "ai_render_quotas": {
+    "runway": 1800,
+    "pika": 1200,
+    "luma": 600,
+    "flux": 0,
+    "kling": 0,
+    "higgsfield": 0
+  },
+  "style_token_lib": ["operator-clinical-warm", "amber-key-soft-fill", "interior-no-skyline"],
+  "cost_floor_per_reel": 200,
+
+  "mode_c_reference_cache": [
+    { "source_url": "https://example.com/ref.mp4", "offset_s": 12.5, "frame_count": 60, "cache_handle": "cache-ref-001" }
+  ],
+  "style_match_thresholds": {
+    "color": 0.85,
+    "framing": 0.80,
+    "movement": 0.75,
+    "wardrobe": 0.70
+  },
+
+  "prior_production_plans": [],
+  "escalation_contacts": {
+    "operator_on_call_id": "ops-jamila",
+    "billing_approver_id": "billing-jamila",
+    "external_vendor_ids": ["vg-handle-1", "vg-handle-2"]
+  }
+}
+
+# Notes:
+# - Drop fields irrelevant to the chosen mode. Validator only requires the 6 top-level required fields.
+# - "shots" minimum content varies by tier (Pilot/Starter 6–8, Pro 8–14, Enterprise 10–24); pre-validate against storyboard schema.
+# - Verbatim system-prompt + JSON-only user message → Opus 4.6 → JSON-only output.
+# - If output fails output.schema.json self-validation, do NOT route downstream. Re-run or escalate.

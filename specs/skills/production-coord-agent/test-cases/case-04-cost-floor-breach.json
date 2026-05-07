@@ -1,0 +1,103 @@
+{
+  "case_id": "case-04-cost-floor-breach",
+  "purpose": "Pilot tier ceiling = $200. Inputs supply only high-day-rate videographers ($500+) AND rentable-only equipment with $80+/day rentals. After fallback exhaustion, total estimated cost exceeds $200 with no path under. Agent MUST emit cost_floor_breach errorEnvelope, NOT ship an over-budget plan. Demonstrates SPEC §6 QC #8 + Hard Rule #8 (budget discipline).",
+  "expected_branch": "errorEnvelope",
+  "expected_error_code": "cost_floor_breach",
+  "input": {
+    "storyboard": {
+      "storyboard_id": "storyboard-REINVENTED-2026-05-04-007",
+      "script_id": "script-REINVENTED-2026-05-01-007",
+      "brief_id": "brief-REINVENTED-2026-04-30-007",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "lever": 3,
+      "production_mode": "A",
+      "duration_target_seconds": 58,
+      "shots": [
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-001", "line_id_ref": "L1", "shot_type": "medium", "duration_seconds": 3.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-002", "line_id_ref": "L2", "shot_type": "close", "duration_seconds": 7.0, "budget_minutes_est": 12 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-003", "line_id_ref": "L3", "shot_type": "wide", "duration_seconds": 8.0, "budget_minutes_est": 14 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-004", "line_id_ref": "L3", "shot_type": "insert", "duration_seconds": 6.0, "budget_minutes_est": 8 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-005", "line_id_ref": "L4", "shot_type": "medium", "duration_seconds": 14.0, "budget_minutes_est": 14 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-006", "line_id_ref": "L5", "shot_type": "medium", "duration_seconds": 10.0, "budget_minutes_est": 10 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-007", "line_id_ref": "L6", "shot_type": "medium", "duration_seconds": 5.0, "budget_minutes_est": 6 },
+        { "shot_id": "shot-REINVENTED-2026-05-04-007-008", "line_id_ref": "L6", "shot_type": "insert", "duration_seconds": 5.0, "budget_minutes_est": 6 }
+      ],
+      "platform_variants": [
+        { "platform": "instagram_reels", "aspect": "9:16" }
+      ]
+    },
+    "brief": {
+      "brief_id": "brief-REINVENTED-2026-04-30-007",
+      "brand_id": "REINVENTED",
+      "tier": "Pilot",
+      "do_not_say": ["girl boss", "hustle culture"],
+      "visual_direction": {
+        "no_buildings_rule": "interior only — no skyline, no exterior framing"
+      }
+    },
+    "script": {
+      "script_id": "script-REINVENTED-2026-05-01-007",
+      "brand_id": "REINVENTED"
+    },
+    "session_id": "ars-2026-05-07-004",
+    "lever_state": 3,
+    "production_mode": "A",
+    "videographer_registry": [
+      {
+        "videographer_id": "vg-elite-shooter-1",
+        "day_rate_usd": 1200,
+        "equipment_tier": "L",
+        "calendar_availability": [
+          { "date": "2026-05-12", "windows": [{ "start_local": "08:00", "end_local": "16:00" }] }
+        ],
+        "location_proximity_miles": 22,
+        "prior_reels_for_brand": 0
+      },
+      {
+        "videographer_id": "vg-elite-shooter-2",
+        "day_rate_usd": 950,
+        "equipment_tier": "L",
+        "calendar_availability": [
+          { "date": "2026-05-13", "windows": [{ "start_local": "10:00", "end_local": "18:00" }] }
+        ],
+        "location_proximity_miles": 35,
+        "prior_reels_for_brand": 0
+      },
+      {
+        "videographer_id": "vg-elite-shooter-3",
+        "day_rate_usd": 850,
+        "equipment_tier": "L",
+        "calendar_availability": [
+          { "date": "2026-05-14", "windows": [{ "start_local": "09:00", "end_local": "17:00" }] }
+        ],
+        "location_proximity_miles": 18,
+        "prior_reels_for_brand": 0
+      }
+    ],
+    "talent_registry": [
+      { "talent_id": "talent-jamila", "wpm_baseline": 145, "availability_calendar": ["2026-05-12", "2026-05-13", "2026-05-14"] }
+    ],
+    "location_registry": [
+      {
+        "location_id": "loc-rented-studio",
+        "address_internal_note": "Rented studio (interior, no exterior windows in frame) — $250/day rental",
+        "no_buildings_compliant_bool": true,
+        "permit_required_bool": false,
+        "last_used_at": "2026-04-15"
+      }
+    ],
+    "equipment_inventory": [
+      { "item": "Cinema camera body (rental only)", "quantity": 1, "owned_or_rent": "rent", "rental_vendor": "BorrowLenses LA", "rental_cost_usd": 220, "equipment_tier": "L" },
+      { "item": "Prime lens kit (rental only)", "quantity": 1, "owned_or_rent": "rent", "rental_vendor": "BorrowLenses LA", "rental_cost_usd": 180, "equipment_tier": "L" },
+      { "item": "Lighting kit (rental only)", "quantity": 1, "owned_or_rent": "rent", "rental_vendor": "Adorama Rentals", "rental_cost_usd": 120, "equipment_tier": "L" }
+    ],
+    "weather_api_handle": "nws-snapshot-2026-05-12",
+    "prior_production_plans": [],
+    "escalation_contacts": {
+      "operator_on_call_id": "ops-jamila",
+      "billing_approver_id": "billing-jamila",
+      "external_vendor_ids": ["vg-elite-shooter-1", "vg-elite-shooter-2", "vg-elite-shooter-3"]
+    }
+  }
+}
