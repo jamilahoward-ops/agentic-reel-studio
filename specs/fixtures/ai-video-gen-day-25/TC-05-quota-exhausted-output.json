@@ -1,0 +1,16 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code": "render_quota_exhausted",
+    "failed_check_id": 5,
+    "attempts": 2,
+    "detail": {
+      "anchor_shot_id": "shot-001",
+      "anchor_status": "rendered",
+      "failed_inheritor_shot_ids": ["shot-002", "shot-003"],
+      "engines_burned": ["pika", "luma", "kling", "higgsfield"],
+      "cost_incurred_usd": 198,
+      "reason": "All inheritor shots exhausted primary plus fallback engines"
+    }
+  }
+}

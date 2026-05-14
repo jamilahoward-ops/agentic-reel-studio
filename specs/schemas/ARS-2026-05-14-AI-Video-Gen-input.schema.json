@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/ai-video-gen-agent/input.schema.json",
+  "title": "ARS AI Video Gen Agent — Input bundle (production_plan + auxiliary context)",
+  "description": "Validates the AI Video Gen Agent v1.0 input bundle authored from SPEC §2 (Day 20 outline) + §7 system prompt (Day 22) + §10 field map (Day 22). Mode B exclusivity is hard-enforced via const + required mode_b_plan. Pilot/Starter tiers reject at schema parse (must halt at Process Step 1 with tier_constraint_violation rather than reach engine dispatch). Reference: production-coord-agent/output.schema.json (Day 17 LOCKED — read-only inheritance for production_plan shape).",
+
+  "type": "object",
+  "required": [
+    "production_plan",
+    "brief",
+    "storyboard",
+    "session_id",
+    "lever_state",
+    "engine_quota_handles"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "production_plan": { "$ref": "#/$defs/productionPlanModeB" },
+    "brief":           { "$ref": "#/$defs/briefSubset" },
+    "storyboard":      { "$ref": "#/$defs/storyboardSubset" },
+    "session_id": {
+      "type": "string",
+      "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "ARS session ID — inherited from upstream production plan."
+    },
+    "lever_state": {
+      "type": "integer",
+      "enum": [1, 2, 3],
+      "description": "Governance lever per Orchestration Blueprint §6. v1.0 default = 3 (every render reviewed)."
+    },
+    "engine_quota_handles": {
+      "type": "object",
+      "description": "Opaque platform-layer handles. NEVER carries raw credentials (per Hard Rule #8). Keys are engine ids; values are opaque handle strings.",
+      "patternProperties": {
+        "^(runway|pika|luma|flux|kling|higgsfield|heygen)$": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Opaque handle ID. Platform layer resolves to signed credential at dispatch."
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "style_token_lib": {
+      "type": "array",
+      "description": "Optional REINVENTED-specific aesthetic tokens. Concatenated into composed prompt per §7 Process Step 4. Absent if upstream defaults to brand_inheritance only.",
+      "items": { "type": "string", "minLength": 1, "maxLength": 256 },
+      "maxItems": 32
+    },
+    "negative_prompt_template": {
+      "type": "string",
+      "description": "Optional pre-composed negative prompt. If absent, agent composes from canonical sources per §7 Process Step 4. ASSERT non-empty (>100 chars).",
+      "minLength": 100,
+      "maxLength": 4096
+    },
+    "cost_overrun_buffer_pct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 15,
+      "default": 10,
+      "description": "Optional override of default 10% cost overrun buffer. Hard ceiling at 15% — operator cannot widen the gate above v1.0 invariant."
+    },
+    "runtime_environment_class": {
+      "type": "string",
+      "enum": ["dev", "staging", "production"],
+      "default": "production",
+      "description": "Per §16.2. Day 27 LLM Test Runbook uses 'staging'. Live reels use 'production'. Dev iteration uses 'dev'."
+    }
+  },
+
+  "$defs": {
+
+    "productionPlanModeB": {
+      "type": "object",
+      "description": "Mode B branch of production-coord-agent/output.schema.json. Enforces tier ∈ {Pro, Enterprise}, production_mode == 'B', mode_b_plan non-null. Mode A / Mode C variants are rejected at this layer — must halt with not_mode_b errorEnvelope upstream of schema parse.",
+      "required": [
+        "production_plan_id",
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "status",
+        "duration_target_seconds",
+        "total_shots",
+        "mode_b_plan",
+        "parent_chain",
+        "metadata"
+      ],
+      "properties": {
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "storyboard_id": { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "script_id":     { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brief_id":      { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier": {
+          "type": "string",
+          "enum": ["Pro", "Enterprise"],
+          "description": "Pilot / Starter tiers MUST NOT reach this agent — halted upstream by ProdCoord. Re-enforced via Check #4."
+        },
+        "lever":           { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "const": "B" },
+        "created_at":      { "type": "string", "format": "date-time" },
+        "session_id":      { "type": "string", "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "status":          { "type": "string", "enum": ["ready", "pending_approval"] },
+        "duration_target_seconds": { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots":     { "type": "integer", "minimum": 1, "maximum": 60 },
+        "mode_b_plan":     { "$ref": "#/$defs/modeBPlan" },
+        "parent_chain":    { "$ref": "#/$defs/parentChain3Tuple" },
+        "metadata":        { "$ref": "#/$defs/upstreamMetadata" }
+      },
+
+      "allOf": [
+        {
+          "description": "Joint validation: tier-bound cost ceiling per SPEC §7.3 tier table.",
+          "oneOf": [
+            {
+              "properties": {
+                "tier": { "const": "Pro" },
+                "mode_b_plan": {
+                  "properties": {
+                    "tier_cost_ceiling_usd": { "const": 400 }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "tier": { "const": "Enterprise" },
+                "mode_b_plan": {
+                  "properties": {
+                    "tier_cost_ceiling_usd": { "const": 750 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "modeBPlan": {
+      "type": "object",
+      "description": "Mode B production plan. Non-null IFF production_mode == 'B'. ProdCoord-emitted; AI Video Gen Agent consumes read-only.",
+      "required": [
+        "render_queue",
+        "style_consistency_anchor",
+        "total_render_cost_usd_estimated",
+        "runtime_target_seconds",
+        "tier_cost_ceiling_usd"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "render_queue": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": { "$ref": "#/$defs/renderQueueEntry" }
+        },
+        "style_consistency_anchor": {
+          "type": "object",
+          "required": ["anchor_shot_id"],
+          "properties": {
+            "anchor_shot_id": { "type": "string", "pattern": "^shot-\\d{3}$" },
+            "inheritance_strategy": {
+              "type": "string",
+              "enum": ["literal_seed_inherit"],
+              "default": "literal_seed_inherit",
+              "description": "v1.0 hardcoded. v1.1+ may add seed_plus_style_token — Open Question #8."
+            }
+          }
+        },
+        "total_render_cost_usd_estimated": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 750,
+          "description": "ProdCoord-estimated render budget. Hard upper bound = Enterprise tier ceiling."
+        },
+        "runtime_target_seconds": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 180
+        },
+        "tier_cost_ceiling_usd": {
+          "type": "number",
+          "enum": [400, 750],
+          "description": "§7.3 tier table value. Pro = 400, Enterprise = 750. Joint-validated against tier."
+        }
+      }
+    },
+
+    "renderQueueEntry": {
+      "type": "object",
+      "required": [
+        "shot_id",
+        "engine_id",
+        "model_id",
+        "duration_s",
+        "quota_reserved_bool",
+        "prompt_seed",
+        "fallback_engine_id"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "shot_id":   { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "engine_id": {
+          "type": "string",
+          "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"]
+        },
+        "model_id": {
+          "type": "string",
+          "enum": [
+            "runway-gen3-alpha",
+            "runway-gen3-alpha-turbo",
+            "pika-1.5",
+            "luma-dream-machine",
+            "flux-1.1",
+            "kling-1.6",
+            "higgsfield-v1",
+            "heygen-v2-clone",
+            "heygen-v3-polish"
+          ]
+        },
+        "duration_s": { "type": "integer", "minimum": 1, "maximum": 90 },
+        "quota_reserved_bool": { "type": "boolean" },
+        "prompt_seed": { "type": "string", "minLength": 8, "maxLength": 4096 },
+        "fallback_engine_id": {
+          "type": "string",
+          "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"]
+        },
+        "talent_id": {
+          "type": "string",
+          "const": "jamila-howard-reinvented-v2",
+          "description": "Required when engine_id == 'heygen'. v1.0 single-talent invariant (Hard Rule #9 + Check #9). Re-enforced via Check #9 at dispatch."
+        },
+        "style_token": { "type": "string", "minLength": 1, "maxLength": 256 }
+      },
+
+      "allOf": [
+        {
+          "description": "HeyGen shots MUST carry talent_id == jamila-howard-reinvented-v2.",
+          "if": { "properties": { "engine_id": { "const": "heygen" } } },
+          "then": { "required": ["talent_id"] }
+        }
+      ]
+    },
+
+    "briefSubset": {
+      "type": "object",
+      "description": "Minimal brief subset needed by AI Video Gen — do_not_say feeds the firewall and OCR walk (§6 Checks #2 + #10).",
+      "required": ["brief_id", "do_not_say", "target_audience"],
+      "additionalProperties": true,
+      "properties": {
+        "brief_id":   { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "do_not_say": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+        },
+        "target_audience": { "type": "string", "minLength": 4 }
+      }
+    },
+
+    "storyboardSubset": {
+      "type": "object",
+      "description": "Minimal storyboard subset — shoot_logistics passthrough fields per §10.3 no-touch reference.",
+      "required": ["storyboard_id"],
+      "additionalProperties": true,
+      "properties": {
+        "storyboard_id":   { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "shoot_logistics": { "type": "object", "description": "Mode A live-shoot context — read-only for Mode B audit." }
+      }
+    },
+
+    "parentChain3Tuple": {
+      "type": "array",
+      "description": "3-tuple inherited from ProdCoord output. AI Video Gen extends to 4-tuple at output. Positional ordering: [brief_id, script_id, storyboard_id].",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+
+    "upstreamMetadata": {
+      "type": "object",
+      "description": "Upstream metadata block from ProdCoord. Read-only — AI Video Gen emits its own metadata block at output (per §16.1).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "lock_date_iso",
+        "session_id",
+        "created_at",
+        "upstream_agent_ids"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "production-coord-agent" },
+        "agent_version": { "type": "string", "pattern": "^v\\d+\\.\\d+(\\.\\d+)?$" },
+        "lock_date_iso": { "type": "string", "format": "date-time" },
+        "session_id":    { "type": "string", "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "upstream_agent_ids": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["brief-agent", "script-agent", "storyboard-agent"] },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code": "cost_overrun",
+    "failed_check_id": 7,
+    "attempts": 1,
+    "detail": {
+      "total_render_cost_usd_actual": 852,
+      "total_estimated_cost_usd": 750,
+      "tier_cost_ceiling_usd": 750,
+      "cost_overrun_buffer_pct": 10,
+      "hard_ceiling": 825,
+      "excess_usd": 27,
+      "excess_pct": 13.6,
+      "per_engine_overrun_attribution": { "runway": 42, "pika": 18, "heygen": 15, "kling": 12, "flux": 5 }
+    }
+  }
+}

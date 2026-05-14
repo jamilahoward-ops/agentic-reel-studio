@@ -1,0 +1,15 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code": "engine_failure_unrecoverable",
+    "failed_check_id": 6,
+    "failed_shot_id": "shot-001",
+    "attempts": 4,
+    "detail": {
+      "anchor_shot_id": "shot-001",
+      "engines_burned": ["runway", "pika"],
+      "cost_incurred_usd": 45,
+      "reason": "Anchor render exhausted primary plus one retry plus fallback plus one retry"
+    }
+  }
+}
