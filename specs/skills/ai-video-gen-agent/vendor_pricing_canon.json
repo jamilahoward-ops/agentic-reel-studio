@@ -1,0 +1,128 @@
+{
+  "vendor_pricing_canon_version": "v1.0-day-23-research-only",
+  "vendor_pricing_canon_verified_iso": "2026-05-24T00:00:00Z",
+  "disclaimer": "RESEARCH-ONLY snapshot. Sourced from vendor public pricing documentation as of May 2026. Day 24 LOCK reviewer (operator) is the gating verification authority before this table feeds Check #7 cost-ceiling math in production. Material discrepancies (>15% vs verified vendor pricing) on Day 24 → row corrected + flagged in §15 change log entry v1.0.1-pricing-corrections-day-24. No vendor subscription purchased. No API call made. No engine credentials referenced.",
+  "tier_ceilings_usd": {
+    "Pro": 400,
+    "Enterprise": 750
+  },
+  "tier_runtime_caps_sec": {
+    "Pro": 60,
+    "Enterprise": 90
+  },
+  "cost_overrun_buffer_pct_default": 10,
+  "cost_overrun_buffer_pct_max": 15,
+  "engines": {
+    "runway": {
+      "vendor_pricing_url_pattern": "runwayml.com/pricing",
+      "models": {
+        "runway-gen3-alpha": {
+          "usd_per_sec": 0.95,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Highest-fidelity general-purpose. v1.0 default for hero shots."
+        },
+        "runway-gen3-alpha-turbo": {
+          "usd_per_sec": 0.45,
+          "runtime_cap_sec_pro": null,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Enterprise"],
+          "v1_0_role_notes": "Enterprise-only. Faster, slight quality concession. v1.0 anchor candidate for Enterprise tier."
+        }
+      }
+    },
+    "pika": {
+      "vendor_pricing_url_pattern": "pika.art/pricing",
+      "models": {
+        "pika-1.5": {
+          "usd_per_sec": 0.30,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Best motion-graphics value at lower price point. v1.0 default for b-roll."
+        }
+      }
+    },
+    "luma": {
+      "vendor_pricing_url_pattern": "lumalabs.ai/dream-machine/pricing",
+      "models": {
+        "luma-dream-machine": {
+          "usd_per_sec": 0.35,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Strong on cinematic motion; weaker on faces. Avoid for HeyGen-substitute scenarios."
+        }
+      }
+    },
+    "flux": {
+      "vendor_pricing_url_pattern": "flux1.ai/pricing",
+      "models": {
+        "flux-1.1": {
+          "usd_per_sec": 0.20,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered_24fps_interpolated",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Image-first model; sequence frames composed. v1.0 default for static-feel b-roll, posters, opener frames."
+        }
+      }
+    },
+    "kling": {
+      "vendor_pricing_url_pattern": "klingai.com/pricing",
+      "models": {
+        "kling-1.6": {
+          "usd_per_sec": 0.40,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Strong on cinematic + character work. Mid-tier price."
+        }
+      }
+    },
+    "higgsfield": {
+      "vendor_pricing_url_pattern": "higgsfield.ai/pricing",
+      "models": {
+        "higgsfield-v1": {
+          "usd_per_sec": 0.50,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_rendered",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "v1_0_role_notes": "Specialty: camera motion / cinematic dollies / drone-style. Use sparingly."
+        }
+      }
+    },
+    "heygen": {
+      "vendor_pricing_url_pattern": "heygen.com/pricing",
+      "models": {
+        "heygen-v2-clone": {
+          "usd_per_sec": 0.042,
+          "usd_per_min_equivalent": 2.50,
+          "runtime_cap_sec_pro": 60,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_of_talent_video",
+          "tier_restriction": ["Pro", "Enterprise"],
+          "talent_id_v1_0": "jamila-howard-reinvented-v2",
+          "v1_0_role_notes": "v1.0 talent: jamila-howard-reinvented-v2. Pro + Enterprise both. Multi-talent v1.1+ gated on first Sequel Digital external client onboarding."
+        },
+        "heygen-v3-polish": {
+          "usd_per_sec": 0.083,
+          "usd_per_min_equivalent": 5.00,
+          "runtime_cap_sec_pro": null,
+          "runtime_cap_sec_enterprise": 90,
+          "quota_unit": "seconds_of_talent_video",
+          "tier_restriction": ["Enterprise"],
+          "talent_id_v1_0": "jamila-howard-reinvented-v2",
+          "v1_0_role_notes": "Enterprise-only. Polish pass: blink/hand naturalism, voice consistency."
+        }
+      }
+    }
+  }
+}

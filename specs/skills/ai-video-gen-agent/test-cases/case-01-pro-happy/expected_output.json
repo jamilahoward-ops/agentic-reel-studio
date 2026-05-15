@@ -1,0 +1,219 @@
+{
+  "render_set_id": "renderset-REINVENTED-2026-05-14-001",
+  "production_plan_id": "productionplan-REINVENTED-2026-05-14-001",
+  "brand_id": "REINVENTED",
+  "tier": "Pro",
+  "lever": 3,
+  "production_mode": "B",
+  "status": "ready_for_edit",
+  "total_shots": 3,
+  "total_rendered_shots": 3,
+  "rendered_shots": [
+    {
+      "shot_id": "shot-001",
+      "shot_index": 1,
+      "engine_id_actual": "runway",
+      "render_status": "rendered",
+      "duration_s_actual": 15.0,
+      "asset_uri": "ars://renderset/REINVENTED/2026-05-14/001/shot-001.mp4",
+      "render_dispatch_log": [
+        {
+          "attempt_idx": 1,
+          "engine_id": "runway",
+          "dispatched_at": "2026-05-14T08:01:00Z",
+          "response_code": 200,
+          "cost_usd_incurred": 78.0,
+          "negative_prompt_attached_bool": true,
+          "negative_prompt_sha256": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+          "composed_prompt_redacted": "[REDACTED-ENTITY] operator at desk purple gold cinematic 4k",
+          "composed_prompt_sha256":  "1111aaaa2222bbbb3333cccc4444dddd5555eeee6666ffff7777aaaa8888bbbb"
+        }
+      ],
+      "post_render_qc_seed": {
+        "frame_count": 360,
+        "black_frame_count": 0,
+        "face_present_bool": true,
+        "face_count_estimated": 1,
+        "motion_blur_score_0_1": 0.18,
+        "brand_color_presence_bool": true,
+        "on_brand_palette_match_score_0_1": 0.92,
+        "suspected_drift_bool": false,
+        "suspected_text_overlay_bool": false,
+        "text_overlay_strings": [],
+        "suspected_buildings_bool": false,
+        "qc_seed_notes": "clean anchor frame"
+      },
+      "quota_drawdown_log": [
+        {
+          "engine_id": "runway",
+          "quota_units_consumed": 15.0,
+          "timestamp": "2026-05-14T08:01:00Z",
+          "handle_id_opaque": "rwy-opaque-handle-001"
+        }
+      ],
+      "rationale": "Anchor rendered first attempt; palette match exceeds threshold."
+    },
+    {
+      "shot_id": "shot-002",
+      "shot_index": 2,
+      "engine_id_actual": "runway",
+      "render_status": "rendered",
+      "duration_s_actual": 12.0,
+      "asset_uri": "ars://renderset/REINVENTED/2026-05-14/001/shot-002.mp4",
+      "render_dispatch_log": [
+        {
+          "attempt_idx": 1,
+          "engine_id": "runway",
+          "dispatched_at": "2026-05-14T08:02:00Z",
+          "response_code": 200,
+          "cost_usd_incurred": 64.0,
+          "negative_prompt_attached_bool": true,
+          "negative_prompt_sha256": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+          "composed_prompt_redacted": "[REDACTED-ENTITY] operator pacing purple gold slow zoom",
+          "composed_prompt_sha256":  "2222aaaa3333bbbb4444cccc5555dddd6666eeee7777ffff8888aaaa9999bbbb"
+        }
+      ],
+      "post_render_qc_seed": {
+        "frame_count": 288,
+        "black_frame_count": 0,
+        "face_present_bool": true,
+        "face_count_estimated": 1,
+        "motion_blur_score_0_1": 0.22,
+        "brand_color_presence_bool": true,
+        "on_brand_palette_match_score_0_1": 0.90,
+        "suspected_drift_bool": false,
+        "suspected_text_overlay_bool": false,
+        "text_overlay_strings": [],
+        "suspected_buildings_bool": false
+      },
+      "quota_drawdown_log": [
+        {
+          "engine_id": "runway",
+          "quota_units_consumed": 12.0,
+          "timestamp": "2026-05-14T08:02:00Z",
+          "handle_id_opaque": "rwy-opaque-handle-001"
+        }
+      ],
+      "inheritance_match_score_0_1": 0.91,
+      "rationale": "Inheritor 1 holds anchor canon; pHash 0.93, CLIP 0.90, palette 0.92."
+    },
+    {
+      "shot_id": "shot-003",
+      "shot_index": 3,
+      "engine_id_actual": "runway",
+      "render_status": "rendered",
+      "duration_s_actual": 18.0,
+      "asset_uri": "ars://renderset/REINVENTED/2026-05-14/001/shot-003.mp4",
+      "render_dispatch_log": [
+        {
+          "attempt_idx": 1,
+          "engine_id": "runway",
+          "dispatched_at": "2026-05-14T08:03:00Z",
+          "response_code": 200,
+          "cost_usd_incurred": 90.0,
+          "negative_prompt_attached_bool": true,
+          "negative_prompt_sha256": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+          "composed_prompt_redacted": "wide pull-out reveal brand canon palette",
+          "composed_prompt_sha256":  "3333aaaa4444bbbb5555cccc6666dddd7777eeee8888ffff9999aaaa1010bbbb"
+        }
+      ],
+      "post_render_qc_seed": {
+        "frame_count": 432,
+        "black_frame_count": 1,
+        "face_present_bool": false,
+        "face_count_estimated": 0,
+        "motion_blur_score_0_1": 0.30,
+        "brand_color_presence_bool": true,
+        "on_brand_palette_match_score_0_1": 0.88,
+        "suspected_drift_bool": false,
+        "suspected_text_overlay_bool": false,
+        "text_overlay_strings": [],
+        "suspected_buildings_bool": false
+      },
+      "quota_drawdown_log": [
+        {
+          "engine_id": "runway",
+          "quota_units_consumed": 18.0,
+          "timestamp": "2026-05-14T08:03:00Z",
+          "handle_id_opaque": "rwy-opaque-handle-001"
+        }
+      ],
+      "inheritance_match_score_0_1": 0.88,
+      "rationale": "Inheritor 2 holds anchor canon; palette slightly cooler, within threshold."
+    }
+  ],
+  "style_consistency_anchor": {
+    "anchor_shot_id": "shot-001",
+    "anchor_seed": 4815162342,
+    "inheritance_strategy": "literal_seed_inherit",
+    "drift_threshold": 0.85,
+    "inheritor_shots": [
+      { "shot_id": "shot-002", "inheritance_match_score_0_1": 0.91, "suspected_drift_bool": false },
+      { "shot_id": "shot-003", "inheritance_match_score_0_1": 0.88, "suspected_drift_bool": false }
+    ]
+  },
+  "render_telemetry": {
+    "total_render_seconds_actual": 45.0,
+    "total_render_cost_usd_actual": 232.0,
+    "total_estimated_cost_usd": 240,
+    "tier_cost_ceiling_usd": 400,
+    "cost_overrun_buffer_pct": 10,
+    "budget_variance_pct": -3.3,
+    "runtime_target_seconds": 45,
+    "retry_count_total": 0,
+    "failure_count_total": 0,
+    "start_timestamp": "2026-05-14T08:01:00Z",
+    "end_timestamp":   "2026-05-14T08:08:30Z",
+    "total_wall_clock_minutes": 7.5,
+    "per_engine_cost_usd": { "runway": 232.0 },
+    "per_engine_minutes":  { "runway": 0.75 }
+  },
+  "qc_pre_flags": [
+    "anchor_drift_below_threshold",
+    "all_renders_first_attempt",
+    "cost_within_5pct_of_estimate",
+    "no_text_overlay_detected",
+    "no_buildings_detected"
+  ],
+  "qc_warnings": [],
+  "escalation_path": [],
+  "handoff_targets": [
+    { "agent": "edit-director", "payload_ref": "rendered_shots" },
+    { "agent": "qc",            "payload_ref": "rendered_shots" }
+  ],
+  "rationale": "Three-shot anchor + 2 inheritor Pro reel. All renders first attempt. Cost 58% of ceiling. Palette canon holds across set.",
+  "created_at": "2026-05-14T08:08:30Z",
+  "session_id": "ars-2026-05-14-001",
+  "parent_chain": [
+    "brief-REINVENTED-2026-05-14-001",
+    "script-REINVENTED-2026-05-14-001",
+    "storyboard-REINVENTED-2026-05-14-001",
+    "productionplan-REINVENTED-2026-05-14-001"
+  ],
+  "metadata": {
+    "agent_id": "ai-video-gen-agent",
+    "agent_version": "v1.0",
+    "spec_version":  "v1.0",
+    "schema_version": "v1.0",
+    "lock_date_iso": "2026-05-13T00:00:00Z",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-14-001",
+      "script-REINVENTED-2026-05-14-001",
+      "storyboard-REINVENTED-2026-05-14-001",
+      "productionplan-REINVENTED-2026-05-14-001"
+    ],
+    "session_id": "ars-2026-05-14-001",
+    "created_at": "2026-05-14T08:08:30Z",
+    "build_envelope_sha256": "f1c2a3b4e5d6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
+    "human_review_required": true,
+    "upstream_agent_ids": ["brief-agent", "script-agent", "storyboard-agent", "production-coord-agent"],
+    "engine_telemetry_summary": {
+      "per_engine": {
+        "runway": { "call_count": 3, "success_rate_0_1": 1.0, "retry_count": 0, "fallback_invocation_count": 0 }
+      }
+    },
+    "composed_prompt_template_sha256": "a8d4b1c2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+    "self_qc_attempts": 1,
+    "runtime_environment_class": "staging"
+  }
+}

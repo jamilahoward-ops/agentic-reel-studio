@@ -1,0 +1,538 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/ai-video-gen-agent/output.schema.json",
+  "title": "ARS AI Video Gen Agent — Output (rendered_shots.json | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the AI Video Gen Agent — either successRenderedShots or errorEnvelope. Authored from SPEC §3 outline (Day 20) + §6 12-Check Self-QC + §6.3 17-code errorEnvelope (Day 22) + §10 field map (Day 22) + §11.5 vendor pricing canon (Day 23) + §16 metadata block (Day 23). Polymorphism via top-level oneOf — mirrors ProdCoord output schema (Day 17 LOCKED) pattern. 17 errorEnvelope codes enumerated via enum per §13 Decision #11.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successRenderedShots" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "Canonical error envelope per Cross-SPEC §3.6 + §3.8. v1.0 error code count = 17 (§13 Decision #11). status='blocked' on every failure.",
+      "required": ["status", "errorEnvelope"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "type": "string", "const": "blocked" },
+        "errorEnvelope": {
+          "type": "object",
+          "required": ["failure_code", "attempts"],
+          "additionalProperties": false,
+          "properties": {
+            "failure_code": {
+              "type": "string",
+              "enum": [
+                "input_validation_failed",
+                "entity_firewall_breach",
+                "tier_constraint_violation",
+                "production_plan_not_success",
+                "not_mode_b",
+                "quota_not_reserved",
+                "anchor_misalignment",
+                "render_quota_exhausted",
+                "cost_overrun",
+                "engine_failure_unrecoverable",
+                "negative_prompt_missing",
+                "talent_unauthorized",
+                "banned_vocab_leaked",
+                "no_buildings_violation",
+                "qc_pre_flags_format_violation",
+                "ai_video_gen_agent_failed",
+                "schema_invalid_after_retry"
+              ],
+              "description": "17 codes per §6.3. Slot 11 renamed to ai_video_gen_agent_failed per Cross-SPEC §3.6."
+            },
+            "failed_check_id": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "failed_shot_id":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+            "attempts":        { "type": "integer", "minimum": 1, "maximum": 4 },
+            "detail":          { "type": "object", "description": "Free-form failure context. Banned vocab + entity firewall validated at content layer, not schema." },
+            "qc_warnings": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 2, "maxLength": 256 }
+            }
+          }
+        }
+      }
+    },
+
+    "successRenderedShots": {
+      "type": "object",
+      "description": "Successful render set. status ∈ {ready_for_edit, partial_with_warnings}. partial_with_warnings = anchor succeeded but ≥1 inheritor failed (per Hard Rule #12).",
+      "required": [
+        "render_set_id",
+        "production_plan_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "status",
+        "total_shots",
+        "total_rendered_shots",
+        "rendered_shots",
+        "style_consistency_anchor",
+        "render_telemetry",
+        "qc_pre_flags",
+        "qc_warnings",
+        "escalation_path",
+        "handoff_targets",
+        "rationale",
+        "created_at",
+        "session_id",
+        "parent_chain",
+        "metadata"
+      ],
+      "additionalProperties": false,
+
+      "properties": {
+        "render_set_id": {
+          "type": "string",
+          "pattern": "^renderset-[A-Z0-9_]{2,32}-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+          "description": "v1.0: ^renderset-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens prefix)."
+        },
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brand_id":        { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":            { "type": "string", "enum": ["Pro", "Enterprise"] },
+        "lever":           { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "const": "B" },
+        "status":          { "type": "string", "enum": ["ready_for_edit", "partial_with_warnings"] },
+        "total_shots":          { "type": "integer", "minimum": 1, "maximum": 60 },
+        "total_rendered_shots": { "type": "integer", "minimum": 1, "maximum": 60 },
+        "rendered_shots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": { "$ref": "#/$defs/renderedShot" }
+        },
+        "style_consistency_anchor": { "$ref": "#/$defs/styleConsistencyAnchor" },
+        "render_telemetry":         { "$ref": "#/$defs/renderTelemetry" },
+        "qc_pre_flags": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "description": "snake_case predicate per Cross-SPEC §3.7. Enforced via Check #12."
+          }
+        },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 256 }
+        },
+        "escalation_path": {
+          "type": "array",
+          "description": "Ordered ascending by severity per Cross-SPEC §3.8.",
+          "items": {
+            "type": "object",
+            "required": ["severity", "notes"],
+            "additionalProperties": false,
+            "properties": {
+              "severity": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "notes":    { "type": "string", "minLength": 4, "maxLength": 1024 },
+              "engine_vendor_support_redacted_bool": { "type": "boolean" },
+              "human_review_required_bool":          { "type": "boolean" }
+            }
+          }
+        },
+        "handoff_targets": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["agent", "payload_ref"],
+            "additionalProperties": false,
+            "properties": {
+              "agent":       { "type": "string", "enum": ["edit-director", "qc", "style-replication"] },
+              "payload_ref": { "type": "string", "minLength": 4, "maxLength": 256 }
+            }
+          },
+          "description": "MUST include {edit-director, rendered_shots} AND {qc, rendered_shots}. Optional {style-replication, style_consistency_anchor} when Mode C consumer exists (v1.0 always emits empty for style-replication)."
+        },
+        "rationale":     { "type": "string", "minLength": 4, "maxLength": 2048 },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "session_id":    { "type": "string", "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "parent_chain":  { "$ref": "#/$defs/parentChain4Tuple" },
+        "metadata":      { "$ref": "#/$defs/metadataBlock" }
+      },
+
+      "allOf": [
+        {
+          "description": "Joint validation: tier-bound tier_cost_ceiling_usd inside render_telemetry per §7.3.",
+          "oneOf": [
+            {
+              "properties": {
+                "tier": { "const": "Pro" },
+                "render_telemetry": {
+                  "properties": {
+                    "tier_cost_ceiling_usd": { "const": 400 }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "tier": { "const": "Enterprise" },
+                "render_telemetry": {
+                  "properties": {
+                    "tier_cost_ceiling_usd": { "const": 750 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "renderedShot": {
+      "type": "object",
+      "description": "Per-shot render record. shot_index=1 is the anchor; shot_index>1 are inheritors. asset_uri MUST be platform-relative (Hard Rule #8).",
+      "required": [
+        "shot_id",
+        "shot_index",
+        "engine_id_actual",
+        "render_status",
+        "duration_s_actual",
+        "asset_uri",
+        "render_dispatch_log",
+        "post_render_qc_seed",
+        "quota_drawdown_log",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "shot_id":    { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "shot_index": { "type": "integer", "minimum": 1, "maximum": 60 },
+        "engine_id_actual": {
+          "type": "string",
+          "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"],
+          "description": "Engine that actually produced the asset (primary OR fallback)."
+        },
+        "fallback_engine_id": {
+          "type": "string",
+          "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"],
+          "description": "Present (not null) only if fallback was dispatched. Absent if fallback never invoked (per §10 + Cross-SPEC §3.10 absence rule)."
+        },
+        "render_status": { "type": "string", "enum": ["rendered", "partial", "failed"] },
+        "duration_s_actual": { "type": "number", "minimum": 0, "maximum": 90 },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://renderset/[A-Z][A-Z0-9_-]*/\\d{4}-\\d{2}-\\d{2}/\\d{3,}/shot-\\d{3}\\.[a-z0-9]+$",
+          "description": "Platform-relative URI per Hard Rule #8. Orchestrator resolves to signed URL at Edit Director → Publishing handoff."
+        },
+        "render_dispatch_log": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/renderDispatchAttempt" }
+        },
+        "retry_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["engine_id", "attempt_idx", "fail_reason"],
+            "additionalProperties": false,
+            "properties": {
+              "engine_id":   { "type": "string", "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"] },
+              "attempt_idx": { "type": "integer", "minimum": 1, "maximum": 4 },
+              "fail_reason": { "type": "string", "minLength": 4, "maxLength": 256 }
+            }
+          }
+        },
+        "post_render_qc_seed": { "$ref": "#/$defs/postRenderQCSeed" },
+        "quota_drawdown_log": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["engine_id", "quota_units_consumed", "timestamp", "handle_id_opaque"],
+            "additionalProperties": false,
+            "properties": {
+              "engine_id":            { "type": "string", "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"] },
+              "quota_units_consumed": { "type": "number", "minimum": 0 },
+              "timestamp":            { "type": "string", "format": "date-time" },
+              "handle_id_opaque":     { "type": "string", "minLength": 8, "description": "Opaque platform handle — NEVER a raw credential value (Hard Rule #8)." }
+            }
+          }
+        },
+        "talent_id": {
+          "type": "string",
+          "const": "jamila-howard-reinvented-v2",
+          "description": "Required when engine_id_actual == 'heygen' or fallback_engine_id == 'heygen'. v1.0 single-talent invariant."
+        },
+        "inheritance_match_score_0_1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "§12 composite signal (0.40 pHash + 0.40 CLIP + 0.20 palette). Inheritor shots only (shot_index>1). Default soft-warning threshold = 0.85."
+        },
+        "self_qc_check_results": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": { "type": "boolean" },
+          "description": "12-element array (one per §6 check). Only populated on retry/regenerate path."
+        },
+        "rationale": { "type": "string", "minLength": 4, "maxLength": 1024 }
+      },
+
+      "allOf": [
+        {
+          "description": "HeyGen shots MUST carry talent_id.",
+          "if": { "properties": { "engine_id_actual": { "const": "heygen" } } },
+          "then": { "required": ["talent_id"] }
+        }
+      ]
+    },
+
+    "renderDispatchAttempt": {
+      "type": "object",
+      "required": [
+        "attempt_idx",
+        "engine_id",
+        "dispatched_at",
+        "response_code",
+        "cost_usd_incurred",
+        "negative_prompt_attached_bool",
+        "negative_prompt_sha256",
+        "composed_prompt_redacted",
+        "composed_prompt_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "attempt_idx":      { "type": "integer", "minimum": 1, "maximum": 4 },
+        "engine_id":        { "type": "string", "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"] },
+        "dispatched_at":    { "type": "string", "format": "date-time" },
+        "response_code":    { "type": "integer", "minimum": 100, "maximum": 599 },
+        "cost_usd_incurred": { "type": "number", "minimum": 0 },
+        "negative_prompt_attached_bool": {
+          "type": "boolean",
+          "const": true,
+          "description": "Hard Rule #10 + Check #10. Absence on any single render = hard halt with negative_prompt_missing. Schema enforces const true — false rejects at parse."
+        },
+        "negative_prompt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hex of the composed negative prompt template (entity firewall + do_not_say + brand-anti + no-buildings)."
+        },
+        "composed_prompt_redacted": {
+          "type": "string",
+          "pattern": "^([^A-Z]|\\[REDACTED-(ENTITY|VOCAB)\\]).*$",
+          "minLength": 4,
+          "maxLength": 4096,
+          "description": "No naked entity names — only redacted tokens. Full unredacted prompt is NEVER stored — only the SHA-256."
+        },
+        "composed_prompt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+
+    "postRenderQCSeed": {
+      "type": "object",
+      "description": "QC signals captured post-render. Feeds Check #2 (banned_vocab_leaked OCR pass) + Check #3 (no_buildings_violation vision-classifier).",
+      "required": [
+        "frame_count",
+        "suspected_buildings_bool",
+        "suspected_text_overlay_bool",
+        "text_overlay_strings"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "frame_count":              { "type": "integer", "minimum": 1, "maximum": 5400 },
+        "black_frame_count":        { "type": "integer", "minimum": 0 },
+        "face_present_bool":        { "type": "boolean" },
+        "face_count_estimated":     { "type": "integer", "minimum": 0, "maximum": 16 },
+        "motion_blur_score_0_1":    { "type": "number",  "minimum": 0, "maximum": 1 },
+        "brand_color_presence_bool":          { "type": "boolean" },
+        "on_brand_palette_match_score_0_1":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "suspected_drift_bool":               { "type": "boolean" },
+        "suspected_text_overlay_bool":        { "type": "boolean" },
+        "text_overlay_strings": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 256 },
+          "description": "OCR output across the rendered video. Each string is walked through brief.do_not_say in Check #2 Pass 2."
+        },
+        "suspected_buildings_bool": {
+          "type": "boolean",
+          "description": "MUST be false post-render — Hard Rule #5 + Check #3. true = halt with no_buildings_violation."
+        },
+        "qc_seed_notes": { "type": "string", "maxLength": 1024 }
+      }
+    },
+
+    "styleConsistencyAnchor": {
+      "type": "object",
+      "required": ["anchor_shot_id", "anchor_seed", "inheritance_strategy", "drift_threshold"],
+      "additionalProperties": false,
+      "properties": {
+        "anchor_shot_id": { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "anchor_seed":    { "type": "integer", "description": "Engine-returned seed value. Inherited literally by all inheritors (v1.0 literal_seed_inherit)." },
+        "inheritance_strategy": { "type": "string", "const": "literal_seed_inherit" },
+        "drift_threshold": {
+          "type": "number",
+          "const": 0.85,
+          "description": "§12.3 default. Soft-warning threshold — never hard-halts v1.0 (Decision #4)."
+        },
+        "inheritor_shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "inheritance_match_score_0_1"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id": { "type": "string", "pattern": "^shot-\\d{3}$" },
+              "inheritance_match_score_0_1": { "type": "number", "minimum": 0, "maximum": 1 },
+              "suspected_drift_bool": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+
+    "renderTelemetry": {
+      "type": "object",
+      "required": [
+        "total_render_seconds_actual",
+        "total_render_cost_usd_actual",
+        "total_estimated_cost_usd",
+        "tier_cost_ceiling_usd",
+        "cost_overrun_buffer_pct",
+        "budget_variance_pct",
+        "runtime_target_seconds",
+        "retry_count_total",
+        "failure_count_total",
+        "start_timestamp",
+        "end_timestamp",
+        "total_wall_clock_minutes",
+        "per_engine_cost_usd",
+        "per_engine_minutes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_render_seconds_actual":   { "type": "number", "minimum": 0 },
+        "total_render_cost_usd_actual":  { "type": "number", "minimum": 0 },
+        "total_estimated_cost_usd":      { "type": "number", "minimum": 0, "maximum": 750 },
+        "tier_cost_ceiling_usd":         { "type": "number", "enum": [400, 750] },
+        "cost_overrun_buffer_pct":       { "type": "integer", "minimum": 0, "maximum": 15 },
+        "budget_variance_pct":           { "type": "number" },
+        "runtime_target_seconds":        { "type": "integer", "minimum": 15, "maximum": 180 },
+        "retry_count_total":             { "type": "integer", "minimum": 0 },
+        "failure_count_total":           { "type": "integer", "minimum": 0 },
+        "start_timestamp":               { "type": "string", "format": "date-time" },
+        "end_timestamp":                 { "type": "string", "format": "date-time" },
+        "total_wall_clock_minutes":      { "type": "number", "minimum": 0 },
+        "per_engine_cost_usd": {
+          "type": "object",
+          "patternProperties": {
+            "^(runway|pika|luma|flux|kling|higgsfield|heygen)$": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "per_engine_minutes": {
+          "type": "object",
+          "patternProperties": {
+            "^(runway|pika|luma|flux|kling|higgsfield|heygen)$": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+
+    "parentChain4Tuple": {
+      "type": "array",
+      "description": "4-tuple LOCKED for AI Video Gen output: [brief_id, script_id, storyboard_id, production_plan_id]. Extends input 3-tuple with own production_plan_id (§10 field map row 22 + §16 metadata canon).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical metadata block — 11 canonical fields + 3 AI Video Gen-specific additions (§16.1 + §16.2).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "spec_version",
+        "schema_version",
+        "lock_date_iso",
+        "parent_chain",
+        "session_id",
+        "created_at",
+        "build_envelope_sha256",
+        "human_review_required",
+        "upstream_agent_ids",
+        "engine_telemetry_summary",
+        "composed_prompt_template_sha256",
+        "runtime_environment_class"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":         { "type": "string", "const": "ai-video-gen-agent" },
+        "agent_version":    { "type": "string", "pattern": "^v\\d+\\.\\d+(\\.\\d+)?$" },
+        "spec_version":     { "type": "string", "pattern": "^v\\d+\\.\\d+$" },
+        "schema_version":   { "type": "string", "pattern": "^v\\d+\\.\\d+$" },
+        "lock_date_iso":    { "type": "string", "format": "date-time" },
+        "parent_chain":     { "$ref": "#/$defs/parentChain4Tuple" },
+        "session_id":       { "type": "string", "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "created_at":       { "type": "string", "format": "date-time" },
+        "build_envelope_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "human_review_required": { "type": "boolean" },
+        "upstream_agent_ids": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "brief-agent" },
+            { "const": "script-agent" },
+            { "const": "storyboard-agent" },
+            { "const": "production-coord-agent" }
+          ],
+          "items": false,
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "engine_telemetry_summary": {
+          "type": "object",
+          "required": ["per_engine"],
+          "additionalProperties": false,
+          "properties": {
+            "per_engine": {
+              "type": "object",
+              "patternProperties": {
+                "^(runway|pika|luma|flux|kling|higgsfield|heygen)$": {
+                  "type": "object",
+                  "required": ["call_count", "success_rate_0_1", "retry_count", "fallback_invocation_count"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "call_count":                { "type": "integer", "minimum": 0 },
+                    "success_rate_0_1":          { "type": "number",  "minimum": 0, "maximum": 1 },
+                    "retry_count":               { "type": "integer", "minimum": 0 },
+                    "fallback_invocation_count": { "type": "integer", "minimum": 0 }
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "composed_prompt_template_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "runtime_environment_class": { "type": "string", "enum": ["dev", "staging", "production"] }
+      }
+    }
+  }
+}

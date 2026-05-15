@@ -1,0 +1,107 @@
+# ARS AI Video Gen Agent — User Message Template (v1.0)
+#
+# Paste the system prompt from SKILL.md verbatim, then send the JSON below as the user message.
+# Replace ALL <ALL_CAPS_PLACEHOLDERS>. Validate against schemas/input.schema.json BEFORE invoking Opus 4.6.
+
+{
+  "production_plan": {
+    "production_plan_id": "productionplan-<BRAND>-YYYY-MM-DD-NNN",
+    "storyboard_id":      "storyboard-<BRAND>-YYYY-MM-DD-NNN",
+    "script_id":          "script-<BRAND>-YYYY-MM-DD-NNN",
+    "brief_id":           "brief-<BRAND>-YYYY-MM-DD-NNN",
+    "brand_id":           "<BRAND>",
+    "tier":               "Pro|Enterprise",
+    "lever":              3,
+    "production_mode":    "B",
+    "created_at":         "YYYY-MM-DDTHH:MM:SSZ",
+    "session_id":         "ars-YYYY-MM-DD-NNN",
+    "status":             "ready",
+    "duration_target_seconds": 45,
+    "total_shots":        3,
+    "mode_b_plan": {
+      "render_queue": [
+        {
+          "shot_id": "shot-001",
+          "engine_id": "runway|pika|luma|flux|kling|higgsfield|heygen",
+          "model_id": "runway-gen3-alpha|runway-gen3-alpha-turbo|pika-1.5|luma-dream-machine|flux-1.1|kling-1.6|higgsfield-v1|heygen-v2-clone|heygen-v3-polish",
+          "duration_s": 15,
+          "quota_reserved_bool": true,
+          "prompt_seed": "<≤512 chars action-verb prompt anchored to brief + style tokens>",
+          "fallback_engine_id": "pika"
+          /* Optional for HeyGen shots ONLY: "talent_id": "jamila-howard-reinvented-v2" */
+        }
+        /* repeat per shot — minimum 1 anchor + 0..N inheritors per tier cap */
+      ],
+      "style_consistency_anchor": {
+        "anchor_shot_id": "shot-001",
+        "inheritance_strategy": "literal_seed_inherit"
+      },
+      "total_render_cost_usd_estimated": 240,
+      "runtime_target_seconds": 45,
+      "tier_cost_ceiling_usd": 400
+      /* Pro = 400 · Enterprise = 750. MUST match tier joint validation. */
+    },
+    "parent_chain": [
+      "brief-<BRAND>-YYYY-MM-DD-NNN",
+      "script-<BRAND>-YYYY-MM-DD-NNN",
+      "storyboard-<BRAND>-YYYY-MM-DD-NNN"
+    ],
+    "metadata": {
+      "agent_id":          "production-coord-agent",
+      "agent_version":     "v1.0",
+      "lock_date_iso":     "2026-05-03T00:00:00Z",
+      "session_id":        "ars-YYYY-MM-DD-NNN",
+      "created_at":        "YYYY-MM-DDTHH:MM:SSZ",
+      "upstream_agent_ids": ["brief-agent", "script-agent", "storyboard-agent"]
+    }
+  },
+
+  "brief": {
+    "brief_id": "brief-<BRAND>-YYYY-MM-DD-NNN",
+    "do_not_say": ["<banned vocab 1>", "<banned vocab 2>"],
+    "target_audience": "<≤200 chars audience description>"
+  },
+
+  "storyboard": {
+    "storyboard_id": "storyboard-<BRAND>-YYYY-MM-DD-NNN",
+    "shoot_logistics": {}
+    /* Mode B = empty object. Mode A would carry shoot blocks; not relevant here. */
+  },
+
+  "session_id":  "ars-YYYY-MM-DD-NNN",
+  "lever_state": 3,
+
+  "engine_quota_handles": {
+    /* Opaque handle strings only — NEVER raw credentials. Keys restricted to the 7 canonical engines. */
+    "runway": "rwy-opaque-handle-NNN",
+    "pika":   "pika-opaque-handle-NNN"
+    /* Add other engines as needed: "luma", "flux", "kling", "higgsfield", "heygen" */
+  },
+
+  /* OPTIONAL FIELDS BELOW — drop entirely if not needed (input schema marks all optional) */
+
+  "style_token_lib": [
+    "operator-clinical-warm",
+    "purple-gold-canon",
+    "interior-no-skyline",
+    "alux-framing-language"
+  ],
+
+  "negative_prompt_template": "<pre-composed negative prompt — must be >100 chars. If absent, agent composes from canonical sources at Process Step 4.>",
+
+  "cost_overrun_buffer_pct": 10,
+  /* Default 10. Hard max 15. Operator cannot widen the gate above v1.0 invariant. */
+
+  "runtime_environment_class": "production"
+  /* "dev" for iteration, "staging" for Day 27 LLM Test Runbook, "production" for live reels (default). */
+}
+
+# Notes:
+# - Mode B exclusivity is hard-enforced at the schema layer. Pilot/Starter/Mode A/Mode C inputs reject at parse.
+# - tier_cost_ceiling_usd MUST match tier via joint validation: Pro→400 OR Enterprise→750. Mismatch rejects at parse.
+# - HeyGen shots MUST include talent_id == "jamila-howard-reinvented-v2" (v1.0 hardcoded).
+# - parent_chain is a 3-tuple at INPUT (brief, script, storyboard); agent extends to 4-tuple at OUTPUT (adds production_plan_id).
+# - engine_quota_handles keys restricted to: runway | pika | luma | flux | kling | higgsfield | heygen
+# - Verbatim system-prompt + JSON-only user message → Opus 4.6 → JSON-only output.
+# - If output fails output.schema.json self-validation, do NOT route downstream. Re-run or escalate.
+# - Cost ceiling is HARD: Pro $440 (= $400 × 1.10) / Enterprise $825 (= $750 × 1.10). Even $1 over = halt with cost_overrun.

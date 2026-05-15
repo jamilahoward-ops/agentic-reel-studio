@@ -1,0 +1,108 @@
+{
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-05-14-004",
+    "storyboard_id": "storyboard-REINVENTED-2026-05-14-004",
+    "script_id": "script-REINVENTED-2026-05-14-004",
+    "brief_id": "brief-REINVENTED-2026-05-14-004",
+    "brand_id": "REINVENTED",
+    "tier": "Enterprise",
+    "lever": 3,
+    "production_mode": "B",
+    "created_at": "2026-05-14T08:00:00Z",
+    "session_id": "ars-2026-05-14-004",
+    "status": "ready",
+    "duration_target_seconds": 90,
+    "total_shots": 5,
+    "mode_b_plan": {
+      "render_queue": [
+        {
+          "shot_id": "shot-001",
+          "engine_id": "runway",
+          "model_id": "runway-gen3-alpha",
+          "duration_s": 30,
+          "quota_reserved_bool": true,
+          "prompt_seed": "anchor: extended hero shot, premium fidelity, complex motion",
+          "fallback_engine_id": "pika"
+        },
+        {
+          "shot_id": "shot-002",
+          "engine_id": "pika",
+          "model_id": "pika-1.5",
+          "duration_s": 18,
+          "quota_reserved_bool": true,
+          "prompt_seed": "brand palette transition, multiple subjects",
+          "fallback_engine_id": "luma"
+        },
+        {
+          "shot_id": "shot-003",
+          "engine_id": "heygen",
+          "model_id": "heygen-v3-polish",
+          "talent_id": "jamila-howard-reinvented-v2",
+          "duration_s": 20,
+          "quota_reserved_bool": true,
+          "prompt_seed": "talent direct-to-camera, polished delivery",
+          "fallback_engine_id": "heygen"
+        },
+        {
+          "shot_id": "shot-004",
+          "engine_id": "kling",
+          "model_id": "kling-1.6",
+          "duration_s": 12,
+          "quota_reserved_bool": true,
+          "prompt_seed": "establishing wide environment, brand canon",
+          "fallback_engine_id": "luma"
+        },
+        {
+          "shot_id": "shot-005",
+          "engine_id": "flux",
+          "model_id": "flux-1.1",
+          "duration_s": 10,
+          "quota_reserved_bool": true,
+          "prompt_seed": "graphic insert: brand wordmark with motion",
+          "fallback_engine_id": "pika"
+        }
+      ],
+      "style_consistency_anchor": {
+        "anchor_shot_id": "shot-001",
+        "inheritance_strategy": "literal_seed_inherit"
+      },
+      "total_render_cost_usd_estimated": 750,
+      "runtime_target_seconds": 90,
+      "tier_cost_ceiling_usd": 750
+    },
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-14-004",
+      "script-REINVENTED-2026-05-14-004",
+      "storyboard-REINVENTED-2026-05-14-004"
+    ],
+    "metadata": {
+      "agent_id": "production-coord-agent",
+      "agent_version": "v1.0",
+      "lock_date_iso": "2026-05-03T00:00:00Z",
+      "session_id": "ars-2026-05-14-004",
+      "created_at": "2026-05-14T07:30:00Z",
+      "upstream_agent_ids": ["brief-agent", "script-agent", "storyboard-agent"]
+    }
+  },
+  "brief": {
+    "brief_id": "brief-REINVENTED-2026-05-14-004",
+    "do_not_say": ["budget", "freelancer"],
+    "target_audience": "operators building agency-scale systems"
+  },
+  "storyboard": {
+    "storyboard_id": "storyboard-REINVENTED-2026-05-14-004",
+    "shoot_logistics": {}
+  },
+  "session_id": "ars-2026-05-14-004",
+  "lever_state": 3,
+  "engine_quota_handles": {
+    "runway": "rwy-opaque-handle-004",
+    "pika":   "pika-opaque-handle-004",
+    "luma":   "luma-opaque-handle-004",
+    "kling":  "kling-opaque-handle-004",
+    "flux":   "flux-opaque-handle-004",
+    "heygen": "hgn-opaque-handle-004"
+  },
+  "cost_overrun_buffer_pct": 10,
+  "runtime_environment_class": "staging"
+}
