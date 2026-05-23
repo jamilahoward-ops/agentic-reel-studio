@@ -1,0 +1,111 @@
+{
+  "engine_pricing_canon_version": "v1.0-day-31-research-only",
+  "engine_pricing_canon_verified_iso": "2026-05-23T00:00:00Z",
+  "disclaimer": "RESEARCH-ONLY snapshot. Sourced from vendor public pricing documentation as of May 2026, per Day 31 §11 Cost Model. Day 32 LOCK CANDIDATE reviewer Item 6 (operator) is the gating verification authority before this table feeds Check #7 cost-ceiling math in production. Material discrepancies (>15% vs verified vendor pricing) on Day 32 → row corrected + flagged in §15 change log entry v1.0.1-pricing-corrections-day-32. No vendor subscription purchased. No API call made. No engine credentials referenced. Native compute paths (clip_native + phash_native + palette_native + grade_pass_native + coverage_envelope_native) are platform-internal; usd_per_shot values reflect amortized compute cost only.",
+
+  "tier_ceilings_usd": {
+    "Pro": 50,
+    "Enterprise": 120
+  },
+  "cost_overrun_buffer_pct_default": 10,
+  "cost_overrun_buffer_pct_max": 15,
+  "drift_threshold_lock": 0.85,
+  "regenerate_strike_ceiling": 2,
+  "engines": {
+    "pika_style_tokens": {
+      "vendor_pricing_url_pattern": "pika.art/pricing#style-tokens",
+      "v1_0_role": "PRIMARY (Decision #5)",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["B", "C"],
+      "models": {
+        "pika-style-tokens-v1": {
+          "usd_per_shot": 0.13,
+          "usd_per_shot_min": 0.08,
+          "usd_per_shot_max": 0.18,
+          "quota_unit": "style_token_transfers",
+          "v1_0_role_notes": "Style token transfer is Pika's first-class style-replication primitive. Typical envelope $0.08–$0.18 per shot. Drift control via prompt seed + style tokens. Day 32 LOCK CANDIDATE Item 6 spot-check target."
+        }
+      }
+    },
+    "runway_style_reference": {
+      "vendor_pricing_url_pattern": "runwayml.com/pricing#style-reference",
+      "v1_0_role": "FALLBACK (Decision #5)",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["B", "C"],
+      "models": {
+        "runway-style-reference-v1": {
+          "usd_per_shot": 0.24,
+          "usd_per_shot_min": 0.15,
+          "usd_per_shot_max": 0.32,
+          "quota_unit": "style_reference_transfers",
+          "v1_0_role_notes": "~85% cost overhead vs Pika PRIMARY. Triggered when Pika fails first attempt (engine_fallback_used_bool = true). Day 32 LOCK CANDIDATE Item 6 spot-check target."
+        }
+      }
+    },
+    "clip_native": {
+      "vendor_pricing_url_pattern": "platform-internal",
+      "v1_0_role": "NATIVE — fingerprint computation",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["A", "B", "C"],
+      "models": {
+        "clip-vit-l14-internal": {
+          "usd_per_shot": 0.001,
+          "quota_unit": "embedding_computes",
+          "v1_0_role_notes": "OpenCLIP ViT-L/14 embeddings — platform-internal GPU job. Used for s_clip in composite inheritance_match_score (0.40 weight)."
+        }
+      }
+    },
+    "phash_native": {
+      "vendor_pricing_url_pattern": "platform-internal",
+      "v1_0_role": "NATIVE — perceptual hash",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["B", "C"],
+      "models": {
+        "phash-64bit-internal": {
+          "usd_per_shot": 0.0005,
+          "quota_unit": "perceptual_hash_computes",
+          "v1_0_role_notes": "64-bit pHash on rendered frames. Used for s_phash in composite inheritance_match_score (0.30 weight). Mode A skipped (raw shoot manifest fingerprinting differs — §16.5 decision #3 Mode-A partial encoding)."
+        }
+      }
+    },
+    "palette_native": {
+      "vendor_pricing_url_pattern": "platform-internal",
+      "v1_0_role": "NATIVE — palette extraction",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["A", "B", "C"],
+      "models": {
+        "palette-kmeans-5-internal": {
+          "usd_per_shot": 0.0005,
+          "quota_unit": "palette_extractions",
+          "v1_0_role_notes": "k=5 dominant color centroids in CIELAB space. Used for s_palette in composite inheritance_match_score (0.20 weight)."
+        }
+      }
+    },
+    "grade_pass_native": {
+      "vendor_pricing_url_pattern": "platform-internal",
+      "v1_0_role": "NATIVE — brand finish layer application",
+      "tier_restriction": ["Pro", "Enterprise"],
+      "modes": ["A", "B", "C"],
+      "models": {
+        "grade-pass-lut-internal": {
+          "usd_per_shot": 0.002,
+          "quota_unit": "grade_passes",
+          "v1_0_role_notes": "LUT-based brand finish layer (contrast + saturation + LUT id from anchor_motion_grade_baseline). Mode A: only engine cost (no fingerprint/transfer). Mode B + C: applied after style transfer."
+        }
+      }
+    },
+    "coverage_envelope_native": {
+      "vendor_pricing_url_pattern": "platform-internal",
+      "v1_0_role": "NATIVE — Mode C coverage envelope check",
+      "tier_restriction": ["Enterprise"],
+      "modes": ["C"],
+      "models": {
+        "coverage-envelope-checker-internal": {
+          "usd_per_shot": 0.001,
+          "quota_unit": "envelope_checks",
+          "v1_0_role_notes": "Mode C only (Decision #10 Enterprise-only). Validates new prompt_seed stays within anchor's coverage envelope (default 12% tolerance, hard ceiling 25%). Sets mode_c_coverage_match_bool on metadata block."
+        }
+      }
+    }
+  }
+}

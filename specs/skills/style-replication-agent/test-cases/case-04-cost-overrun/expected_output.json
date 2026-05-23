@@ -1,0 +1,40 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code":    "cost_overrun",
+    "failed_check_id": 7,
+    "failed_shot_id":  "shot-006",
+    "attempts":        1,
+    "detail": {
+      "tier_cost_ceiling_per_reel_usd": 120,
+      "hard_ceiling_with_buffer_usd":   132.0,
+      "actual_spent_at_halt_usd":       134.15,
+      "shots_completed_before_halt":    5,
+      "fallback_cascades":              3,
+      "per_engine_actual_usd": {
+        "pika_style_tokens":      72.0,
+        "runway_style_reference": 60.0,
+        "clip_native":            0.005,
+        "phash_native":           0.003,
+        "palette_native":         0.003,
+        "grade_pass_native":      0.012
+      },
+      "per_engine_overrun_attribution": {
+        "runway_style_reference": 60.0
+      },
+      "spec_bug": false
+    },
+    "qc_warnings": [
+      "shot-002/003/004 cascaded Pika→Runway fallback ($60 overhead vs Pika single-pass)",
+      "projection at Step 5 anticipated $48 Pika + ~$0 fallback; actual fallback rate 3 of 7 inheritors burned through buffer"
+    ],
+    "successful_shots": [
+      { "shot_id": "shot-001", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/404/shot-001.mp4", "engine_id": "grade_pass_native", "cost_actual_usd": 0.002 },
+      { "shot_id": "shot-002", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/404/shot-002.mp4", "engine_id": "runway_style_reference", "cost_actual_usd": 26.0 },
+      { "shot_id": "shot-003", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/404/shot-003.mp4", "engine_id": "runway_style_reference", "cost_actual_usd": 18.0 },
+      { "shot_id": "shot-004", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/404/shot-004.mp4", "engine_id": "runway_style_reference", "cost_actual_usd": 16.0 },
+      { "shot_id": "shot-005", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/404/shot-005.mp4", "engine_id": "pika_style_tokens", "cost_actual_usd": 24.0 }
+    ],
+    "recovery_path": "Cost overrun on shot-006 dispatch: cumulative spend $134.15 breached Enterprise $120 × 1.10 = $132 hard ceiling. Cascade attribution: runway_style_reference fallback ate $60 (vs ~$1 Pika single-pass). Recommend (a) raise tier_cost_ceiling at ProdCoord re-plan stage, or (b) reduce total_shots, or (c) investigate Pika availability — 3 of 7 inheritors went to fallback on first attempt, well above expected drift retry rate. successful_shots[5] preserved for Edit Director salvage decision."
+  }
+}

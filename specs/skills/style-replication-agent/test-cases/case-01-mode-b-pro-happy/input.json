@@ -1,0 +1,79 @@
+{
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-05-23-101",
+    "storyboard_id":      "storyboard-REINVENTED-2026-05-23-101",
+    "script_id":          "script-REINVENTED-2026-05-23-101",
+    "brief_id":           "brief-REINVENTED-2026-05-23-101",
+    "brand_id":           "REINVENTED",
+    "tier":               "Pro",
+    "lever":              3,
+    "production_mode":    "B",
+    "created_at":         "2026-05-23T07:00:00Z",
+    "session_id":         "ars-2026-05-23-101",
+    "status":             "ready",
+    "duration_target_seconds":        45,
+    "total_shots":                    5,
+    "tier_cost_ceiling_per_reel_usd": 50,
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-23-101",
+      "script-REINVENTED-2026-05-23-101",
+      "storyboard-REINVENTED-2026-05-23-101",
+      "ai-video-gen-REINVENTED-2026-05-23-101"
+    ],
+    "metadata": {
+      "agent_id":         "ai-video-gen-agent",
+      "agent_version":    "1.0",
+      "lock_date_iso":    "2026-05-23T06:30:00Z",
+      "session_id":       "ars-2026-05-23-101",
+      "created_at":       "2026-05-23T06:45:00Z",
+      "upstream_agent_ids": ["brief-agent", "script-agent", "storyboard-agent", "production-coord-agent"]
+    }
+  },
+
+  "rendered_shots": {
+    "render_set_id": "renderset-REINVENTED-2026-05-23-101",
+    "rendered_shots": [
+      { "shot_id": "shot-001", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/101/shot-001.mp4", "prompt_seed": "REINVENTED-anchor-editorial-magenta-gold-cinematic-2026-05-23", "engine_id": "runway" },
+      { "shot_id": "shot-002", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/101/shot-002.mp4", "prompt_seed": "REINVENTED-inheritor-02-editorial-magenta-gold-cinematic-2026-05-23", "engine_id": "pika" },
+      { "shot_id": "shot-003", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/101/shot-003.mp4", "prompt_seed": "REINVENTED-inheritor-03-editorial-magenta-gold-cinematic-2026-05-23", "engine_id": "pika" },
+      { "shot_id": "shot-004", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/101/shot-004.mp4", "prompt_seed": "REINVENTED-inheritor-04-editorial-magenta-gold-cinematic-2026-05-23", "engine_id": "pika" },
+      { "shot_id": "shot-005", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/101/shot-005.mp4", "prompt_seed": "REINVENTED-inheritor-05-editorial-magenta-gold-cinematic-2026-05-23", "engine_id": "pika" }
+    ],
+    "style_consistency_anchor": { "anchor_shot_id": "shot-001" },
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-23-101",
+      "script-REINVENTED-2026-05-23-101",
+      "storyboard-REINVENTED-2026-05-23-101",
+      "ai-video-gen-REINVENTED-2026-05-23-101"
+    ]
+  },
+
+  "brief": {
+    "brief_id":            "brief-REINVENTED-2026-05-23-101",
+    "do_not_say":          ["Holdco Group", "Principal", "NPOX", "Sequel Digital", "4821 Main", "6315"],
+    "target_audience":     "Operators 30-55 building 7-figure businesses with AI leverage",
+    "brand_finish_intent": "editorial"
+  },
+
+  "brand_anchor_reference": {
+    "brand_id":            "REINVENTED",
+    "anchor_id":           "anchor-REINVENTED-v1-2026-05-01",
+    "anchor_sha256":       "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+    "anchor_locked_date":  "2026-05-01",
+    "anchor_version":      "v1.0"
+  },
+
+  "session_id":   "ars-2026-05-23-101",
+  "lever_state":  3,
+  "engine_quota_handles": {
+    "pika_style_tokens":      "handle-pika-opaque-12345678",
+    "runway_style_reference": "handle-runway-opaque-87654321",
+    "clip_native":            "handle-clip-opaque-internal01",
+    "phash_native":           "handle-phash-opaque-internal02",
+    "palette_native":         "handle-palette-opaque-internal03",
+    "grade_pass_native":      "handle-grade-opaque-internal04"
+  },
+
+  "cost_overrun_buffer_pct":  10,
+  "runtime_environment_class": "production"
+}

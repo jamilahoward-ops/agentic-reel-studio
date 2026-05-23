@@ -1,0 +1,30 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code":    "style_drift_exceeded",
+    "failed_check_id": 6,
+    "failed_shot_id":  "shot-003",
+    "attempts":        2,
+    "detail": {
+      "drift_threshold":              0.85,
+      "shot_003_attempt_1_score":     0.71,
+      "shot_003_attempt_2_score":     0.74,
+      "regenerate_strike_ceiling":    2,
+      "anchor_status":                "inherit_fail_final",
+      "engine_used":                  "pika_style_tokens",
+      "fallback_attempted":           false,
+      "engine_fallback_used_bool":    false,
+      "drift_components_attempt_2":   { "s_clip": 0.78, "s_phash": 0.68, "s_palette": 0.82, "s_motion": 0.55 },
+      "spec_bug":                     false
+    },
+    "qc_warnings": [
+      "shot-003 prompt_seed contained noise that drove pHash + motion grade away from anchor; both regenerate attempts failed Check #6",
+      "Decision #6 2-strike ceiling reached; do NOT cascade to Runway fallback per LOCKED canon (drift is reasoning failure, not engine availability)"
+    ],
+    "successful_shots": [
+      { "shot_id": "shot-001", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/505/shot-001.mp4", "engine_id": "grade_pass_native", "cost_actual_usd": 0.002 },
+      { "shot_id": "shot-002", "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/505/shot-002.mp4", "engine_id": "pika_style_tokens", "cost_actual_usd": 0.135 }
+    ],
+    "recovery_path": "shot-003 regenerate-then-still-fail (Decision #6 2-strike). Recommend operator (a) inspect upstream rendered_shots/shot-003 for prompt_seed noise (s_motion=0.55 indicates motion grade divergence) and re-run AI Video Gen for that shot, or (b) accept partial reel with shots 1+2+4 via Edit Director salvage decision. successful_shots[2] preserved; shot-004 not attempted (halt on shot-003 fail)."
+  }
+}

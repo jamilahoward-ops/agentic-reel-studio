@@ -1,0 +1,24 @@
+{
+  "status": "blocked",
+  "errorEnvelope": {
+    "failure_code":    "anchor_unavailable",
+    "failed_check_id": 9,
+    "attempts":        1,
+    "detail": {
+      "anchor_id_requested":     "anchor-REINVENTED-v0-2026-01-15",
+      "anchor_sha256_requested": "ffffeeeeddddccccbbbbaaaa99998888777766665555444433332222111100ff",
+      "anchor_locked_date_requested": "2026-01-15",
+      "cache_lookup_result": "stale",
+      "anchor_age_days":     128,
+      "anchor_freshness_max_days": 90,
+      "current_lock_anchor_id": "anchor-REINVENTED-v1-2026-05-01",
+      "spec_bug": false
+    },
+    "qc_warnings": [
+      "anchor age 128d exceeds freshness ceiling 90d",
+      "cache has a current REINVENTED anchor v1 LOCKED 2026-05-01; client requested deprecated v0.9"
+    ],
+    "successful_shots": [],
+    "recovery_path": "anchor expired (128d > 90d max) — re-LOCK brand anchor cache with current anchor-REINVENTED-v1-2026-05-01 (anchor_sha256 + anchor_locked_date 2026-05-01) and retry. Cost incurred: $0 — agent halted at Step 2 before dispatch."
+  }
+}

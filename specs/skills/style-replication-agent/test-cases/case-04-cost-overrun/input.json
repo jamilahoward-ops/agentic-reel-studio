@@ -1,0 +1,82 @@
+{
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-05-23-404",
+    "storyboard_id":      "storyboard-REINVENTED-2026-05-23-404",
+    "script_id":          "script-REINVENTED-2026-05-23-404",
+    "brief_id":           "brief-REINVENTED-2026-05-23-404",
+    "brand_id":           "REINVENTED",
+    "tier":               "Enterprise",
+    "lever":              3,
+    "production_mode":    "B",
+    "created_at":         "2026-05-23T08:30:00Z",
+    "session_id":         "ars-2026-05-23-404",
+    "status":             "ready",
+    "duration_target_seconds":        90,
+    "total_shots":                    8,
+    "tier_cost_ceiling_per_reel_usd": 120,
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-23-404",
+      "script-REINVENTED-2026-05-23-404",
+      "storyboard-REINVENTED-2026-05-23-404",
+      "ai-video-gen-REINVENTED-2026-05-23-404"
+    ],
+    "metadata": {
+      "agent_id":         "ai-video-gen-agent",
+      "agent_version":    "1.0",
+      "lock_date_iso":    "2026-05-23T08:00:00Z",
+      "session_id":       "ars-2026-05-23-404",
+      "created_at":       "2026-05-23T08:15:00Z",
+      "upstream_agent_ids": ["brief-agent", "script-agent", "storyboard-agent", "production-coord-agent"]
+    }
+  },
+
+  "rendered_shots": {
+    "render_set_id": "renderset-REINVENTED-2026-05-23-404",
+    "rendered_shots": [
+      { "shot_id": "shot-001", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-001.mp4", "prompt_seed": "REINVENTED-anchor-2026-05-23-404", "engine_id": "runway" },
+      { "shot_id": "shot-002", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-002.mp4", "prompt_seed": "REINVENTED-shot02-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-003", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-003.mp4", "prompt_seed": "REINVENTED-shot03-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-004", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-004.mp4", "prompt_seed": "REINVENTED-shot04-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-005", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-005.mp4", "prompt_seed": "REINVENTED-shot05-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-006", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-006.mp4", "prompt_seed": "REINVENTED-shot06-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-007", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-007.mp4", "prompt_seed": "REINVENTED-shot07-2026-05-23-404", "engine_id": "pika" },
+      { "shot_id": "shot-008", "asset_uri": "ars://rendered_shots/REINVENTED/2026-05-23/404/shot-008.mp4", "prompt_seed": "REINVENTED-shot08-2026-05-23-404", "engine_id": "pika" }
+    ],
+    "style_consistency_anchor": { "anchor_shot_id": "shot-001" },
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-23-404",
+      "script-REINVENTED-2026-05-23-404",
+      "storyboard-REINVENTED-2026-05-23-404",
+      "ai-video-gen-REINVENTED-2026-05-23-404"
+    ]
+  },
+
+  "brief": {
+    "brief_id":            "brief-REINVENTED-2026-05-23-404",
+    "do_not_say":          ["Holdco Group", "Principal", "NPOX", "Sequel Digital", "4821 Main", "6315"],
+    "target_audience":     "Enterprise operators 35-55 evaluating high-volume reel pipeline",
+    "brand_finish_intent": "cinematic"
+  },
+
+  "brand_anchor_reference": {
+    "brand_id":            "REINVENTED",
+    "anchor_id":           "anchor-REINVENTED-v1-2026-05-01",
+    "anchor_sha256":       "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+    "anchor_locked_date":  "2026-05-01",
+    "anchor_version":      "v1.0"
+  },
+
+  "session_id":   "ars-2026-05-23-404",
+  "lever_state":  3,
+  "engine_quota_handles": {
+    "pika_style_tokens":      "handle-pika-opaque-44440001",
+    "runway_style_reference": "handle-runway-opaque-44440002",
+    "clip_native":            "handle-clip-opaque-44440003",
+    "phash_native":           "handle-phash-opaque-44440004",
+    "palette_native":         "handle-palette-opaque-44440005",
+    "grade_pass_native":      "handle-grade-opaque-44440006"
+  },
+
+  "cost_overrun_buffer_pct":  10,
+  "runtime_environment_class": "production"
+}

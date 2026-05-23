@@ -1,0 +1,599 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/style-replication-agent/input.schema.json",
+  "title": "ARS Style Replication Agent — Input bundle (Mode A | Mode B | Mode C variants)",
+  "description": "Validates the Style Replication Agent v1.0 input bundle. Authored Day 33 (Fri May 22 2026) from SPEC §0–§16 unified LOCK CANDIDATE (Day 32) + §16.5 schema authoring decisions. Polymorphic across three production_mode branches: Mode A (live shoot passthrough · grade pass only) · Mode B (ProdCoord + AI Video Gen rendered_shots inherit · default) · Mode C (hot-path direct from ProdCoord · Enterprise-only at v1.0). Mode is the discriminator via top-level oneOf; tier-↔-mode constraint enforced via allOf joint validators. Pilot/Starter tiers reject at schema parse for Mode C (Enterprise-only canon Decision #10). Per-engine credentials NEVER appear in this bundle (Hard Rule #8 — only opaque handles). 5-tuple parent_chain on output is authored in output.schema.json; this input bundle inherits a 4-tuple from AI Video Gen (Mode B) or 3-tuple from ProdCoord (Mode A + C direct).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/modeABundle" },
+    { "$ref": "#/$defs/modeBBundle" },
+    { "$ref": "#/$defs/modeCBundle" }
+  ],
+
+  "$defs": {
+
+    "modeABundle": {
+      "type": "object",
+      "description": "Mode A — grade pass only on live-shoot footage. ProdCoord output + raw shot manifest. No AI render upstream; no anchor SHA cache lookup; brand finish layer applied to operator+videographer-captured assets.",
+      "required": [
+        "production_plan",
+        "brief",
+        "brand_anchor_reference",
+        "raw_shot_manifest",
+        "session_id",
+        "lever_state",
+        "engine_quota_handles"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "production_plan": { "$ref": "#/$defs/productionPlanModeA" },
+        "brief":           { "$ref": "#/$defs/briefSubset" },
+        "brand_anchor_reference": { "$ref": "#/$defs/brandAnchorReference" },
+        "raw_shot_manifest":      { "$ref": "#/$defs/rawShotManifest" },
+        "session_id":   { "$ref": "#/$defs/sessionId" },
+        "lever_state":  { "$ref": "#/$defs/leverState" },
+        "engine_quota_handles": { "$ref": "#/$defs/engineQuotaHandlesModeA" },
+        "cost_overrun_buffer_pct":   { "$ref": "#/$defs/costOverrunBufferPct" },
+        "runtime_environment_class": { "$ref": "#/$defs/runtimeEnvironmentClass" }
+      },
+
+      "allOf": [
+        {
+          "description": "Mode A tier ceiling joint validation: Pro $50 / Enterprise $120 per §7.3 tier table + Decision #2.",
+          "oneOf": [
+            {
+              "properties": {
+                "production_plan": {
+                  "properties": {
+                    "tier":                              { "const": "Pro" },
+                    "tier_cost_ceiling_per_reel_usd":    { "const": 50 }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "production_plan": {
+                  "properties": {
+                    "tier":                              { "const": "Enterprise" },
+                    "tier_cost_ceiling_per_reel_usd":    { "const": 120 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "modeBBundle": {
+      "type": "object",
+      "description": "Mode B — inheritor pass on AI Video Gen rendered_shots. ProdCoord output + AI Video Gen rendered_shots inherit. Anchor SHA cache lookup required. Dominant production volume mode at v1.0.",
+      "required": [
+        "production_plan",
+        "rendered_shots",
+        "brief",
+        "brand_anchor_reference",
+        "session_id",
+        "lever_state",
+        "engine_quota_handles"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "production_plan": { "$ref": "#/$defs/productionPlanModeB" },
+        "rendered_shots":  { "$ref": "#/$defs/renderedShotsSubset" },
+        "brief":           { "$ref": "#/$defs/briefSubset" },
+        "brand_anchor_reference": { "$ref": "#/$defs/brandAnchorReference" },
+        "session_id":   { "$ref": "#/$defs/sessionId" },
+        "lever_state":  { "$ref": "#/$defs/leverState" },
+        "engine_quota_handles": { "$ref": "#/$defs/engineQuotaHandlesModeB" },
+        "cost_overrun_buffer_pct":   { "$ref": "#/$defs/costOverrunBufferPct" },
+        "runtime_environment_class": { "$ref": "#/$defs/runtimeEnvironmentClass" }
+      },
+
+      "allOf": [
+        {
+          "description": "Mode B tier ceiling joint validation.",
+          "oneOf": [
+            {
+              "properties": {
+                "production_plan": {
+                  "properties": {
+                    "tier":                              { "const": "Pro" },
+                    "tier_cost_ceiling_per_reel_usd":    { "const": 50 }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "production_plan": {
+                  "properties": {
+                    "tier":                              { "const": "Enterprise" },
+                    "tier_cost_ceiling_per_reel_usd":    { "const": 120 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "modeCBundle": {
+      "type": "object",
+      "description": "Mode C — hot path. Direct from ProdCoord (no AI Video Gen upstream). Anchor SHA cache lookup mandatory; coverage envelope match check applied; bypasses both human shoot AND per-shot generation. Enterprise-only at v1.0 per §13 Decision #10. Pilot/Starter tier rejected at schema parse.",
+      "required": [
+        "production_plan",
+        "brief",
+        "brand_anchor_reference",
+        "session_id",
+        "lever_state",
+        "engine_quota_handles"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "production_plan": { "$ref": "#/$defs/productionPlanModeC" },
+        "brief":           { "$ref": "#/$defs/briefSubset" },
+        "brand_anchor_reference": { "$ref": "#/$defs/brandAnchorReference" },
+        "session_id":   { "$ref": "#/$defs/sessionId" },
+        "lever_state":  { "$ref": "#/$defs/leverState" },
+        "engine_quota_handles": { "$ref": "#/$defs/engineQuotaHandlesModeC" },
+        "cost_overrun_buffer_pct":   { "$ref": "#/$defs/costOverrunBufferPct" },
+        "runtime_environment_class": { "$ref": "#/$defs/runtimeEnvironmentClass" }
+      },
+
+      "allOf": [
+        {
+          "description": "Mode C tier ceiling joint validation — Enterprise-only at v1.0 (Decision #10). Pro tier rejected at schema parse.",
+          "properties": {
+            "production_plan": {
+              "properties": {
+                "tier":                              { "const": "Enterprise" },
+                "tier_cost_ceiling_per_reel_usd":    { "const": 120 }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "productionPlanModeA": {
+      "type": "object",
+      "description": "Mode A branch of production-coord-agent/output.schema.json. tier ∈ {Pro, Enterprise}, production_mode == 'A'. Raw shoot manifest references; no render_queue.",
+      "required": [
+        "production_plan_id",
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "status",
+        "duration_target_seconds",
+        "total_shots",
+        "tier_cost_ceiling_per_reel_usd",
+        "parent_chain",
+        "metadata"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "production_plan_id": { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "storyboard_id":      { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "script_id":          { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brief_id":           { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brand_id":           { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":               { "type": "string", "enum": ["Pro", "Enterprise"] },
+        "lever":              { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode":    { "type": "string", "const": "A" },
+        "created_at":         { "type": "string", "format": "date-time" },
+        "session_id":         { "$ref": "#/$defs/sessionId" },
+        "status":             { "type": "string", "enum": ["ready", "pending_approval"] },
+        "duration_target_seconds":     { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots":                  { "type": "integer", "minimum": 1, "maximum": 60 },
+        "tier_cost_ceiling_per_reel_usd": { "type": "integer", "enum": [50, 120] },
+        "parent_chain":       { "$ref": "#/$defs/parentChain3Tuple" },
+        "metadata":           { "$ref": "#/$defs/upstreamProdCoordMetadata" }
+      }
+    },
+
+    "productionPlanModeB": {
+      "type": "object",
+      "description": "Mode B branch — inherits AI Video Gen's 4-tuple parent_chain. tier ∈ {Pro, Enterprise}, production_mode == 'B'. mode_b_plan from ProdCoord remains in scope for cost reconciliation.",
+      "required": [
+        "production_plan_id",
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "status",
+        "duration_target_seconds",
+        "total_shots",
+        "tier_cost_ceiling_per_reel_usd",
+        "parent_chain",
+        "metadata"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "production_plan_id": { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "storyboard_id":      { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "script_id":          { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brief_id":           { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brand_id":           { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":               { "type": "string", "enum": ["Pro", "Enterprise"] },
+        "lever":              { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode":    { "type": "string", "const": "B" },
+        "created_at":         { "type": "string", "format": "date-time" },
+        "session_id":         { "$ref": "#/$defs/sessionId" },
+        "status":             { "type": "string", "enum": ["ready", "pending_approval"] },
+        "duration_target_seconds":     { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots":                  { "type": "integer", "minimum": 1, "maximum": 60 },
+        "tier_cost_ceiling_per_reel_usd": { "type": "integer", "enum": [50, 120] },
+        "parent_chain":       { "$ref": "#/$defs/parentChain4Tuple" },
+        "metadata":           { "$ref": "#/$defs/upstreamAiVideoGenMetadata" }
+      }
+    },
+
+    "productionPlanModeC": {
+      "type": "object",
+      "description": "Mode C branch — direct from ProdCoord (no AI Video Gen upstream). tier == 'Enterprise', production_mode == 'C'. Anchor coverage envelope check (§10 Decision #10 Enterprise-only LOCKED with PRELIMINARY · operator amend annotation).",
+      "required": [
+        "production_plan_id",
+        "storyboard_id",
+        "script_id",
+        "brief_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "created_at",
+        "session_id",
+        "status",
+        "duration_target_seconds",
+        "total_shots",
+        "tier_cost_ceiling_per_reel_usd",
+        "mode_c_directive",
+        "parent_chain",
+        "metadata"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "production_plan_id": { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "storyboard_id":      { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "script_id":          { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brief_id":           { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "brand_id":           { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":               { "type": "string", "const": "Enterprise" },
+        "lever":              { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode":    { "type": "string", "const": "C" },
+        "created_at":         { "type": "string", "format": "date-time" },
+        "session_id":         { "$ref": "#/$defs/sessionId" },
+        "status":             { "type": "string", "enum": ["ready", "pending_approval"] },
+        "duration_target_seconds":     { "type": "integer", "minimum": 15, "maximum": 180 },
+        "total_shots":                  { "type": "integer", "minimum": 1, "maximum": 30 },
+        "tier_cost_ceiling_per_reel_usd": { "type": "integer", "const": 120 },
+        "mode_c_directive":   { "$ref": "#/$defs/modeCDirective" },
+        "parent_chain":       { "$ref": "#/$defs/parentChain3Tuple" },
+        "metadata":           { "$ref": "#/$defs/upstreamProdCoordMetadata" }
+      }
+    },
+
+    "modeCDirective": {
+      "type": "object",
+      "description": "Mode C hot-path directive. Required prompt envelope + coverage envelope tolerance. ProdCoord asserts the new prompts stay within the anchor's coverage envelope.",
+      "required": [
+        "shot_prompts",
+        "coverage_envelope_tolerance_pct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "shot_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "required": ["shot_index", "prompt_seed"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_index":  { "type": "integer", "minimum": 1, "maximum": 30 },
+              "prompt_seed": { "type": "string", "minLength": 8, "maxLength": 4096 }
+            }
+          }
+        },
+        "coverage_envelope_tolerance_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 25,
+          "default": 12,
+          "description": "Tolerance for Mode C envelope check. Default 12% (§9 TC-02 fixture). Hard ceiling 25% — operator cannot widen above v1.0 invariant (Mode C must stay close to anchor or fall back to Mode B)."
+        }
+      }
+    },
+
+    "brandAnchorReference": {
+      "type": "object",
+      "description": "Brand-anchor cache lookup record. Cross-SPEC §3.6 — anchor identity is three-way bit equality (anchor_id + anchor_sha256 + anchor_locked_date). Hard Rule #9 elevated to Hard Rule status Day 30 §7. anchor_unavailable errorEnvelope code triggers when any of three are missing or stale.",
+      "required": [
+        "brand_id",
+        "anchor_id",
+        "anchor_sha256",
+        "anchor_locked_date",
+        "anchor_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":          { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "anchor_id":         { "type": "string", "pattern": "^anchor-[A-Z0-9_-]+-v\\d+(\\.\\d+)?-\\d{4}-\\d{2}-\\d{2}$" },
+        "anchor_sha256":     { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "anchor_locked_date": { "type": "string", "format": "date" },
+        "anchor_version":    { "type": "string", "pattern": "^v\\d+(\\.\\d+)?$" },
+        "anchor_freshness_max_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365,
+          "default": 90,
+          "description": "Operator override on default 90-day freshness; agent rejects anchors older than this with anchor_unavailable."
+        },
+        "literal_fingerprint_inherit_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^ars://brand_anchor_cache/[A-Z0-9_]{2,32}/.+",
+          "description": "Pre-computed fingerprint URI per §12.3. Schema-level reference only; runtime fetch happens platform-side."
+        }
+      }
+    },
+
+    "rawShotManifest": {
+      "type": "object",
+      "description": "Mode A — raw shoot manifest. References operator+videographer-captured assets. Hard Rule #8: asset_uri MUST be platform-relative; no external URLs.",
+      "required": ["manifest_id", "shoot_session_id", "shots"],
+      "additionalProperties": false,
+      "properties": {
+        "manifest_id":      { "type": "string", "pattern": "^manifest-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "shoot_session_id": { "type": "string", "pattern": "^shoot-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "shots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "asset_uri", "duration_s"],
+            "additionalProperties": false,
+            "properties": {
+              "shot_id":     { "type": "string", "pattern": "^shot-\\d{3}$" },
+              "asset_uri":   { "type": "string", "pattern": "^ars://raw_shoots/.+\\.(mov|mp4|prores|braw)$" },
+              "duration_s":  { "type": "integer", "minimum": 1, "maximum": 90 },
+              "capture_metadata": {
+                "type": "object",
+                "description": "Optional camera/lens/exposure context for grade-pass calibration. Free-form key-value.",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "renderedShotsSubset": {
+      "type": "object",
+      "description": "Mode B — read-only subset of AI Video Gen's output.schema.json successRenderedShots envelope. Style Replication needs render_set_id, rendered_shots array (per-shot asset_uri + seed inherit), and style_consistency_anchor. No re-validation of full AI Video Gen envelope at this layer; agent inherits AI Video Gen's LOCK guarantees (Cross-SPEC §3.11 LOCK respect).",
+      "required": [
+        "render_set_id",
+        "rendered_shots",
+        "style_consistency_anchor",
+        "parent_chain"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "render_set_id": {
+          "type": "string",
+          "pattern": "^renderset-[A-Z0-9_]{2,32}-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "rendered_shots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "asset_uri", "prompt_seed", "engine_id"],
+            "additionalProperties": true,
+            "properties": {
+              "shot_id":     { "type": "string", "pattern": "^shot-\\d{3}$" },
+              "asset_uri":   { "type": "string", "pattern": "^ars://rendered_shots/.+" },
+              "prompt_seed": { "type": "string", "minLength": 8, "maxLength": 4096 },
+              "engine_id":   { "type": "string", "enum": ["runway", "pika", "luma", "flux", "kling", "higgsfield", "heygen"] }
+            }
+          }
+        },
+        "style_consistency_anchor": {
+          "type": "object",
+          "description": "AI Video Gen-emitted anchor reference. Style Replication validates anchor_shot_id matches Mode B render_queue's anchor; mismatch triggers anchor_unavailable.",
+          "required": ["anchor_shot_id"],
+          "additionalProperties": true,
+          "properties": {
+            "anchor_shot_id": { "type": "string", "pattern": "^shot-\\d{3}$" }
+          }
+        },
+        "parent_chain": { "$ref": "#/$defs/parentChain4Tuple" }
+      }
+    },
+
+    "briefSubset": {
+      "type": "object",
+      "description": "Minimal brief subset needed by Style Replication — do_not_say + brand_finish_intent feed Check #2 (firewall) + Check #7 (brand finish layer presence).",
+      "required": ["brief_id", "do_not_say", "target_audience"],
+      "additionalProperties": true,
+      "properties": {
+        "brief_id":   { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "do_not_say": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 128 }
+        },
+        "target_audience":     { "type": "string", "minLength": 4 },
+        "brand_finish_intent": {
+          "type": "string",
+          "enum": ["editorial", "documentary", "cinematic", "social-native"],
+          "description": "Optional brand-finish-layer style hint. Defaults to brand anchor's locked layer if absent."
+        }
+      }
+    },
+
+    "engineQuotaHandlesModeA": {
+      "type": "object",
+      "description": "Mode A engines — grade pass only (no fingerprint extraction, no Pika/Runway style transfer). CLIP+pHash and Palette extraction handled native (no opaque handle required).",
+      "patternProperties": {
+        "^(clip_native|phash_native|palette_native|grade_pass_native)$": {
+          "type": "string",
+          "minLength": 8
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 0
+    },
+
+    "engineQuotaHandlesModeB": {
+      "type": "object",
+      "description": "Mode B engines — Pika Style Tokens PRIMARY (Decision #5 LOCKED with PRELIMINARY · operator amend annotation Day 32) + Runway Style Reference FALLBACK + native CLIP/pHash/Palette. Hard Rule #8: opaque handles only; no raw credentials.",
+      "patternProperties": {
+        "^(pika_style_tokens|runway_style_reference|clip_native|phash_native|palette_native|grade_pass_native)$": {
+          "type": "string",
+          "minLength": 8
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+
+    "engineQuotaHandlesModeC": {
+      "type": "object",
+      "description": "Mode C engines — same as Mode B with coverage envelope check enabled by default.",
+      "patternProperties": {
+        "^(pika_style_tokens|runway_style_reference|clip_native|phash_native|palette_native|grade_pass_native|coverage_envelope_native)$": {
+          "type": "string",
+          "minLength": 8
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+
+    "sessionId": {
+      "type": "string",
+      "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "ARS session ID — inherited from upstream ProdCoord (or AI Video Gen for Mode B)."
+    },
+
+    "leverState": {
+      "type": "integer",
+      "enum": [1, 2, 3],
+      "description": "Governance lever per Orchestration Blueprint §6. v1.0 default = 3 (every reel reviewed)."
+    },
+
+    "costOverrunBufferPct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 15,
+      "default": 10,
+      "description": "Optional override of default 10% cost overrun buffer. Hard ceiling 15% — operator cannot widen above v1.0 invariant (canon-shared with AI Video Gen §11)."
+    },
+
+    "runtimeEnvironmentClass": {
+      "type": "string",
+      "enum": ["dev", "staging", "production"],
+      "default": "production",
+      "description": "Per §16.2. Day 36 LLM Test Runbook uses 'staging'; live reels use 'production'; dev iteration uses 'dev'."
+    },
+
+    "parentChain3Tuple": {
+      "type": "array",
+      "description": "3-tuple inherited from ProdCoord output. Mode A + Mode C entry-point — Style Replication extends to 5-tuple at output via §16.3 amendment. Positional ordering: [brief_id, script_id, storyboard_id].",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+
+    "parentChain4Tuple": {
+      "type": "array",
+      "description": "4-tuple inherited from AI Video Gen output. Mode B entry-point — Style Replication appends own replication_set_id to produce 5-tuple at output (§16.3 amendment Day 32). Positional ordering: [brief_id, script_id, storyboard_id, ai_video_gen_session_id].",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+
+    "upstreamProdCoordMetadata": {
+      "type": "object",
+      "description": "ProdCoord-emitted metadata block (Mode A + C upstream). Read-only — Style Replication emits its own at output.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "lock_date_iso",
+        "session_id",
+        "created_at",
+        "upstream_agent_ids"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "production-coord-agent" },
+        "agent_version": { "type": "string", "pattern": "^v?\\d+\\.\\d+(\\.\\d+)?$" },
+        "lock_date_iso": { "type": "string", "format": "date-time" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "upstream_agent_ids": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["brief-agent", "script-agent", "storyboard-agent"] },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
+
+    "upstreamAiVideoGenMetadata": {
+      "type": "object",
+      "description": "AI Video Gen-emitted metadata block (Mode B upstream). Read-only — Style Replication emits its own at output.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "lock_date_iso",
+        "session_id",
+        "created_at",
+        "upstream_agent_ids"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "ai-video-gen-agent" },
+        "agent_version": { "type": "string", "pattern": "^v?\\d+\\.\\d+(\\.\\d+)?$" },
+        "lock_date_iso": { "type": "string", "format": "date-time" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "upstream_agent_ids": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["brief-agent", "script-agent", "storyboard-agent", "production-coord-agent"] },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,582 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/style-replication-agent/output.schema.json",
+  "title": "ARS Style Replication Agent — Output (replicated_shots | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Style Replication Agent — either successReplicatedShots or errorEnvelope. Authored Day 33 (Fri May 22 2026) from SPEC §3 (Day 29 outline) + §6 12-Check Self-QC + §6.3 6-code errorEnvelope (Day 30) + §10 Field Map 26 rows (Day 30) + §12 verbatim inherit math (Day 31 from AI Video Gen Day 23) + §16 metadata block + §16.5 schema authoring decisions. Polymorphism via top-level oneOf — mirrors AI Video Gen Day 14 + ProdCoord Day 17 pattern. 6 errorEnvelope codes enumerated via enum per §13 Decision #11. 5-tuple parent_chain encoded via Draft 2020-12 prefixItems + items:false (§16.5 decision #1 LOCKED).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successReplicatedShots" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "Canonical error envelope per Cross-SPEC §3.6 + §3.8. v1.0 error code count = 6 (Day 30 §6.3 LOCKED). status='blocked' on every failure. partial_replicated_shots[] preserves any inheritor shots that completed before the halt (Hard Rule #12 mirror).",
+      "required": ["status", "errorEnvelope"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "type": "string", "const": "blocked" },
+        "errorEnvelope": {
+          "type": "object",
+          "required": ["failure_code", "attempts"],
+          "additionalProperties": false,
+          "properties": {
+            "failure_code": {
+              "type": "string",
+              "enum": [
+                "anchor_unavailable",
+                "style_drift_exceeded",
+                "brand_finish_layer_missing",
+                "cost_overrun",
+                "qc_pre_flags_format_violation",
+                "style_replication_agent_failed"
+              ],
+              "description": "6 codes per Day 30 §6.3 LOCKED. Slot 12 named `style_replication_agent_failed` per Cross-SPEC §3.6."
+            },
+            "failed_check_id": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "failed_shot_id":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+            "attempts":        { "type": "integer", "minimum": 1, "maximum": 3 },
+            "detail":          { "type": "object", "description": "Free-form failure context. Banned vocab + entity firewall validated at content layer, not schema." },
+            "qc_warnings": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 2, "maxLength": 256 }
+            },
+            "successful_shots": {
+              "type": "array",
+              "description": "Inheritor shots that completed before halt (Hard Rule #12 partial-work preservation).",
+              "items": { "$ref": "#/$defs/replicatedShotPartial" }
+            },
+            "recovery_path": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 1024,
+              "description": "Optional operator-facing guidance (e.g., 'anchor expired — re-LOCK brand anchor cache and retry')."
+            }
+          }
+        }
+      }
+    },
+
+    "successReplicatedShots": {
+      "type": "object",
+      "description": "Successful replication set. status ∈ {ready_for_qc, partial_with_warnings}. partial_with_warnings = anchor + ≥1 inheritor succeeded but ≥1 inheritor failed Check #6 drift twice (per §13 Decision #6 regenerate-then-still-fail).",
+      "required": [
+        "replication_set_id",
+        "production_plan_id",
+        "brand_id",
+        "tier",
+        "lever",
+        "production_mode",
+        "status",
+        "total_shots",
+        "total_replicated_shots",
+        "replicated_shots",
+        "brand_anchor_reference",
+        "replication_telemetry",
+        "qc_pre_flags",
+        "qc_warnings",
+        "escalation_path",
+        "handoff_targets",
+        "rationale",
+        "created_at",
+        "session_id",
+        "parent_chain",
+        "metadata"
+      ],
+      "additionalProperties": false,
+
+      "properties": {
+        "replication_set_id": {
+          "type": "string",
+          "pattern": "^replicationset-[A-Z0-9_]{2,32}-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+          "description": "v1.0: ^replicationset-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens prefix)."
+        },
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "brand_id":        { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "tier":            { "type": "string", "enum": ["Pro", "Enterprise"] },
+        "lever":           { "type": "integer", "enum": [1, 2, 3] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "status":          { "type": "string", "enum": ["ready_for_qc", "partial_with_warnings"] },
+        "total_shots":             { "type": "integer", "minimum": 1, "maximum": 60 },
+        "total_replicated_shots":  { "type": "integer", "minimum": 1, "maximum": 60 },
+        "replicated_shots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": { "$ref": "#/$defs/replicatedShot" }
+        },
+        "brand_anchor_reference":  { "$ref": "#/$defs/brandAnchorReferenceEmitted" },
+        "replication_telemetry":   { "$ref": "#/$defs/replicationTelemetry" },
+        "qc_pre_flags": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "description": "snake_case predicate per Cross-SPEC §3.7. Enforced via Check #8."
+          }
+        },
+        "qc_warnings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 256 }
+        },
+        "escalation_path": {
+          "type": "array",
+          "description": "Ordered ascending by severity per Cross-SPEC §3.8.",
+          "items": {
+            "type": "object",
+            "required": ["severity", "notes"],
+            "additionalProperties": false,
+            "properties": {
+              "severity": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "notes":    { "type": "string", "minLength": 4, "maxLength": 1024 },
+              "engine_vendor_support_redacted_bool": { "type": "boolean" },
+              "human_review_required_bool":          { "type": "boolean" }
+            }
+          }
+        },
+        "handoff_targets": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["agent", "payload_ref"],
+            "additionalProperties": false,
+            "properties": {
+              "agent":       { "type": "string", "enum": ["edit-director", "qc", "localization"] },
+              "payload_ref": { "type": "string", "minLength": 4, "maxLength": 256 }
+            }
+          },
+          "description": "MUST include {edit-director, replicated_shots} AND {qc, replicated_shots}. Optional {localization, replicated_shots} for v1.1+ multi-language fanout."
+        },
+        "rationale":     { "type": "string", "minLength": 4, "maxLength": 2048 },
+        "created_at":    { "type": "string", "format": "date-time" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "parent_chain":  { "$ref": "#/$defs/parentChain5Tuple" },
+        "metadata":      { "$ref": "#/$defs/metadataBlock" }
+      },
+
+      "allOf": [
+        {
+          "description": "Joint validation: tier-bound tier_cost_ceiling_per_reel_usd inside replication_telemetry per §7.3 + Decision #2.",
+          "oneOf": [
+            {
+              "properties": {
+                "tier": { "const": "Pro" },
+                "replication_telemetry": {
+                  "properties": {
+                    "tier_cost_ceiling_per_reel_usd": { "const": 50 }
+                  }
+                }
+              }
+            },
+            {
+              "properties": {
+                "tier": { "const": "Enterprise" },
+                "replication_telemetry": {
+                  "properties": {
+                    "tier_cost_ceiling_per_reel_usd": { "const": 120 }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "description": "Joint validation: Mode C is Enterprise-only at v1.0 per §13 Decision #10.",
+          "if": { "properties": { "production_mode": { "const": "C" } } },
+          "then": { "properties": { "tier": { "const": "Enterprise" } } }
+        },
+        {
+          "description": "Joint validation: mode_c_coverage_match_bool non-null on Mode C; null on Mode A + Mode B.",
+          "if": { "properties": { "production_mode": { "const": "C" } } },
+          "then": {
+            "properties": {
+              "metadata": {
+                "properties": { "mode_c_coverage_match_bool": { "type": "boolean" } }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "metadata": {
+                "properties": { "mode_c_coverage_match_bool": { "type": "null" } }
+              }
+            }
+          }
+        }
+      ]
+    },
+
+    "replicatedShot": {
+      "type": "object",
+      "description": "Per-shot replication record. shot_index=1 is the anchor (literal_fingerprint_inherit, drift=0); shot_index>1 are inheritors with composite inheritance_match_score_0_1 against drift_threshold 0.85 (LOCKED canon §12). asset_uri MUST be platform-relative (Hard Rule #8).",
+      "required": [
+        "shot_id",
+        "shot_index",
+        "asset_uri",
+        "is_anchor_bool",
+        "engine_id",
+        "cost_actual_usd",
+        "inheritance_match_score_0_1",
+        "anchor_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "shot_id":     { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "shot_index":  { "type": "integer", "minimum": 1, "maximum": 60 },
+        "asset_uri":   { "type": "string", "pattern": "^ars://replicated_shots/.+" },
+        "is_anchor_bool": { "type": "boolean" },
+        "engine_id": {
+          "type": "string",
+          "enum": [
+            "pika_style_tokens",
+            "runway_style_reference",
+            "clip_native",
+            "phash_native",
+            "palette_native",
+            "grade_pass_native",
+            "coverage_envelope_native"
+          ],
+          "description": "4 engines + 3 native compute paths per Day 31 §11.1. Pika PRIMARY · Runway FALLBACK."
+        },
+        "cost_actual_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Per-shot cost. Hard upper bound = Enterprise reel ceiling; per-shot ceiling lower in practice (typical $0.001–$0.32)."
+        },
+        "inheritance_match_score_0_1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Composite score per §12 (VERBATIM INHERIT from AI Video Gen Day 23 §12): 0.40 × s_clip + 0.30 × s_phash + 0.20 × s_palette + 0.10 × s_motion. Drift threshold 0.85 (LOCKED canon)."
+        },
+        "anchor_status": {
+          "type": "string",
+          "enum": ["anchor", "inherit_pass", "inherit_warn", "inherit_fail_regenerated", "inherit_fail_final"],
+          "description": "Per-shot status. inherit_warn = score 0.85–0.90 (Check #6 tri-state WARN, Lever-3 routes to human review). inherit_fail_regenerated = score < 0.85 first attempt, regenerated successfully. inherit_fail_final = regenerate-then-still-fail (Decision #6 2-strike ceiling)."
+        },
+        "fingerprint_components": {
+          "type": "object",
+          "description": "Optional per-shot fingerprint breakdown for QC + audit. Present when lever_state ≤ 2 (Lever 1 + 2 require this; Lever 3 may omit).",
+          "additionalProperties": false,
+          "properties": {
+            "s_clip":    { "type": "number", "minimum": 0, "maximum": 1 },
+            "s_phash":   { "type": "number", "minimum": 0, "maximum": 1 },
+            "s_palette": { "type": "number", "minimum": 0, "maximum": 1 },
+            "s_motion":  { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0,
+          "description": "Per-shot retry count. Hard ceiling 2 (Decision #6 2-strike). >0 implies inherit_fail_regenerated or inherit_fail_final."
+        },
+        "engine_fallback_used_bool": {
+          "type": "boolean",
+          "default": false,
+          "description": "True if Pika PRIMARY failed and Runway FALLBACK was invoked. Used in Mode C coverage envelope and Mode B drift retry."
+        }
+      },
+
+      "allOf": [
+        {
+          "description": "Anchor shot must have shot_index = 1 and is_anchor_bool = true and inheritance_match_score_0_1 = 1.0.",
+          "if":   { "properties": { "is_anchor_bool": { "const": true } } },
+          "then": {
+            "properties": {
+              "shot_index":                  { "const": 1 },
+              "inheritance_match_score_0_1": { "const": 1 },
+              "anchor_status":               { "const": "anchor" }
+            }
+          }
+        }
+      ]
+    },
+
+    "replicatedShotPartial": {
+      "type": "object",
+      "description": "Partial per-shot record on errorEnvelope branch. Allows downstream auditor to reconstruct what completed before halt without re-validating full replicatedShot.",
+      "required": ["shot_id", "asset_uri", "engine_id", "cost_actual_usd"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_id":         { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri":       { "type": "string", "pattern": "^ars://replicated_shots/.+" },
+        "engine_id":       { "type": "string", "minLength": 4 },
+        "cost_actual_usd": { "type": "number", "minimum": 0, "maximum": 120 }
+      }
+    },
+
+    "brandAnchorReferenceEmitted": {
+      "type": "object",
+      "description": "Brand-anchor reference re-emitted at output for downstream QC + Loop re-validation without recomputing. literal_fingerprint_inherit_uri persists across downstream agents (per §12.3).",
+      "required": [
+        "brand_id",
+        "anchor_id",
+        "anchor_sha256",
+        "anchor_locked_date",
+        "anchor_version",
+        "anchor_resolved_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":          { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "anchor_id":         { "type": "string", "pattern": "^anchor-[A-Z0-9_-]+-v\\d+(\\.\\d+)?-\\d{4}-\\d{2}-\\d{2}$" },
+        "anchor_sha256":     { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "anchor_locked_date": { "type": "string", "format": "date" },
+        "anchor_version":    { "type": "string", "pattern": "^v\\d+(\\.\\d+)?$" },
+        "anchor_resolved_at": { "type": "string", "format": "date-time" },
+        "literal_fingerprint_inherit_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^ars://brand_anchor_cache/[A-Z0-9_]{2,32}/.+"
+        }
+      }
+    },
+
+    "replicationTelemetry": {
+      "type": "object",
+      "description": "Per-reel cost + latency + retry rollup. Populates §8 performance target metrics 1, 4, 5, 6, 7, 8. tier_cost_ceiling_per_reel_usd joint-validated against tier (allOf block above).",
+      "required": [
+        "total_replication_cost_usd_actual",
+        "total_replication_cost_usd_estimated",
+        "budget_variance_pct",
+        "tier_cost_ceiling_per_reel_usd",
+        "total_wall_clock_minutes",
+        "retry_count_total",
+        "per_engine_dispatched",
+        "per_engine_completed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_replication_cost_usd_actual":    { "type": "number", "minimum": 0, "maximum": 120 },
+        "total_replication_cost_usd_estimated": { "type": "number", "minimum": 0, "maximum": 120 },
+        "budget_variance_pct": {
+          "type": "number",
+          "description": "(actual / estimated) ratio. Hard ceiling 1.10 per §8.1 #6; agent halts with cost_overrun if breached at projection time."
+        },
+        "tier_cost_ceiling_per_reel_usd": {
+          "type": "integer",
+          "enum": [50, 120],
+          "description": "§7.3 tier table value. Pro=50, Enterprise=120. Joint-validated against tier."
+        },
+        "total_wall_clock_minutes": { "type": "number", "minimum": 0, "maximum": 240 },
+        "retry_count_total":        { "type": "integer", "minimum": 0, "maximum": 60 },
+        "per_engine_dispatched": {
+          "type": "object",
+          "description": "Per-engine dispatched count for §8 metric #5 grade-pass success rate calibration.",
+          "patternProperties": {
+            "^(pika_style_tokens|runway_style_reference|clip_native|phash_native|palette_native|grade_pass_native|coverage_envelope_native)$": {
+              "type": "integer", "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "per_engine_completed": {
+          "type": "object",
+          "description": "Per-engine completed (passed grade pass) count. completed / dispatched per engine = §8 metric #5.",
+          "patternProperties": {
+            "^(pika_style_tokens|runway_style_reference|clip_native|phash_native|palette_native|grade_pass_native|coverage_envelope_native)$": {
+              "type": "integer", "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "per_engine_overrun_attribution": {
+          "type": "object",
+          "description": "Optional per-engine cost overrun attribution when cost_overrun occurs (recovery_path hint).",
+          "patternProperties": {
+            "^(pika_style_tokens|runway_style_reference|clip_native|phash_native|palette_native|grade_pass_native|coverage_envelope_native)$": {
+              "type": "number", "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Style Replication's emitted metadata block — 11 Cross-SPEC §3.9 canonical + 3 Style Replication additions (§16.1 + §16.2 Day 31). 5-tuple parent_chain encoded separately at top-level per §16.5 schema authoring decision #1. mode_c_coverage_match_bool nullable per §16.5 decision #2. literal_fingerprint_inherit per §16.5 decision #3 (anyOf with Mode-A partial encoding). replication_set_id UUID format per §16.5 decision #4. self_qc_failed_check_id enum + null per §16.5 decision #5.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "session_id",
+        "tier",
+        "production_mode",
+        "lever_state",
+        "self_qc_attempts",
+        "self_qc_failed_check_id",
+        "timestamps",
+        "literal_fingerprint_inherit",
+        "mode_c_coverage_match_bool",
+        "replication_set_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "style-replication-agent-v1.0" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "tier":             { "type": "string", "enum": ["pro", "enterprise"] },
+        "production_mode":  { "type": "string", "enum": ["A", "B", "C"] },
+        "lever_state":      { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 12 }
+          ],
+          "description": "null on success, 1..12 on failure. §16.5 decision #5 — Draft 2020-12 union via oneOf."
+        },
+        "timestamps": {
+          "type": "object",
+          "required": ["agent_started_at", "agent_completed_at"],
+          "additionalProperties": false,
+          "properties": {
+            "agent_started_at":   { "type": "string", "format": "date-time" },
+            "agent_completed_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "literal_fingerprint_inherit": {
+          "anyOf": [
+            { "$ref": "#/$defs/literalFingerprintInheritFull" },
+            { "$ref": "#/$defs/literalFingerprintInheritModeAPartial" },
+            { "type": "null" }
+          ],
+          "description": "§16.5 decision #3: anyOf encoding. Full encoding present on Mode B + Mode C; partial encoding on Mode A (missing anchor_phash_64bit); null on errorEnvelope branch."
+        },
+        "mode_c_coverage_match_bool": {
+          "type": ["boolean", "null"],
+          "description": "§16.5 decision #2: Draft 2020-12 union encoding. true on Mode C reel passing coverage envelope check; false on Mode C reel falling back to Mode B; null on Mode A + Mode B (not applicable)."
+        },
+        "replication_set_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "§16.5 decision #4: UUID v4 per-invocation. Appended to parent_chain at position [4] to extend AI Video Gen's 4-tuple to 5-tuple (§16.3 amendment Day 32 LOCK ceremony language)."
+        }
+      }
+    },
+
+    "literalFingerprintInheritFull": {
+      "type": "object",
+      "description": "Mode B + Mode C full fingerprint inherit (§12.3). Brand-anchor immutable fingerprint passed downstream so QC + Loop can re-validate without recomputing CLIP/pHash.",
+      "required": [
+        "anchor_clip_embedding_uri",
+        "anchor_phash_64bit",
+        "anchor_palette_lab_centroids",
+        "anchor_motion_grade_baseline"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "anchor_clip_embedding_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^ars://brand_anchor_cache/[A-Z0-9_]{2,32}/.+\\.embeddings\\.bin$"
+        },
+        "anchor_phash_64bit": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{16}$",
+          "description": "64-bit perceptual hash as 16-char lowercase hex, 0x-prefixed."
+        },
+        "anchor_palette_lab_centroids": {
+          "type": "array",
+          "description": "k=5 dominant color centroids in CIELAB space (L*, a*, b* triplets).",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": { "type": "number" }
+          }
+        },
+        "anchor_motion_grade_baseline": {
+          "type": "object",
+          "required": ["contrast_target", "saturation_target", "lut_id"],
+          "additionalProperties": false,
+          "properties": {
+            "contrast_target":   { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "saturation_target": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "lut_id":            { "type": "string", "pattern": "^[A-Z0-9_-]+-finish-v\\d+(\\.\\d+)?-\\d{4}-\\d{2}-\\d{2}$" }
+          }
+        }
+      }
+    },
+
+    "literalFingerprintInheritModeAPartial": {
+      "type": "object",
+      "description": "Mode A partial fingerprint inherit (§16.5 decision #3). Mode A doesn't extract anchor_phash_64bit because raw shot manifest fingerprinting differs from rendered_shots fingerprinting. Other fields present.",
+      "required": [
+        "anchor_clip_embedding_uri",
+        "anchor_palette_lab_centroids",
+        "anchor_motion_grade_baseline"
+      ],
+      "not": { "required": ["anchor_phash_64bit"] },
+      "additionalProperties": false,
+      "properties": {
+        "anchor_clip_embedding_uri": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^ars://brand_anchor_cache/[A-Z0-9_]{2,32}/.+\\.embeddings\\.bin$"
+        },
+        "anchor_palette_lab_centroids": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": { "type": "number" }
+          }
+        },
+        "anchor_motion_grade_baseline": {
+          "type": "object",
+          "required": ["contrast_target", "saturation_target", "lut_id"],
+          "additionalProperties": false,
+          "properties": {
+            "contrast_target":   { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "saturation_target": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "lut_id":            { "type": "string", "pattern": "^[A-Z0-9_-]+-finish-v\\d+(\\.\\d+)?-\\d{4}-\\d{2}-\\d{2}$" }
+          }
+        }
+      }
+    },
+
+    "sessionId": {
+      "type": "string",
+      "pattern": "^ars-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+    },
+
+    "parentChain5Tuple": {
+      "type": "array",
+      "description": "5-tuple parent_chain — §16.5 decision #1 encoding: Draft 2020-12 prefixItems + items:false. minItems = 5 / maxItems = 5 hard-pinned. Cross-SPEC §3.9 amendment Day 32 LOCK ceremony binds this. Positional ordering: [brief_id, script_id, storyboard_id, ai-video-gen-or-mode-c-marker, replication-set-uuid]. Position [3] is `mode-c-direct` literal string on Mode C reels (no AI Video Gen upstream) or ai-video-gen session_id on Mode B reels. Backward-compat assertion (§16.5 decision #6): legacy 4-tuple consumers must be updated to 5-tuple; this schema rejects 4-tuple inputs to enforce the migration.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    }
+  }
+}

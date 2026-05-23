@@ -1,0 +1,127 @@
+{
+  "replication_set_id":   "replicationset-REINVENTED-2026-05-23-202",
+  "production_plan_id":   "productionplan-REINVENTED-2026-05-23-202",
+  "brand_id":             "REINVENTED",
+  "tier":                 "Enterprise",
+  "lever":                3,
+  "production_mode":      "C",
+  "status":               "ready_for_qc",
+  "total_shots":          3,
+  "total_replicated_shots": 3,
+
+  "replicated_shots": [
+    {
+      "shot_id": "shot-001", "shot_index": 1,
+      "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/202/shot-001.mp4",
+      "is_anchor_bool": true,
+      "engine_id": "grade_pass_native",
+      "cost_actual_usd": 0.002,
+      "inheritance_match_score_0_1": 1,
+      "anchor_status": "anchor",
+      "fingerprint_components": { "s_clip": 1.0, "s_phash": 1.0, "s_palette": 1.0, "s_motion": 1.0 },
+      "retry_count": 0,
+      "engine_fallback_used_bool": false
+    },
+    {
+      "shot_id": "shot-002", "shot_index": 2,
+      "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/202/shot-002.mp4",
+      "is_anchor_bool": false,
+      "engine_id": "pika_style_tokens",
+      "cost_actual_usd": 0.140,
+      "inheritance_match_score_0_1": 0.91,
+      "anchor_status": "inherit_pass",
+      "fingerprint_components": { "s_clip": 0.93, "s_phash": 0.90, "s_palette": 0.91, "s_motion": 0.88 },
+      "retry_count": 0,
+      "engine_fallback_used_bool": false
+    },
+    {
+      "shot_id": "shot-003", "shot_index": 3,
+      "asset_uri": "ars://replicated_shots/REINVENTED/2026-05-23/202/shot-003.mp4",
+      "is_anchor_bool": false,
+      "engine_id": "pika_style_tokens",
+      "cost_actual_usd": 0.138,
+      "inheritance_match_score_0_1": 0.92,
+      "anchor_status": "inherit_pass",
+      "fingerprint_components": { "s_clip": 0.94, "s_phash": 0.91, "s_palette": 0.91, "s_motion": 0.88 },
+      "retry_count": 0,
+      "engine_fallback_used_bool": false
+    }
+  ],
+
+  "brand_anchor_reference": {
+    "brand_id":            "REINVENTED",
+    "anchor_id":           "anchor-REINVENTED-v1-2026-05-01",
+    "anchor_sha256":       "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+    "anchor_locked_date":  "2026-05-01",
+    "anchor_version":      "v1.0",
+    "anchor_resolved_at":  "2026-05-23T07:30:08Z",
+    "literal_fingerprint_inherit_uri": "ars://brand_anchor_cache/REINVENTED/anchor-v1-2026-05-01.bundle"
+  },
+
+  "replication_telemetry": {
+    "total_replication_cost_usd_actual":    55.000,
+    "total_replication_cost_usd_estimated": 55.000,
+    "budget_variance_pct":                  1.000,
+    "tier_cost_ceiling_per_reel_usd":       120,
+    "total_wall_clock_minutes":             3.2,
+    "retry_count_total":                    0,
+    "per_engine_dispatched": {
+      "pika_style_tokens": 2, "runway_style_reference": 0, "clip_native": 3, "phash_native": 3, "palette_native": 3, "grade_pass_native": 3, "coverage_envelope_native": 3
+    },
+    "per_engine_completed": {
+      "pika_style_tokens": 2, "runway_style_reference": 0, "clip_native": 3, "phash_native": 3, "palette_native": 3, "grade_pass_native": 3, "coverage_envelope_native": 3
+    }
+  },
+
+  "qc_pre_flags": [
+    "schema_valid", "entity_firewall_clean", "no_buildings_clean", "brand_voice_consistent",
+    "tier_ceiling_clean", "drift_within_threshold", "mode_c_envelope_match",
+    "asset_uri_pattern_clean", "parent_chain_5_tuple_clean"
+  ],
+  "qc_warnings": [],
+
+  "escalation_path": [
+    { "severity": 1, "notes": "Mode C hot path: 2 inheritors via Pika within drift threshold; coverage envelope match true; -92% cost vs Mode B equivalent ($55 vs $692).", "engine_vendor_support_redacted_bool": false, "human_review_required_bool": false }
+  ],
+
+  "handoff_targets": [
+    { "agent": "edit-director", "payload_ref": "replicationset-REINVENTED-2026-05-23-202" },
+    { "agent": "qc",            "payload_ref": "replicationset-REINVENTED-2026-05-23-202" }
+  ],
+
+  "rationale": "Mode C Enterprise happy path. Anchor cache HIT (three-way bit equality clean). 2 inheritors via Pika PRIMARY style token transfer within coverage envelope tolerance 12% (no AI Video Gen upstream invoked). Mode C margin demonstrator: $55.00 actual vs ~$692 Mode B equivalent re-render envelope = -92% cost (-$637/reel). 12-check Self-QC clean including Mode C envelope check; ready for Edit Director + QC handoff.",
+  "created_at":  "2026-05-23T07:33:12Z",
+  "session_id":  "ars-2026-05-23-202",
+
+  "parent_chain": [
+    "brief-REINVENTED-2026-05-23-202",
+    "script-REINVENTED-2026-05-23-202",
+    "storyboard-REINVENTED-2026-05-23-202",
+    "mode-c-direct",
+    "22222222-3333-4444-8555-666666666666"
+  ],
+
+  "metadata": {
+    "agent_id":         "style-replication-agent-v1.0",
+    "agent_version":    "1.0",
+    "session_id":       "ars-2026-05-23-202",
+    "trace_id":         null,
+    "tier":             "enterprise",
+    "production_mode":  "C",
+    "lever_state":      "lever-3",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "timestamps": {
+      "agent_started_at":   "2026-05-23T07:30:00Z",
+      "agent_completed_at": "2026-05-23T07:33:12Z"
+    },
+    "literal_fingerprint_inherit": {
+      "anchor_clip_embedding_uri": "ars://brand_anchor_cache/REINVENTED/anchor-v1-2026-05-01.embeddings.bin",
+      "anchor_phash_64bit":        "0x9f3a7b2c5d1e8f4a",
+      "anchor_palette_lab_centroids": [[28.0, 42.0, -18.0], [62.0, 8.0, 38.0], [88.0, -2.0, 12.0], [44.0, 28.0, -8.0], [18.0, 4.0, -4.0]],
+      "anchor_motion_grade_baseline": { "contrast_target": 1.18, "saturation_target": 1.12, "lut_id": "REINVENTED-finish-v1-2026-05-01" }
+    },
+    "mode_c_coverage_match_bool": true,
+    "replication_set_id": "22222222-3333-4444-8555-666666666666"
+  }
+}
