@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/qc-preflight-agent/input.schema.json",
+  "title": "ARS QC Pre-flight Agent — Input (production-tier convergence)",
+  "description": "Validates the v1.0 input of the QC Pre-flight Agent (Agent #7 of 17). Authored Day 45 (Wed Jun 3 2026) from SPEC §2 Inputs (Day 40 outline) + §2.1 primary input (replicated_shots, any mode) + §2.2 Mode B forensic cross-check (rendered_shots) + §2.3 accumulated_qc_pre_flags surface + §2.4 lever/tier context + §16 metadata block (Day 43). QC Pre-flight is mode-agnostic: production_mode is read for context/reporting, not for verdict forking. The polymorphic predecessor success/error discrimination is the upstream output_type — but QC Pre-flight CANNOT QC a failed input, so this schema requires the success shape on the consumed branch; an inbound errorEnvelope is a runtime halt (upstream_not_success), not a schema-valid input. parent_chain inbound = Style Replication 5-tuple (LOCKED canon, ARS-2026-05-22-Style-Replication-output.schema.json parentChain5Tuple, inherited verbatim positions 0-4). Deep replicated_shots / rendered_shots internals are validated by their own LOCKED producer schemas (read-only); this schema constrains the QC-relevant envelope + the fields QC Pre-flight adjudicates, and leaves deep producer internals permissive to avoid canon drift (single-file, no external $ref resolution).",
+
+  "type": "object",
+  "required": [
+    "replicated_shots",
+    "production_plan",
+    "brief_ref",
+    "metadata",
+    "cost_ledger",
+    "accumulated_qc_pre_flags"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "replicated_shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "description": "Style Replication output.schema.json successReplicatedShots branch (primary input, any mode). Deep internals enforced by the LOCKED producer schema; QC-relevant per-shot fields constrained here.",
+      "items": { "$ref": "#/$defs/replicatedShotConsumed" }
+    },
+    "production_plan": {
+      "type": "object",
+      "description": "Denormalized ProdCoord output carried for format-spec + tier + platform_variants. platform_variants[] is the format-spec target set (§2.1 hard validation 6).",
+      "required": ["production_plan_id", "platform_variants"],
+      "properties": {
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "platform_variants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "description": "Non-empty per §2.1 validation 6. Each variant is the aspect/duration/caption-burn target adjudicated in Step 5.",
+          "items": { "$ref": "#/$defs/platformVariant" }
+        }
+      }
+    },
+    "brief_ref": {
+      "type": "object",
+      "required": ["brief_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        }
+      }
+    },
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" },
+    "cost_ledger": {
+      "type": "object",
+      "description": "Per-agent actual spend + combined tier ceiling. QC Pre-flight is the first agent with total-spend visibility (Step 7 cost_ledger_check). cumulative = ai_video_gen + style_replication + self-cost.",
+      "required": [
+        "ai_video_gen_actual_usd",
+        "style_replication_actual_usd",
+        "tier_combined_ceiling_usd"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ai_video_gen_actual_usd":     { "type": "number", "minimum": 0.0 },
+        "style_replication_actual_usd": { "type": "number", "minimum": 0.0 },
+        "tier_combined_ceiling_usd": {
+          "type": "number",
+          "enum": [40, 450, 870],
+          "description": "Combined tier ceiling (§4 / §7.3): <=40 Pilot-Starter Mode A · 450 Pro ($400+$50) · 870 Enterprise ($750+$120). Inherited verbatim from Style Replication §7.3 reconciliation."
+        }
+      }
+    },
+    "accumulated_qc_pre_flags": {
+      "type": "object",
+      "description": "§2.3 — the defining input. Union of qc_pre_flags[] from all 6 upstream agents. Each agent MUST contribute >=4 snake_case predicates (Cross-SPEC §3.4 floor). A short array from any stage => qc_pre_flags_floor_breach at runtime (Step 3 adjudication).",
+      "required": [
+        "brief-agent",
+        "script-agent",
+        "storyboard-agent",
+        "production-coord-agent",
+        "ai-video-gen-agent",
+        "style-replication-agent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brief-agent":             { "$ref": "#/$defs/qcPreFlagsArray" },
+        "script-agent":            { "$ref": "#/$defs/qcPreFlagsArray" },
+        "storyboard-agent":        { "$ref": "#/$defs/qcPreFlagsArray" },
+        "production-coord-agent":  { "$ref": "#/$defs/qcPreFlagsArray" },
+        "ai-video-gen-agent":      { "$ref": "#/$defs/qcPreFlagsArray" },
+        "style-replication-agent": { "$ref": "#/$defs/qcPreFlagsArray" }
+      }
+    },
+    "rendered_shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "description": "OPTIONAL — Mode B forensic cross-check only (§2.2). AI Video Gen output.schema.json successRenderedShots branch. Present => verify negative_prompt_sha256 survived the Style Replication passthrough (Step 9). Absent in Mode A / Mode C.",
+      "items": { "$ref": "#/$defs/renderedShotConsumed" }
+    },
+    "negative_prompt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "OPTIONAL — Mode B only. The forensic invariant cross-checked against the value carried on rendered_shots (Step 9 lineage_integrity_failure on mismatch)."
+    }
+  },
+
+  "$defs": {
+    "replicatedShotConsumed": {
+      "type": "object",
+      "description": "QC-relevant projection of a Style Replication replicated_shot. Deep internals validated by the producer schema (read-only); QC reads asset_uri (ars:// platform-relative — Hard Rule #8), qc_pre_flags floor, and drift_warning_bool (Step 8 reconciliation).",
+      "required": ["shot_id", "asset_uri", "qc_pre_flags"],
+      "properties": {
+        "shot_id":   { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://",
+          "description": "Platform-relative ars:// pattern (Hard Rule #8 inherit — NO absolute URLs). §2.1 validation 2."
+        },
+        "qc_pre_flags":      { "$ref": "#/$defs/qcPreFlagsArray" },
+        "drift_warning_bool": { "type": "boolean" },
+        "style_drift_exceeded": { "type": "boolean" }
+      }
+    },
+    "renderedShotConsumed": {
+      "type": "object",
+      "description": "QC-relevant projection of an AI Video Gen rendered_shot (Mode B forensic). All rendered_shots[] share one negative_prompt_sha256 (Day 22 §6 Check #10 forensic invariant).",
+      "required": ["shot_id", "negative_prompt_sha256"],
+      "properties": {
+        "shot_id":               { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "negative_prompt_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "platformVariant": {
+      "type": "object",
+      "description": "A target platform render spec. QC Pre-flight checks aspect / duration / caption-burn parity per variant (Step 5).",
+      "required": ["platform", "aspect_ratio", "duration_s"],
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "instagram-feed",
+            "instagram-reels",
+            "tiktok",
+            "youtube-shorts",
+            "linkedin",
+            "facebook"
+          ]
+        },
+        "aspect_ratio": { "type": "string", "enum": ["9:16", "1:1", "4:5", "16:9"] },
+        "duration_s":   { "type": "number", "minimum": 1, "maximum": 180 },
+        "caption_burn": { "type": "boolean" }
+      }
+    },
+    "qcPreFlagsArray": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 32,
+      "description": "Cross-SPEC §3.4 minItems-4 floor + §3.7 snake_case predicate shape. Adjudicated, not re-executed, by Step 3.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Inbound session identifier. Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible — does not false-reject existing pipeline session ids). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+    "inboundParentChain5Tuple": {
+      "type": "array",
+      "description": "Inbound lineage = Style Replication 5-tuple (LOCKED canon — ARS-2026-05-22-Style-Replication-output.schema.json parentChain5Tuple, positions 0-4 inherited verbatim). QC Pre-flight validates this is a well-formed 5-tuple inbound (§2.1 validation 4); a malformed inbound chain => lineage_integrity_failure at runtime. QC appends its own preflight_report_id at position 5 on OUTPUT (held at minItems-5 until Cross-SPEC §3.9 ratifies — see output.schema.json).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 inbound metadata carried from Style Replication. QC Pre-flight reads tier / production_mode / lever_state / parent_chain (5-tuple) / brand_id for context + the 7th-pass tier-mode re-validation.",
+      "required": [
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "session_id",
+        "lever_state"
+      ],
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["pilot", "starter", "pro", "enterprise"],
+          "description": "Universal — all 4 tiers traverse the gate (§4 / Decision #2). Safety is not a tier feature."
+        },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "lever_state":     { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "brand_id":        { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "session_id":      { "$ref": "#/$defs/sessionId" },
+        "parent_chain":    { "$ref": "#/$defs/inboundParentChain5Tuple" }
+      }
+    }
+  }
+}
