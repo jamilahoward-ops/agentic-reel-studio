@@ -1,0 +1,49 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "entity_firewall_breach",
+  "failed_check_id": 2,
+  "attempts": 1,
+  "route_back_to": "style-replication-agent",
+  "reel_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-29-001",
+    "production_plan_id": "productionplan-REINVENTED-2026-05-29-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-05-29-003"
+  },
+  "cost_incurred_usd": 0.01,
+  "detail": {
+    "violation": "Banned entity token '4821 main' found in replicated_shots[0].replication_notes",
+    "leaking_upstream_stage": "style-replication-agent",
+    "matched_firewall_entry": 2,
+    "recovery_path": "Forensic-log the leak; route to style-replication-agent to strip the entity reference from replication_notes; re-run the 7th pass."
+  },
+  "metadata": {
+    "agent_id": "qc-preflight-agent-v1.0",
+    "agent_version": "1.0",
+    "session_id": "sess-2026-05-29-reinvented-pro-03",
+    "trace_id": null,
+    "tier": "pro",
+    "production_mode": "B",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-29-001",
+      "script-REINVENTED-2026-05-29-001",
+      "storyboard-REINVENTED-2026-05-29-001",
+      "ai-video-gen-REINVENTED-2026-05-29-001",
+      "0190f3a1-7c2b-7e44-9a1b-2c3d4e5f6071",
+      "preflight-REINVENTED-2026-05-29-003"
+    ],
+    "lever_state": "lever-3",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "human_review_required": true,
+    "timestamps": {
+      "agent_started_at": "2026-06-04T05:46:10Z",
+      "agent_completed_at": "2026-06-04T05:46:38Z"
+    },
+    "latency_ms": 24180,
+    "qc_gate_class": "pre_flight",
+    "verdict_evidence_hash": "0904b8966ef0c767ff8a7f09a8ca6f4d284b8455c7995c0858db7f1d15c2e5b8",
+    "runtime_environment_class": "staging"
+  },
+  "human_review_required": true
+}

@@ -1,0 +1,52 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "format_spec_violation",
+  "failed_check_id": 4,
+  "attempts": 1,
+  "route_back_to": "style-replication-agent",
+  "reel_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-29-001",
+    "production_plan_id": "productionplan-REINVENTED-2026-05-29-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-05-29-004"
+  },
+  "cost_incurred_usd": 0.01,
+  "detail": {
+    "violation": "platform_variants[1] requested aspect 1:1 but replicated_shots[*] rendered at 9:16 only",
+    "affected_platform": "instagram-feed",
+    "format_spec_check": {
+      "platform_variants_checked": 2,
+      "aspect_ratio_violations": 1
+    },
+    "recovery_path": "Re-run Style Replication grade pass with a 1:1 crop token OR drop the 1:1 variant from platform_variants."
+  },
+  "metadata": {
+    "agent_id": "qc-preflight-agent-v1.0",
+    "agent_version": "1.0",
+    "session_id": "sess-2026-05-29-reinvented-pro-04",
+    "trace_id": null,
+    "tier": "pro",
+    "production_mode": "B",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-29-001",
+      "script-REINVENTED-2026-05-29-001",
+      "storyboard-REINVENTED-2026-05-29-001",
+      "ai-video-gen-REINVENTED-2026-05-29-001",
+      "0190f3a1-7c2b-7e44-9a1b-2c3d4e5f6071",
+      "preflight-REINVENTED-2026-05-29-004"
+    ],
+    "lever_state": "lever-3",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "human_review_required": true,
+    "timestamps": {
+      "agent_started_at": "2026-06-04T05:46:10Z",
+      "agent_completed_at": "2026-06-04T05:46:38Z"
+    },
+    "latency_ms": 24180,
+    "qc_gate_class": "pre_flight",
+    "verdict_evidence_hash": "f260fcc7e49f564ee24e17a7522012bf8ad8e7b35f42a78076c04d1840d4111e",
+    "runtime_environment_class": "staging"
+  },
+  "human_review_required": true
+}

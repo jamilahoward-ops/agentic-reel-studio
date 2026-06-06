@@ -1,0 +1,53 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "hold",
+  "failure_code": "drift_unresolved",
+  "failed_check_id": 8,
+  "attempts": 1,
+  "route_back_to": null,
+  "reel_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-29-001",
+    "production_plan_id": "productionplan-REINVENTED-2026-05-29-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-05-29-005"
+  },
+  "cost_incurred_usd": 0.01,
+  "detail": {
+    "drift_reconciliation": {
+      "unresolved_drift_count": 1,
+      "human_signoff_required": true
+    },
+    "affected_shot": "shot-003",
+    "routed_to": "human-review",
+    "note": "Carried style_drift_exceeded on shot-003 with no Lever-3 sign-off. NOT auto-failed, NOT auto-passed. Held for operator judgment.",
+    "recovery_path": "Operator reviews shot-003 drift and either (a) signs off (drift accepted -> re-run gate, verdict resolves to pass) or (b) rejects (route to style-replication-agent for re-grade)."
+  },
+  "metadata": {
+    "agent_id": "qc-preflight-agent-v1.0",
+    "agent_version": "1.0",
+    "session_id": "sess-2026-05-29-reinvented-pro-05",
+    "trace_id": null,
+    "tier": "pro",
+    "production_mode": "B",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-29-001",
+      "script-REINVENTED-2026-05-29-001",
+      "storyboard-REINVENTED-2026-05-29-001",
+      "ai-video-gen-REINVENTED-2026-05-29-001",
+      "0190f3a1-7c2b-7e44-9a1b-2c3d4e5f6071",
+      "preflight-REINVENTED-2026-05-29-005"
+    ],
+    "lever_state": "lever-3",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "human_review_required": true,
+    "timestamps": {
+      "agent_started_at": "2026-06-04T05:46:10Z",
+      "agent_completed_at": "2026-06-04T05:46:38Z"
+    },
+    "latency_ms": 24180,
+    "qc_gate_class": "pre_flight",
+    "verdict_evidence_hash": "72e7c3d813219fa7a0c821df2a309dfc31bc6d5084f8503b576623a5c2616708",
+    "runtime_environment_class": "staging"
+  },
+  "human_review_required": true
+}

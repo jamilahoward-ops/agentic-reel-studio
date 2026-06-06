@@ -1,0 +1,127 @@
+{
+  "replicated_shots": [
+    {
+      "shot_id": "shot-001",
+      "asset_uri": "ars://replicated/REINVENTED/sess-2026-05-29/shot-001.mp4",
+      "drift_warning_bool": false,
+      "qc_pre_flags": [
+        "anchor_identity_verified",
+        "drift_within_tolerance",
+        "brand_finish_applied",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_id": "shot-002",
+      "asset_uri": "ars://replicated/REINVENTED/sess-2026-05-29/shot-002.mp4",
+      "drift_warning_bool": false,
+      "qc_pre_flags": [
+        "anchor_identity_verified",
+        "drift_within_tolerance",
+        "brand_finish_applied",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_id": "shot-003",
+      "asset_uri": "ars://replicated/REINVENTED/sess-2026-05-29/shot-003.mp4",
+      "drift_warning_bool": true,
+      "style_drift_exceeded": true,
+      "qc_pre_flags": [
+        "anchor_identity_verified",
+        "drift_within_tolerance",
+        "brand_finish_applied",
+        "cost_within_ceiling"
+      ]
+    }
+  ],
+  "rendered_shots": [
+    {
+      "shot_id": "shot-001",
+      "negative_prompt_sha256": "6851266f6e23182f19a9b40af2d94e089480d05aa34ea0a1d4d9293556f7c210"
+    },
+    {
+      "shot_id": "shot-002",
+      "negative_prompt_sha256": "6851266f6e23182f19a9b40af2d94e089480d05aa34ea0a1d4d9293556f7c210"
+    }
+  ],
+  "negative_prompt_sha256": "6851266f6e23182f19a9b40af2d94e089480d05aa34ea0a1d4d9293556f7c210",
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-05-29-001",
+    "platform_variants": [
+      {
+        "platform": "instagram-reels",
+        "aspect_ratio": "9:16",
+        "duration_s": 28,
+        "caption_burn": true
+      },
+      {
+        "platform": "instagram-feed",
+        "aspect_ratio": "1:1",
+        "duration_s": 28,
+        "caption_burn": true
+      }
+    ]
+  },
+  "brief_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-29-001"
+  },
+  "cost_ledger": {
+    "ai_video_gen_actual_usd": 0.0,
+    "style_replication_actual_usd": 0.4,
+    "tier_combined_ceiling_usd": 450
+  },
+  "accumulated_qc_pre_flags": {
+    "brief-agent": [
+      "no_banned_vocabulary",
+      "hook_within_3s",
+      "tier_mode_authorized",
+      "no_buildings_declared"
+    ],
+    "script-agent": [
+      "hook_verbatim_from_brief",
+      "duration_within_band",
+      "do_not_say_absent",
+      "cta_block_present"
+    ],
+    "storyboard-agent": [
+      "shot_count_within_tier",
+      "audio_pillar_voice_present",
+      "no_buildings_per_shot",
+      "platform_variants_complete"
+    ],
+    "production-coord-agent": [
+      "mode_routed",
+      "vendor_assigned",
+      "budget_envelope_set",
+      "qc_pre_flags_propagated"
+    ],
+    "ai-video-gen-agent": [
+      "negative_prompt_attached",
+      "render_status_completed",
+      "cost_within_ceiling",
+      "firewall_prompt_clean"
+    ],
+    "style-replication-agent": [
+      "anchor_identity_verified",
+      "drift_within_tolerance",
+      "brand_finish_applied",
+      "cost_within_ceiling"
+    ]
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "B",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-29-001",
+      "script-REINVENTED-2026-05-29-001",
+      "storyboard-REINVENTED-2026-05-29-001",
+      "ai-video-gen-REINVENTED-2026-05-29-001",
+      "0190f3a1-7c2b-7e44-9a1b-2c3d4e5f6071"
+    ],
+    "negative_prompt_sha256": "6851266f6e23182f19a9b40af2d94e089480d05aa34ea0a1d4d9293556f7c210",
+    "lever_state": "lever-3",
+    "session_id": "sess-2026-05-29-reinvented-pro-05"
+  }
+}

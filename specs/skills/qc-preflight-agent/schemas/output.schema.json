@@ -1,0 +1,458 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/qc-preflight-agent/output.schema.json",
+  "title": "ARS QC Pre-flight Agent — Output (successPreflightReport | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the QC Pre-flight Agent (Agent #7 of 17). Authored Day 45 (Wed Jun 3 2026) from SPEC §3 Outputs (Day 40 outline) + §6 9-code/slot-11 errorEnvelope (Day 41 §6.3 LOCKED) + §10 Field Map 26 rows (Day 41) + §12 deterministic verdict math (Day 43) + §16 metadata block + §16.5 schema authoring decisions (Day 43). Polymorphism via top-level oneOf — mirrors AI Video Gen Day 14 + Style Replication Day 33 pattern. successPreflightReport <=> verdict 'pass'; errorEnvelope <=> verdict in {fail, reshoot, hold}. 9 LOCKED failure codes + slot-11 catch-all enumerated via enum (§16.5 #4 — folded codes qc_pre_flags_format_violation / negative_prompt_chain_break NOT enumerated). brand_voice_qc.per_point minItems/maxItems 11, name constrained to the 11 snake_case point names from §7 (§16.5 #5). verdict_evidence_hash pattern ^[a-f0-9]{64}$ (§16.5 #6). human_review_required const true (§16.5 #7 — recommend-don't-approve, schema-enforced). mode_b_chain_check type [object, null] (§16.5 #8). DEFERRED (Decision #5 / §16.5 #1): parent_chain held at minItems 5 + optional 6th preflight_report_id position (maxItems 6, items false) — backward-compatible, accepts both the 5-tuple inbound canon AND the 6-tuple QC extension preview. TODO@schemas-day-followup: when Cross-SPEC §3.9 n-tuple amendment ratifies, flip to minItems 6 (exact-6) per §16.5 #1. The 6-tuple is the one item NOT auto-advanced this run.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successPreflightReport" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successPreflightReport": {
+      "type": "object",
+      "description": "verdict='pass' branch (§3.1). Emitted only when all 13 PASS-conjunction terms are true (§12 deterministic AND-of-gates, zero tunable thresholds): firewall clean (hits==0) AND 11/11 brand-voice AND 0 format violations AND caption sub-statuses pass AND cost within_ceiling AND floor met (agents_reporting==6, floor_met_all, 0 negative_predicates) AND unresolved_drift_count==0. human_review_required is const true even on pass (a pass = cleared to advance to the human's publish decision, NOT published — Rule #12).",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "brand_voice_qc",
+        "entity_firewall_pass_7",
+        "format_spec_check",
+        "caption_spec_check",
+        "cost_ledger_check",
+        "qc_pre_flags_adjudication",
+        "drift_reconciliation",
+        "mode_b_chain_check",
+        "qc_pre_flags",
+        "handoff_targets",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successPreflightReport" },
+        "verdict":     { "type": "string", "const": "pass" },
+        "reel_ref":    { "$ref": "#/$defs/reelRefFull" },
+        "brand_voice_qc": {
+          "type": "object",
+          "description": "11-point Brand Voice QC gate result (§3.1 / §10 rows 10-12). points_passed==11 is the gate-pass invariant on this branch.",
+          "required": ["points_total", "points_passed", "per_point"],
+          "additionalProperties": false,
+          "properties": {
+            "points_total":  { "type": "integer", "const": 11 },
+            "points_passed": { "type": "integer", "const": 11 },
+            "per_point":     { "$ref": "#/$defs/brandVoicePerPointAllPass" }
+          }
+        },
+        "entity_firewall_pass_7": {
+          "type": "object",
+          "description": "The 7th-pass firewall result (§10 row 9). hits MUST be 0 on a pass verdict; any hit => entity_firewall_breach (errorEnvelope branch).",
+          "required": ["status", "tokens_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":         { "type": "string", "const": "pass" },
+            "tokens_scanned": { "type": "integer", "minimum": 0 },
+            "hits":           { "type": "integer", "const": 0 }
+          }
+        },
+        "format_spec_check": {
+          "type": "object",
+          "description": "§10 row — platform_variants_checked == len(production_plan.platform_variants); all violation counts 0 on pass.",
+          "required": [
+            "platform_variants_checked",
+            "aspect_ratio_violations",
+            "duration_violations",
+            "caption_burn_parity_violations"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "platform_variants_checked":     { "type": "integer", "minimum": 1 },
+            "aspect_ratio_violations":       { "type": "integer", "const": 0 },
+            "duration_violations":           { "type": "integer", "const": 0 },
+            "caption_burn_parity_violations": { "type": "integer", "const": 0 }
+          }
+        },
+        "caption_spec_check": {
+          "type": "object",
+          "description": "§10 row — both sub-statuses pass on a pass verdict (burn-in firewall + caption-burn parity).",
+          "required": ["burn_in_firewall_status", "parity_status"],
+          "additionalProperties": false,
+          "properties": {
+            "burn_in_firewall_status": { "type": "string", "const": "pass" },
+            "parity_status":           { "type": "string", "const": "pass" }
+          }
+        },
+        "cost_ledger_check": {
+          "type": "object",
+          "description": "§10 row — cumulative_reel_usd = sum(production agents) + self-cost; within_ceiling on pass. First agent with total-spend visibility.",
+          "required": ["cumulative_reel_usd", "tier_combined_ceiling_usd", "status"],
+          "additionalProperties": false,
+          "properties": {
+            "cumulative_reel_usd":       { "type": "number", "minimum": 0.0 },
+            "tier_combined_ceiling_usd": { "type": "number", "enum": [40, 450, 870] },
+            "status":                    { "type": "string", "const": "within_ceiling" }
+          }
+        },
+        "qc_pre_flags_adjudication": {
+          "type": "object",
+          "description": "§10 row — the §3.4 floor adjudication. On pass: agents_reporting==6, floor_met_all true, negative_predicates==0.",
+          "required": ["agents_reporting", "floor_met_all", "negative_predicates"],
+          "additionalProperties": false,
+          "properties": {
+            "agents_reporting":   { "type": "integer", "const": 6 },
+            "floor_met_all":      { "type": "boolean", "const": true },
+            "negative_predicates": { "type": "integer", "const": 0 }
+          }
+        },
+        "drift_reconciliation": {
+          "type": "object",
+          "description": "§10 row — a pass verdict REQUIRES unresolved_drift_count==0 (the forbidden auto-pass-over-drift defect is schema-blocked here).",
+          "required": ["unresolved_drift_count", "human_signoff_required"],
+          "additionalProperties": false,
+          "properties": {
+            "unresolved_drift_count": { "type": "integer", "const": 0 },
+            "human_signoff_required": { "type": "boolean", "const": false }
+          }
+        },
+        "mode_b_chain_check": { "$ref": "#/$defs/modeBChainCheck" },
+        "qc_pre_flags":       { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "handoff_targets": {
+          "type": "array",
+          "description": "§10 row — non-empty only on pass. v1.0 = the two terminal downstream stages.",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["localization", "publishing"] }
+        },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.05,
+          "description": "This agent's own self-cost ($0.00-$0.02; reasoning-only + optional native pHash/CLIP re-verify). Generative engine spend FORBIDDEN ($0 ceiling, not bounded)."
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict in {fail, reshoot, hold} branch (§3.2). fail = fixable without re-shooting (route to responsible upstream agent). reshoot = Mode A source footage unusable (route to production-coord-agent; Mode A-exclusive per Decision #14). hold = drift_unresolved soft-hold (the one human-deferred outcome — NOT auto-failed, NOT auto-passed). human_review_required const true on every branch.",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "attempts",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "detail",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "enum": ["fail", "reshoot", "hold"] },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_not_success",
+            "entity_firewall_breach",
+            "brand_voice_qc_failed",
+            "format_spec_violation",
+            "caption_spec_violation",
+            "cost_ledger_overrun",
+            "qc_pre_flags_floor_breach",
+            "drift_unresolved",
+            "lineage_integrity_failure",
+            "preflight_qc_agent_failed"
+          ],
+          "description": "9 LOCKED codes (Day 41 §6.3) + slot-11 catch-all preflight_qc_agent_failed (Cross-SPEC §3.6). Folded codes (qc_pre_flags_format_violation -> qc_pre_flags_floor_breach; negative_prompt_chain_break -> lineage_integrity_failure) are NOT enumerated per §16.5 #4."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Which §6 self-QC check produced the verdict (1..12)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies preflight_qc_agent_failed."
+        },
+        "route_back_to": {
+          "description": "§3.2 verdict<->route map. null on hold (human review); responsible upstream agent on fail; production-coord-agent on reshoot (Mode A only).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "brief-agent",
+                "script-agent",
+                "storyboard-agent",
+                "production-coord-agent",
+                "ai-video-gen-agent",
+                "style-replication-agent"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.05 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (violation, affected_platform, recovery_path, upstream_failure, per-agent cost attribution, failing brand-voice point ids, etc.). Advisory recovery_path is surfaced, NOT auto-executed (Decision #13 ADVISORY in v1.0).",
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 }
+          }
+        },
+        "mode_b_chain_check":    { "$ref": "#/$defs/modeBChainCheck" },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+
+      "allOf": [
+        {
+          "description": "Decision #14 — reshoot is Mode A-exclusive and routes to production-coord-agent. A reshoot verdict MUST carry route_back_to: production-coord-agent.",
+          "if": {
+            "properties": { "verdict": { "const": "reshoot" } }
+          },
+          "then": {
+            "properties": {
+              "route_back_to": { "const": "production-coord-agent" }
+            }
+          }
+        },
+        {
+          "description": "§3.2 / Step 8 — hold is the drift_unresolved soft-hold; verdict held, routed to human (route_back_to null), failure_code drift_unresolved.",
+          "if": {
+            "properties": { "verdict": { "const": "hold" } }
+          },
+          "then": {
+            "properties": {
+              "route_back_to": { "const": null },
+              "failure_code":  { "const": "drift_unresolved" }
+            }
+          }
+        }
+      ]
+    },
+
+    "reelRefFull": {
+      "type": "object",
+      "description": "Full reel reference triple (§3.1) — the cross-record audit join keys.",
+      "required": ["brief_id", "production_plan_id", "preflight_report_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id":            { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "production_plan_id":  { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["preflight_report_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id":            { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "production_plan_id":  { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" }
+      }
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens prefix). This agent's emitted identity + the 6th parent_chain element."
+    },
+    "brandVoicePerPoint": {
+      "type": "array",
+      "description": "Exactly 11 entries (§16.5 #5). Each name constrained to the 11 canonical snake_case point names from §7. Each evidence non-empty.",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id":   { "type": "integer", "minimum": 1, "maximum": 11 },
+          "name": {
+            "type": "string",
+            "enum": [
+              "pillar_tag_present",
+              "truth_echo_present",
+              "voice_markers_min_2",
+              "hook_within_spec",
+              "cta_self_answered",
+              "zero_banned_vocabulary",
+              "zero_entity_references",
+              "visual_palette_correct",
+              "end_card_correct",
+              "caption_within_spec",
+              "brand_safety_clean"
+            ]
+          },
+          "status":   { "type": "string", "enum": ["pass", "fail"] },
+          "evidence": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      }
+    },
+    "brandVoicePerPointAllPass": {
+      "type": "array",
+      "description": "Success-branch-strict variant: every one of the 11 points MUST carry status 'pass' (§12 PASS conjunction — 11/11 brand-voice). This makes a false-pass (points_passed=11 alongside a failing point) STRUCTURALLY impossible, not merely emitter-discipline. A reel with >=1 failing point routes to the errorEnvelope branch (brand_voice_qc_failed), not here.",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id":   { "type": "integer", "minimum": 1, "maximum": 11 },
+          "name": {
+            "type": "string",
+            "enum": [
+              "pillar_tag_present",
+              "truth_echo_present",
+              "voice_markers_min_2",
+              "hook_within_spec",
+              "cta_self_answered",
+              "zero_banned_vocabulary",
+              "zero_entity_references",
+              "visual_palette_correct",
+              "end_card_correct",
+              "caption_within_spec",
+              "brand_safety_clean"
+            ]
+          },
+          "status":   { "type": "string", "const": "pass" },
+          "evidence": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      }
+    },
+    "modeBChainCheck": {
+      "type": ["object", "null"],
+      "description": "§16.5 #8 — populated Mode B (forensic SHA-256 passthrough cross-check); null Mode A / Mode C (§10.5 matrix). passthrough_intact_bool==false => lineage_integrity_failure.",
+      "required": ["negative_prompt_sha256", "passthrough_intact_bool"],
+      "additionalProperties": false,
+      "properties": {
+        "negative_prompt_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "passthrough_intact_bool": { "type": "boolean" }
+      }
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "QC Pre-flight's own emitted predicates (§3.7 snake_case, >=4 — Check #12). e.g. entity_firewall_clean_pass_7, eleven_point_gate_all_green, cost_within_combined_ceiling, no_unresolved_drift_auto_passed.",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "DEFERRED (Decision #5 / §16.5 #1). Held at minItems 5 with an OPTIONAL 6th preflight_report_id position (maxItems 6, items false). This is the additive, backward-compatible encoding: it ACCEPTS the 5-tuple inbound canon AND the 6-tuple QC extension preview, and REJECTS a 4-tuple. TODO@cross-spec-3.9-ratification: when the n-tuple amendment ratifies, flip to minItems 6 (exact-6) per §16.5 #1 — the 6-tuple is then mandatory, not optional. NOT auto-advanced this run.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 6
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block (§16.1) + 4 QC Pre-flight additions (§16.2): qc_gate_class, verdict_evidence_hash, runtime_environment_class, + the parent_chain 6th position. human_review_required const true (§16.5 #7).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "session_id",
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "lever_state",
+        "self_qc_attempts",
+        "self_qc_failed_check_id",
+        "human_review_required",
+        "timestamps",
+        "latency_ms",
+        "qc_gate_class",
+        "verdict_evidence_hash",
+        "runtime_environment_class"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "qc-preflight-agent-v1.0" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "tier":             { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "production_mode":  { "type": "string", "enum": ["A", "B", "C"] },
+        "parent_chain":     { "$ref": "#/$defs/parentChainHeld" },
+        "lever_state":      { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 12 }
+          ],
+          "description": "null on success, 1..12 on failure (§16.4)."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamps": {
+          "type": "object",
+          "required": ["agent_started_at", "agent_completed_at"],
+          "additionalProperties": false,
+          "properties": {
+            "agent_started_at":   { "type": "string", "format": "date-time" },
+            "agent_completed_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p95 <= 90000 (§8 performance portfolio)."
+        },
+        "qc_gate_class": {
+          "type": "string",
+          "enum": ["pre_flight", "pre_publish"],
+          "description": "v1.0 = pre_flight (production->post boundary). pre_publish reserved for v1.1+ post-Motion gate."
+        },
+        "verdict_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 (lowercase hex, 64) over the canonicalized per-check evidence block (§12.5). Tamper-evident verdict; the false-pass review audit anchor."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Inherited from AI Video Gen §16. Gates production-only behaviors (contested-drift fingerprint re-verify is staging/production only)."
+        }
+      }
+    }
+  }
+}

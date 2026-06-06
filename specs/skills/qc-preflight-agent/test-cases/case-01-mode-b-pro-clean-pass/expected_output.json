@@ -1,0 +1,154 @@
+{
+  "output_type": "successPreflightReport",
+  "verdict": "pass",
+  "reel_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-29-001",
+    "production_plan_id": "productionplan-REINVENTED-2026-05-29-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-05-29-001"
+  },
+  "brand_voice_qc": {
+    "points_total": 11,
+    "points_passed": 11,
+    "per_point": [
+      {
+        "id": 1,
+        "name": "pillar_tag_present",
+        "status": "pass",
+        "evidence": "Pillar tag P3 present on opening serif line."
+      },
+      {
+        "id": 2,
+        "name": "truth_echo_present",
+        "status": "pass",
+        "evidence": "Truth echo: 'systems outlast motivation' paraphrased in VO line 2."
+      },
+      {
+        "id": 3,
+        "name": "voice_markers_min_2",
+        "status": "pass",
+        "evidence": "Markers found: 'operator', 'build', 'on purpose' (3 of 2 required)."
+      },
+      {
+        "id": 4,
+        "name": "hook_within_spec",
+        "status": "pass",
+        "evidence": "Hook 8 words, pattern: inversion. Within 10-word ceiling."
+      },
+      {
+        "id": 5,
+        "name": "cta_self_answered",
+        "status": "pass",
+        "evidence": "CTA self-answered question. No sales pull detected."
+      },
+      {
+        "id": 6,
+        "name": "zero_banned_vocabulary",
+        "status": "pass",
+        "evidence": "Scanned caption + burn-in. Zero banned vocabulary tokens."
+      },
+      {
+        "id": 7,
+        "name": "zero_entity_references",
+        "status": "pass",
+        "evidence": "Zero HC / Principal / NPOX / tool-name references in any string."
+      },
+      {
+        "id": 8,
+        "name": "visual_palette_correct",
+        "status": "pass",
+        "evidence": "Ivory-black-gold palette confirmed. Serif pillar line present. No whip-pans."
+      },
+      {
+        "id": 9,
+        "name": "end_card_correct",
+        "status": "pass",
+        "evidence": "End card serif on ivory, 1.5s hold, copy exact."
+      },
+      {
+        "id": 10,
+        "name": "caption_within_spec",
+        "status": "pass",
+        "evidence": "Caption 142 words, pillar hashtag present. Within 80-180 band."
+      },
+      {
+        "id": 11,
+        "name": "brand_safety_clean",
+        "status": "pass",
+        "evidence": "No HC financials, no named clients, no legal matter referenced."
+      }
+    ]
+  },
+  "entity_firewall_pass_7": {
+    "status": "pass",
+    "tokens_scanned": 312,
+    "hits": 0
+  },
+  "format_spec_check": {
+    "platform_variants_checked": 2,
+    "aspect_ratio_violations": 0,
+    "duration_violations": 0,
+    "caption_burn_parity_violations": 0
+  },
+  "caption_spec_check": {
+    "burn_in_firewall_status": "pass",
+    "parity_status": "pass"
+  },
+  "cost_ledger_check": {
+    "cumulative_reel_usd": 0.42,
+    "tier_combined_ceiling_usd": 450,
+    "status": "within_ceiling"
+  },
+  "qc_pre_flags_adjudication": {
+    "agents_reporting": 6,
+    "floor_met_all": true,
+    "negative_predicates": 0
+  },
+  "drift_reconciliation": {
+    "unresolved_drift_count": 0,
+    "human_signoff_required": false
+  },
+  "mode_b_chain_check": {
+    "negative_prompt_sha256": "6851266f6e23182f19a9b40af2d94e089480d05aa34ea0a1d4d9293556f7c210",
+    "passthrough_intact_bool": true
+  },
+  "qc_pre_flags": [
+    "entity_firewall_clean_pass_7",
+    "eleven_point_gate_all_green",
+    "cost_within_combined_ceiling",
+    "no_unresolved_drift_auto_passed"
+  ],
+  "handoff_targets": [
+    "localization",
+    "publishing"
+  ],
+  "cost_incurred_usd": 0.02,
+  "metadata": {
+    "agent_id": "qc-preflight-agent-v1.0",
+    "agent_version": "1.0",
+    "session_id": "sess-2026-05-29-reinvented-pro-01",
+    "trace_id": null,
+    "tier": "pro",
+    "production_mode": "B",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-29-001",
+      "script-REINVENTED-2026-05-29-001",
+      "storyboard-REINVENTED-2026-05-29-001",
+      "ai-video-gen-REINVENTED-2026-05-29-001",
+      "0190f3a1-7c2b-7e44-9a1b-2c3d4e5f6071",
+      "preflight-REINVENTED-2026-05-29-001"
+    ],
+    "lever_state": "lever-3",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "human_review_required": true,
+    "timestamps": {
+      "agent_started_at": "2026-06-04T05:46:10Z",
+      "agent_completed_at": "2026-06-04T05:46:38Z"
+    },
+    "latency_ms": 24180,
+    "qc_gate_class": "pre_flight",
+    "verdict_evidence_hash": "25ab24fb8b1f618c256e0a80f14510ab3fe899d0f7d499c42475e760844f6c3f",
+    "runtime_environment_class": "staging"
+  },
+  "human_review_required": true
+}
