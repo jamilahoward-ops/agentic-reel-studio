@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/ingest-agent/input.schema.json",
+  "title": "ARS Ingest Agent — Input (QC precondition gate + polymorphic production source)",
+  "description": "Validates the v1.0 input of the Ingest Agent (Agent #8 of 17 — the first post-production agent, the 8th defense-in-depth firewall pass, the mode-convergence seam). Authored Day 54 (Fri Jun 12 2026) from SPEC §2 Inputs (Day 48 outline) + §10 Field Map (Day 51 partial 1) + §10.4 schema authoring note + §10.5 ingestion-by-mode matrix + §16 metadata block (Day 52 partial 2). TWO defining input characteristics: (1) the QC precondition gate — Ingest reads preflight_report FIRST and never ingests an unvetted reel (Hard Rule #3 / Decision #4); (2) the polymorphic production source — Mode B/C consume replicated_shots (Mode B adds an optional rendered_shots forensic cross-ref), Mode A consumes a footage_upload_manifest. Exactly one source shape is present (top-level oneOf split keyed by metadata.production_mode). Ingest's verdict logic is mode-AGNOSTIC (§4); production_mode drives source selection + take-substitution + reshoot reachability only (§10.5 matrix). Like every prior ARS schema this is single-file (no external $ref resolution): deep replicated_shots / rendered_shots internals are validated by their own LOCKED producer schemas (Style Replication output.schema.json / AI Video Gen output.schema.json — read-only) and left permissive here to avoid canon drift; this schema constrains the ingest-relevant envelope + the fields the 11-check self-QC adjudicates. parent_chain inbound = QC Pre-flight's 6-tuple, HELD ADDITIVELY (minItems 5 accepts the 5-tuple pre-ratification canon; maxItems 6 accepts the QC 6-tuple extension preview; items false). Runtime halts (NOT schema rejections): inbound errorEnvelope on the consumed branch => upstream_not_success; preflight verdict != pass with no Lever-3 sign-off => upstream_qc_not_passed; malformed parent_chain => manifest_lineage_failure. TODO@cross-spec-3.9-ratification: when the n-tuple amendment ratifies AND the QC Pre-flight 6-tuple LOCKs, flip inbound to minItems 6 (exact-6). The 6-tuple is NOT auto-advanced this run (Decision D6 — doubly-deferred).",
+
+  "type": "object",
+  "required": [
+    "preflight_report",
+    "production_plan",
+    "storyboard_ref",
+    "brief_ref",
+    "metadata"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "preflight_report": {
+      "type": "object",
+      "description": "§2 QC precondition gate (Hard Rule #3 / Decision #4 / Step 1). Ingest reads this FIRST. The runtime gate: verdict_observed == 'pass' OR lever3_signoff_present == true is REQUIRED to proceed; otherwise the agent halts with upstream_qc_not_passed (a runtime halt, not a schema rejection — a non-pass preflight is a valid object, an invalid ingest). Deep preflight internals are owned by the QC Pre-flight output.schema.json (read-only); only the gate-relevant envelope is constrained here. Ingest reads the verdict, NEVER the per-point brand_voice adjudication (§10.3 no-touch — that is QC Pre-flight's jurisdiction).",
+      "required": ["preflight_report_id", "verdict"],
+      "additionalProperties": true,
+      "properties": {
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" },
+        "verdict": {
+          "type": "string",
+          "enum": ["pass", "fail", "reshoot", "hold"],
+          "description": "The upstream QC verdict (QC Pre-flight emits pass|fail|reshoot|hold). Ingest proceeds ONLY on 'pass' OR an attached Lever-3 sign-off; any other value with no sign-off => upstream_qc_not_passed at runtime."
+        },
+        "lever3_signoff": {
+          "type": ["object", "null"],
+          "description": "OPTIONAL human Lever-3 sign-off — the ONLY bypass of the QC-pass precondition (Decision #4). Presence with signoff_present:true permits ingest of a non-pass reel. Absent / null on the normal pass path.",
+          "properties": {
+            "signoff_present": { "type": "boolean" },
+            "signoff_by":      { "type": "string", "minLength": 1, "maxLength": 128 },
+            "signoff_at":      { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+
+    "production_plan": {
+      "type": "object",
+      "description": "Denormalized ProdCoord output carried for the declared-spec targets + platform_variants + brand-asset pulls. platform_variants[] is the aspect/frame-rate/resolution/container target set adjudicated by the spec_check (Check #5, §10 spec_check rows). Deep internals owned by the ProdCoord schema (read-only).",
+      "required": ["production_plan_id", "platform_variants"],
+      "additionalProperties": true,
+      "properties": {
+        "production_plan_id": {
+          "type": "string",
+          "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "platform_variants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "description": "Non-empty target set. Each variant carries the declared aspect/duration/caption-burn target the spec_check adjudicates against the DECLARED asset metadata (byte_probe_performed:false — no decode).",
+          "items": { "$ref": "#/$defs/platformVariant" }
+        },
+        "assets_pulled": {
+          "type": "array",
+          "description": "OPTIONAL — brand-asset filename list (logo, lower-third templates) named by the plan. Ingest confirms firewall-clean filenames (Check #4 / asset_firewall_pass_8) but does NOT fetch (§10.1 row).",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        },
+        "music_bed": {
+          "type": "string",
+          "description": "OPTIONAL — production-plan music reference (Mode B/C). URI-integrity checked (Check #3). Platform-relative ars:// (Hard Rule #8).",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$"
+        }
+      }
+    },
+
+    "storyboard_ref": {
+      "type": "object",
+      "description": "§10 coverage_check basis. shots_required == storyboard_ref.total_shots (Check #6 — no phantom coverage). Carried denormalized so the coverage invariant is self-contained at the asset layer.",
+      "required": ["storyboard_id", "total_shots"],
+      "additionalProperties": false,
+      "properties": {
+        "storyboard_id": {
+          "type": "string",
+          "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "total_shots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60,
+          "description": "The required-coverage cardinality. coverage_check.coverage_complete == (shots_covered == total_shots)."
+        }
+      }
+    },
+
+    "brief_ref": {
+      "type": "object",
+      "required": ["brief_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        }
+      }
+    },
+
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" },
+
+    "replicated_shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "description": "MODE B/C source (§2 / §10.5). Style Replication output.schema.json successReplicatedShots branch — the produced asset set. Deep internals enforced by the LOCKED producer schema (read-only); ingest-relevant per-shot fields constrained here. Mode C = single-source; Mode B may additionally carry the optional rendered_shots forensic cross-ref. An inbound errorEnvelope here is a runtime halt (upstream_not_success), NOT a schema-valid input.",
+      "items": { "$ref": "#/$defs/replicatedShotConsumed" }
+    },
+
+    "rendered_shots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "description": "OPTIONAL — Mode B forensic cross-ref only (§10.5). AI Video Gen output.schema.json successRenderedShots branch. Permitted ONLY alongside replicated_shots (Mode B). Absent in Mode A (footage_upload_manifest branch) and Mode C (single-source).",
+      "items": { "$ref": "#/$defs/renderedShotConsumed" }
+    },
+
+    "footage_upload_manifest": {
+      "type": "object",
+      "description": "MODE A source (§2 / §10.5) — videographer-uploaded live footage. Carries per-shot clips with take numbers (the take-substitution ladder basis, Hard Rule #8), an audio file list, and an optional music bed. This is the ONLY source shape from which verdict 'reshoot' is reachable (live footage can be re-shot; AI output is re-genned — Decision #3, Mode-A-exclusive).",
+      "required": ["clips"],
+      "additionalProperties": true,
+      "properties": {
+        "clips": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 240,
+          "description": "Per-shot live-footage clips. Multiple takes per shot_ref are expected; the highest-numbered take satisfying the declared spec is selected (take-substitution ladder). Ladder-exhausted with no covering take => missing_shot_coverage => reshoot.",
+          "items": { "$ref": "#/$defs/footageClip" }
+        },
+        "audio": {
+          "type": "array",
+          "description": "Flat audio asset list (§10.1 normalization row). Sync adjudication lives in spec_check, not here.",
+          "items": {
+            "type": "object",
+            "required": ["asset_uri"],
+            "additionalProperties": true,
+            "properties": {
+              "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" }
+            }
+          }
+        },
+        "music_bed": {
+          "type": "string",
+          "description": "OPTIONAL — single music-bed URI. URI-integrity checked (Check #3).",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$"
+        }
+      }
+    }
+  },
+
+  "oneOf": [
+    {
+      "title": "Mode B/C source branch",
+      "description": "replicated_shots present; footage_upload_manifest forbidden. rendered_shots permitted (Mode B forensic cross-ref) or absent (Mode C single-source).",
+      "required": ["replicated_shots"],
+      "properties": {
+        "footage_upload_manifest": false
+      }
+    },
+    {
+      "title": "Mode A source branch",
+      "description": "footage_upload_manifest present; replicated_shots AND rendered_shots forbidden (those are the AI-production source shapes).",
+      "required": ["footage_upload_manifest"],
+      "properties": {
+        "replicated_shots": false,
+        "rendered_shots": false
+      }
+    }
+  ],
+
+  "$defs": {
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity (§ QC output) + the 6th inbound parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "platformVariant": {
+      "type": "object",
+      "description": "A target platform render spec. The spec_check adjudicates declared aspect / frame-rate / resolution / container-codec / duration against these targets (declared metadata only — no decode).",
+      "required": ["platform", "aspect_ratio", "duration_s"],
+      "additionalProperties": true,
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "instagram-feed",
+            "instagram-reels",
+            "tiktok",
+            "youtube-shorts",
+            "linkedin",
+            "facebook"
+          ]
+        },
+        "aspect_ratio": { "type": "string", "enum": ["9:16", "1:1", "4:5", "16:9"] },
+        "duration_s":   { "type": "number", "minimum": 1, "maximum": 180 },
+        "caption_burn": { "type": "boolean" }
+      }
+    },
+    "replicatedShotConsumed": {
+      "type": "object",
+      "description": "Ingest-relevant projection of a Style Replication replicated_shot (Mode B/C). Deep internals validated by the producer schema (read-only). Ingest reads shot_ref (coverage census), asset_uri (ars:// platform-relative — Hard Rule #8 / Check #3), declared_spec.duration_sec (spec_check duration-fold — Decision #14), and the upstream qc_pre_flags floor.",
+      "required": ["shot_ref", "asset_uri"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "Platform-relative ars:// URI (Hard Rule #8 — NO absolute URLs). A non-relative or dangling URI => asset_uri_integrity_failure (Check #3)."
+        },
+        "declared_spec": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "duration_sec": { "type": "number", "minimum": 0 }
+          }
+        },
+        "qc_pre_flags": { "$ref": "#/$defs/qcPreFlagsArray" }
+      }
+    },
+    "renderedShotConsumed": {
+      "type": "object",
+      "description": "Ingest-relevant projection of an AI Video Gen rendered_shot (Mode B forensic cross-ref). Optional lineage context; deep internals owned by the AI Video Gen schema (read-only).",
+      "required": ["shot_ref"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":               { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri":              { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" },
+        "negative_prompt_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "footageClip": {
+      "type": "object",
+      "description": "A Mode A live-footage clip. take numbers drive the take-substitution ladder (Hard Rule #8): the highest take satisfying the declared spec is selected; ladder-exhausted => reshoot.",
+      "required": ["shot_ref", "asset_uri", "take"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "Platform-relative ars:// URI (Hard Rule #8 / Check #3)."
+        },
+        "take": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99,
+          "description": "Take number. Substitution prefers the highest take meeting the declared spec."
+        },
+        "declared_spec": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "duration_sec": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "qcPreFlagsArray": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 32,
+      "description": "Cross-SPEC §3.4 minItems-4 floor + §3.7 snake_case predicate shape. Consumed read-only by Ingest (QC Pre-flight already adjudicated the floor); Ingest appends its own >=4 predicates downstream without modifying this surface (§10.3).",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Inbound session identifier. Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible — does not false-reject existing pipeline session ids). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+    "inboundParentChainHeld": {
+      "type": "array",
+      "description": "Inbound lineage = QC Pre-flight's 6-tuple, HELD ADDITIVELY. positions 0-4 inherit Style Replication's 5-tuple canon verbatim (ARS-2026-05-22-Style-Replication-output.schema.json); position 5 = the QC Pre-flight extension (preflight_report_id). minItems 5 ACCEPTS the 5-tuple pre-ratification canon; maxItems 6 ACCEPTS the QC 6-tuple extension preview; items false. REJECTS a 4-tuple. Ingest validates a well-formed inbound chain (Step 2); malformed => manifest_lineage_failure at runtime. Ingest appends its own asset_manifest_id at position 6 on OUTPUT (see output.schema.json — 7-tuple, also held additively). TODO@cross-spec-3.9-ratification: flip to minItems 6 (exact-6) when the n-tuple amendment ratifies AND the QC Pre-flight 6-tuple LOCKs (Decision D6 — doubly-deferred, NOT auto-advanced this run).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 6
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 inbound metadata carried from QC Pre-flight. Ingest reads tier / production_mode (source-branch selection + reshoot reachability — NOT verdict forking) / lever_state / parent_chain (6-tuple, held) / brand_id for context + the 8th-pass tier-mode re-validation (Check #4). production_mode is the polymorphic-source discriminator (A => footage_upload_manifest; B/C => replicated_shots).",
+      "required": [
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "session_id",
+        "lever_state"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["pilot", "starter", "pro", "enterprise"],
+          "description": "Universal — ALL 4 tiers traverse Ingest at ~$0 (§4 / Decision #2). Asset readiness is not a tier feature."
+        },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "lever_state":     { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "brand_id":        { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "session_id":      { "$ref": "#/$defs/sessionId" },
+        "parent_chain":    { "$ref": "#/$defs/inboundParentChainHeld" }
+      }
+    }
+  }
+}

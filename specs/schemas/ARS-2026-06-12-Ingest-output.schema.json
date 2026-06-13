@@ -1,0 +1,480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/ingest-agent/output.schema.json",
+  "title": "ARS Ingest Agent — Output (successAssetManifest | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Ingest Agent (Agent #8 of 17 — first post-production agent, 8th defense-in-depth firewall pass on the asset-layer surface, mode-convergence seam). Authored Day 54 (Fri Jun 12 2026) from SPEC §3 Outputs (Day 48 outline) + §6 8-code/slot-11 errorEnvelope (Day 51 §6.3 LOCKED) + §10 Field Map 25 rows + §10.4 schema authoring note (Day 51) + §12 deterministic AND-of-8-gates verdict math (Day 52) + §16 metadata block (Day 52). Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 pattern). successAssetManifest <=> verdict 'pass'; errorEnvelope <=> verdict in {fail, reshoot}. DELIBERATE DIVERGENCE from QC Pre-flight: NO 'hold' verdict (§6.4 / Decision #3 — Ingest's domain is deterministic: a file is present or absent; there is no asset-layer ambiguity for a human to adjudicate mid-verdict; human deferral lives in human_review_required:true on EVERY emission, not in a verdict value). 8 LOCKED failure codes + slot-11 catch-all ingest_agent_failed enumerated via enum; the folded code duration_envelope_breach is NOT enumerated (subsumed into asset_spec_violation per Decision #14). The success branch encodes the §12 AND-of-8-gates as const invariants (firewall hits==0, URI non_relative==0 & dangling==0, all spec_check booleans true, missing_shots==[], coverage_complete==true) — making a false-pass STRUCTURALLY impossible (false-pass tolerance ZERO, Decision #10). byte_probe_performed const false (Decision #1/#11 — declared-spec-only honesty contract; flips to plain boolean in v1.1). manifest_evidence_hash pattern ^[a-f0-9]{64}$. asset_uri ^ars:// platform-relative (Hard Rule #8). human_review_required const true on EVERY branch (recommend-don't-clear — Decision #12). DOUBLY-DEFERRED (Decision D6): parent_chain held additively (minItems 5, prefixItems 0-6, maxItems 7, items false) — accepts the 5-tuple, the 6-tuple QC extension preview, AND the 7-tuple Ingest append. TODO@cross-spec-3.9-ratification: flip to minItems 7 (exact-7) ONLY after the Cross-SPEC §3.9 n-tuple amendment ratifies AND the QC Pre-flight 6-tuple LOCKs. The 7-tuple is the one item NOT auto-advanced this run.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successAssetManifest" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successAssetManifest": {
+      "type": "object",
+      "description": "verdict='pass' branch (§3.1). Emitted ONLY when all 8 AND-of-gate terms are true (§12 deterministic AND-of-gates, zero tunable thresholds): QC precondition met AND all URIs integral (non_relative==0 AND dangling==0) AND firewall clean (hits==0) AND all declared specs match AND full coverage (coverage_complete==true, missing_shots==[]) AND audio adjudicated AND lineage intact. The gate terms are schema-pinned as consts below, so a false-pass (a clean envelope alongside a failing sub-status) is STRUCTURALLY impossible (Decision #10 — false-pass tolerance ZERO). A reel with any defect routes to the errorEnvelope branch. human_review_required is const true even on pass (a pass = 'ready for the operator's clear-to-edit decision', NEVER 'cleared' — Decision #12 / Hard Rule #12).",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "asset_bundle",
+        "mode_convergence",
+        "qc_precondition_check",
+        "asset_uri_integrity",
+        "asset_firewall_pass_8",
+        "spec_check",
+        "coverage_check",
+        "qc_pre_flags",
+        "handoff_targets",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successAssetManifest" },
+        "verdict":     { "type": "string", "const": "pass" },
+        "reel_ref":    { "$ref": "#/$defs/reelRefFull" },
+
+        "asset_bundle": {
+          "type": "object",
+          "description": "§10 bundle-normalization rows (the mode-convergence map). The editor's canonical pull list — three production source shapes (Mode A footage_upload_manifest / Mode B+C replicated_shots) normalized into ONE shape (Check #9). This block is byte-shape-identical regardless of ingested mode (the TC-01/TC-02 convergence proof).",
+          "required": ["raw_footage", "audio"],
+          "additionalProperties": false,
+          "properties": {
+            "raw_footage": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 240,
+              "description": "Normalized per-shot footage rows {shot_ref, asset_uri, duration_sec, source}. source = the producing agent (style-replication-agent / ai-video-gen-agent) or videographer_upload (Mode A).",
+              "items": { "$ref": "#/$defs/normalizedFootageRow" }
+            },
+            "audio": {
+              "type": "array",
+              "description": "Flat normalized audio URI list. Sync adjudication evidence lives in spec_check, not here.",
+              "items": {
+                "type": "object",
+                "required": ["asset_uri"],
+                "additionalProperties": false,
+                "properties": {
+                  "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" }
+                }
+              }
+            },
+            "assets_pulled": {
+              "type": "array",
+              "description": "Brand-asset filename list (logo, lower-third templates) — firewall-confirmed (Check #4), not fetched.",
+              "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+            },
+            "music_bed": {
+              "type": "string",
+              "description": "Single music-bed URI (URI-integrity checked, Check #3).",
+              "pattern": "^ars://[a-zA-Z0-9_\\-./]+$"
+            }
+          }
+        },
+
+        "mode_convergence": {
+          "type": "object",
+          "description": "§10 convergence record (Check #9). Every field downstream of this block is mode-identical. The contract that makes Edit Director + all 9 downstream agents mode-blind (Decision #9 / Blueprint §3).",
+          "required": ["ingested_mode", "normalized_to"],
+          "additionalProperties": false,
+          "properties": {
+            "ingested_mode": { "type": "string", "enum": ["A", "B", "C"] },
+            "normalized_to": { "type": "string", "const": "mode_agnostic_manifest" }
+          }
+        },
+
+        "qc_precondition_check": {
+          "type": "object",
+          "description": "§10 precondition evidence (Check #1). On a pass: verdict_observed=='pass' OR lever3_signoff_present==true (the only bypass, Decision #4).",
+          "required": ["preflight_report_id", "verdict_observed", "lever3_signoff_present"],
+          "additionalProperties": false,
+          "properties": {
+            "preflight_report_id":   { "$ref": "#/$defs/preflightReportId" },
+            "verdict_observed":      { "type": "string", "enum": ["pass", "fail", "reshoot", "hold"] },
+            "lever3_signoff_present": { "type": "boolean" }
+          },
+          "allOf": [
+            {
+              "description": "Precondition gate (Decision #4): on the success branch the upstream verdict was 'pass' OR a Lever-3 sign-off was attached. A non-pass with no sign-off cannot reach this branch (it halts upstream_qc_not_passed).",
+              "anyOf": [
+                { "properties": { "verdict_observed": { "const": "pass" } } },
+                { "properties": { "lever3_signoff_present": { "const": true } } }
+              ]
+            }
+          ]
+        },
+
+        "asset_uri_integrity": {
+          "type": "object",
+          "description": "§10 URI census (Check #3). non_relative==0 AND dangling==0 required on pass (gate term). uris_checked must equal the true bundle URI census.",
+          "required": ["uris_checked", "non_relative", "dangling"],
+          "additionalProperties": false,
+          "properties": {
+            "uris_checked": { "type": "integer", "minimum": 1 },
+            "non_relative": { "type": "integer", "const": 0 },
+            "dangling":     { "type": "integer", "const": 0 }
+          }
+        },
+
+        "asset_firewall_pass_8": {
+          "type": "object",
+          "description": "§10 the 8th-pass firewall result on the asset-layer surface (Check #4) — filenames + embedded/sidecar metadata, a surface no prior content pass inspected. hits MUST be 0 on a pass; any hit => asset_firewall_breach (errorEnvelope branch).",
+          "required": ["status", "filenames_scanned", "metadata_fields_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":                  { "type": "string", "const": "pass" },
+            "filenames_scanned":       { "type": "integer", "minimum": 0 },
+            "metadata_fields_scanned": { "type": "integer", "minimum": 0 },
+            "hits":                    { "type": "integer", "const": 0 }
+          }
+        },
+
+        "spec_check": {
+          "type": "object",
+          "description": "§10 Blueprint §4.8 shape (Checks #5+#7+#8). All booleans true + missing_shots==[] required on pass (gate term). Derived from DECLARED metadata ONLY (byte_probe_performed:false — no decode). The duration-envelope result folds into this family (asset_spec_violation, subtype duration_envelope — Decision #14).",
+          "required": [
+            "aspect_ok",
+            "frame_rate_ok",
+            "resolution_ok",
+            "container_codec_ok",
+            "audio_present_ok",
+            "audio_sync_declared_ok",
+            "missing_shots"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "aspect_ok":              { "type": "boolean", "const": true },
+            "frame_rate_ok":          { "type": "boolean", "const": true },
+            "resolution_ok":          { "type": "boolean", "const": true },
+            "container_codec_ok":     { "type": "boolean", "const": true },
+            "audio_present_ok":       { "type": "boolean", "const": true },
+            "audio_sync_declared_ok": { "type": "boolean", "const": true },
+            "missing_shots": {
+              "type": "array",
+              "description": "REQUIRED-on-success (§10.4) — its emptiness IS the coverage invariant, so it cannot be optional. const empty on pass; populated only on missing_shot_coverage (errorEnvelope).",
+              "const": []
+            }
+          }
+        },
+
+        "coverage_check": {
+          "type": "object",
+          "description": "§10 coverage census (Check #6). shots_required == storyboard_ref.total_shots; coverage_complete == (shots_covered == shots_required). Internal consistency enforced (no phantom coverage). coverage_complete const true on pass (gate term).",
+          "required": ["shots_required", "shots_covered", "coverage_complete"],
+          "additionalProperties": false,
+          "properties": {
+            "shots_required":   { "type": "integer", "minimum": 1, "maximum": 60 },
+            "shots_covered":    { "type": "integer", "minimum": 1, "maximum": 60 },
+            "coverage_complete": { "type": "boolean", "const": true }
+          }
+        },
+
+        "qc_pre_flags":  { "$ref": "#/$defs/qcPreFlagsEmitted" },
+
+        "handoff_targets": {
+          "type": "array",
+          "description": "§10 — non-empty only on pass. v1.0 logical target = edit-director-agent (Agent #9, not yet built). Physical destination is the Notion Asset Manifest DB holding store until Agent #9 LOCKs (Decision D15 PRELIMINARY — operator-pending); the LOGICAL handoff_targets value is unaffected.",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "const": "edit-director-agent" }
+        },
+
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "This agent's own self-cost (~$0.00 — reasoning only; $0.00 engine + $0.00 probe structurally guaranteed). Generative engine spend + byte-probe spend are FORBIDDEN ($0 invariant, not a bounded budget — Hard Rule #2). Reported to 2dp per Cross-SPEC §3.9. No cost-ceiling authority (Hard Rule #10 — QC Pre-flight's jurisdiction)."
+        },
+
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict in {fail, reshoot} branch (§3.2). fail = fixable without re-shooting (route to the responsible upstream agent or re-upload). reshoot = Mode A live footage unusable, take-substitution ladder exhausted (route to production-coord-agent; Mode-A-exclusive per Decision #3). NO 'hold' (§6.4 divergence — Ingest's domain is deterministic). human_review_required const true on every branch (the agent RECOMMENDS the verdict, the operator clears — Decision #12).",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "attempts",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "detail",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "enum": ["fail", "reshoot"] },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_qc_not_passed",
+            "upstream_not_success",
+            "asset_uri_integrity_failure",
+            "asset_spec_violation",
+            "missing_shot_coverage",
+            "audio_sync_failure",
+            "asset_firewall_breach",
+            "manifest_lineage_failure",
+            "ingest_agent_failed"
+          ],
+          "description": "8 LOCKED codes (Day 51 §6.3) + slot-11 catch-all ingest_agent_failed (Cross-SPEC §3.6). The folded code duration_envelope_breach is NOT enumerated (subsumed into asset_spec_violation, detail.subtype 'duration_envelope' — Decision #14). ingest_agent_failed accompanies attempts==2 (self-QC 2-strike exhaustion)."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 11,
+          "description": "Which §6 self-QC check produced the verdict (1..11 — the 11-check list, bipartite-covering the 8 codes + slot-11)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies ingest_agent_failed (slot-11). No third attempt."
+        },
+        "route_back_to": {
+          "description": "§3.2 / §10.5 verdict<->route map. production-coord-agent on reshoot (Mode A only); style-replication-agent / ai-video-gen-agent on a B/C re-gen fail; re-upload on a Mode A fixable defect; null on slot-11 ingest_agent_failed (self-QC exhaustion — no upstream is at fault).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "production-coord-agent",
+                "style-replication-agent",
+                "ai-video-gen-agent",
+                "re-upload"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.10 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (the specific violation, affected_shot, recovery_path, upstream_failed_branch, the take-substitution-ladder attempt on a reshoot, the firewall hit asset names + upstream stage on a breach, asset_spec_violation subtype incl. 'duration_envelope', etc.). Advisory recovery_path is surfaced, NOT auto-executed (v1.0 routes; it does not conform — §10.2 reserved).",
+          "additionalProperties": true,
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 },
+            "subtype":       { "type": "string", "minLength": 2, "maxLength": 64 }
+          }
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+
+      "allOf": [
+        {
+          "description": "Decision #3 — reshoot is Mode-A-exclusive and routes to production-coord-agent. A reshoot verdict MUST carry route_back_to: production-coord-agent AND failure_code: missing_shot_coverage (the only verdict-routing-mode-dependent code; Mode A, ladder exhausted).",
+          "if": {
+            "properties": { "verdict": { "const": "reshoot" } },
+            "required": ["verdict"]
+          },
+          "then": {
+            "properties": {
+              "route_back_to": { "const": "production-coord-agent" },
+              "failure_code":  { "const": "missing_shot_coverage" }
+            }
+          }
+        },
+        {
+          "description": "Slot-11 self-QC exhaustion: ingest_agent_failed accompanies attempts==2 and routes nowhere upstream (route_back_to null — no upstream agent is at fault for the agent's own self-QC failure).",
+          "if": {
+            "properties": { "failure_code": { "const": "ingest_agent_failed" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": {
+              "attempts":      { "const": 2 },
+              "route_back_to": { "const": null },
+              "verdict":       { "const": "fail" }
+            }
+          }
+        }
+      ]
+    },
+
+    "normalizedFootageRow": {
+      "type": "object",
+      "description": "§10 normalized footage row — one shape regardless of source mode (the convergence guarantee).",
+      "required": ["shot_ref", "asset_uri", "duration_sec", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "shot_ref":     { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri":    { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" },
+        "duration_sec": { "type": "number", "minimum": 0 },
+        "source": {
+          "type": "string",
+          "enum": ["style-replication-agent", "ai-video-gen-agent", "videographer_upload"],
+          "description": "The producing source — an AI agent (B/C) or the videographer upload (Mode A)."
+        },
+        "take": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99,
+          "description": "OPTIONAL — present only for Mode A rows (the selected take after the substitution ladder)."
+        }
+      }
+    },
+
+    "reelRefFull": {
+      "type": "object",
+      "description": "Full reel reference (§10 row) — the cross-record audit join keys. asset_manifest_id is this agent's emitted identity (= parent_chain[6]).",
+      "required": ["brand_id", "brief_id", "preflight_report_id", "asset_manifest_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":            { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "brief_id":            { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" },
+        "asset_manifest_id":   { "$ref": "#/$defs/assetManifestId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["asset_manifest_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":            { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "brief_id":            { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" },
+        "asset_manifest_id":   { "$ref": "#/$defs/assetManifestId" }
+      }
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "assetManifestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "This agent's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — also appended at parent_chain[6] (the 7-tuple extension, held additively). UUIDv7 validates under the uuid format."
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Ingest's own emitted predicates (§3.7 snake_case, >=4 — Check #11). e.g. asset_firewall_clean_pass_8, full_storyboard_coverage, all_uris_platform_relative, declared_specs_match_plan. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "DOUBLY-DEFERRED (Decision D6 / §10.4 / §16 addition 1). The 7-tuple, HELD ADDITIVELY: prefixItems positions 0-6 = [brief_id, script_id, storyboard_id, production_plan_id|rendered_shots_set_id, replication_set_id, preflight_report_id, asset_manifest_id]. minItems 5 ACCEPTS the 5-tuple inbound canon (pre-ratification); maxItems 7 ACCEPTS the 6-tuple QC extension preview AND the 7-tuple Ingest append; items false. REJECTS a 4-tuple. positions 0-5 inherit the QC Pre-flight parentChainHeld verbatim; position 6 is Ingest's append (asset_manifest_id, UUIDv7). TODO@cross-spec-3.9-ratification: flip to minItems 7 (exact-7) ONLY after BOTH gates close — the Cross-SPEC §3.9 n-tuple amendment ratifies AND the QC Pre-flight 6-tuple LOCKs. This is the one item NOT auto-advanced this run (Ingest is the second forcing function for the amendment).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 7
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + 5 Ingest additions (§16): asset_manifest_class, manifest_evidence_hash, runtime_environment_class, byte_probe_performed (const false), asset_manifest_id. human_review_required const true (Decision #12). byte_probe_performed const false is the declared-spec honesty contract — a manifest CLAIMING probe-verified specs it never probed is forged provenance (Hard Rule #2).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "production_mode",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "asset_manifest_class",
+        "manifest_evidence_hash",
+        "runtime_environment_class",
+        "byte_probe_performed",
+        "asset_manifest_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "ingest-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "parent_chain":  { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "~$0 — reasoning only (Cross-SPEC §3.9). $0 engine + $0 probe invariant."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "tier":          { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 11 }
+          ],
+          "description": "null on success, 1..11 on failure."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p50 <= 25000 / p95 <= 75000 (§8 performance portfolio)."
+        },
+
+        "asset_manifest_class": {
+          "type": "string",
+          "enum": ["pre_edit"],
+          "description": "Addition 1. v1.0 = pre_edit; re_ingest reserved v1.1+ (§16)."
+        },
+        "manifest_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Addition 2. SHA-256 (lowercase hex, 64) over the per-asset evidence + spec_check block (§3.2). Tamper-evident manifest; the audit anchor."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Addition 3. Inherited from AI Video Gen §16."
+        },
+        "byte_probe_performed": {
+          "type": "boolean",
+          "const": false,
+          "description": "Addition 4. const false in v1.0 — the declared-spec honesty contract (Decision #1/#11 / Hard Rule #2). Ingest adjudicates DECLARED metadata only; it never decodes. Flips to a plain boolean in v1.1 when ffprobe/MediaInfo lands (requires a runtime execution environment)."
+        },
+        "asset_manifest_id": {
+          "$ref": "#/$defs/assetManifestId",
+          "description": "Addition 5. This agent's emitted identity (UUIDv7) — mirrors reel_ref.asset_manifest_id and parent_chain[6]."
+        }
+      }
+    }
+  }
+}
