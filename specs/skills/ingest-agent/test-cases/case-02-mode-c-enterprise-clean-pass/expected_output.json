@@ -1,0 +1,134 @@
+{
+  "output_type": "successAssetManifest",
+  "verdict": "pass",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "brief_id": "brief-REINVENTED-2026-06-13-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-06-13-001",
+    "asset_manifest_id": "018f7c9a-0002-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "asset_bundle": {
+    "raw_footage": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      },
+      {
+        "shot_ref": "shot-003",
+        "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      },
+      {
+        "shot_ref": "shot-004",
+        "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      },
+      {
+        "shot_ref": "shot-005",
+        "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      },
+      {
+        "shot_ref": "shot-006",
+        "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+        "duration_sec": 5,
+        "source": "style-replication-agent"
+      }
+    ],
+    "audio": [
+      {
+        "asset_uri": "ars://reinvented/audio/vo_master.wav"
+      }
+    ],
+    "assets_pulled": [
+      "reinvented_logo_ivory.png",
+      "lower_third_serif.png"
+    ],
+    "music_bed": "ars://reinvented/audio/bed_operator_01.wav"
+  },
+  "mode_convergence": {
+    "ingested_mode": "C",
+    "normalized_to": "mode_agnostic_manifest"
+  },
+  "qc_precondition_check": {
+    "preflight_report_id": "preflight-REINVENTED-2026-06-13-001",
+    "verdict_observed": "pass",
+    "lever3_signoff_present": false
+  },
+  "asset_uri_integrity": {
+    "uris_checked": 9,
+    "non_relative": 0,
+    "dangling": 0
+  },
+  "asset_firewall_pass_8": {
+    "status": "pass",
+    "filenames_scanned": 9,
+    "metadata_fields_scanned": 14,
+    "hits": 0
+  },
+  "spec_check": {
+    "aspect_ok": true,
+    "frame_rate_ok": true,
+    "resolution_ok": true,
+    "container_codec_ok": true,
+    "audio_present_ok": true,
+    "audio_sync_declared_ok": true,
+    "missing_shots": []
+  },
+  "coverage_check": {
+    "shots_required": 6,
+    "shots_covered": 6,
+    "coverage_complete": true
+  },
+  "qc_pre_flags": [
+    "asset_firewall_clean_pass_8",
+    "full_storyboard_coverage",
+    "all_uris_platform_relative",
+    "declared_specs_match_plan"
+  ],
+  "handoff_targets": [
+    "edit-director-agent"
+  ],
+  "cost_incurred_usd": 0.0,
+  "metadata": {
+    "agent_id": "ingest-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260613-ars01",
+    "production_mode": "C",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-13-001",
+      "script-REINVENTED-2026-06-13-001",
+      "storyboard-REINVENTED-2026-06-13-001",
+      "mode-c-direct",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-13-001",
+      "018f7c9a-0002-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-13T05:45:00Z",
+    "lever_state": "lever-3",
+    "tier": "enterprise",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "latency_ms": 18400,
+    "asset_manifest_class": "pre_edit",
+    "manifest_evidence_hash": "bbe784093d86cfdfc2ba33d11b523823eb08ffca612171ba1dafc1b99dbdb446",
+    "runtime_environment_class": "staging",
+    "byte_probe_performed": false,
+    "asset_manifest_id": "018f7c9a-0002-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true
+}

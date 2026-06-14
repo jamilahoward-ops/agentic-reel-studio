@@ -1,0 +1,90 @@
+{
+  "preflight_report": {
+    "preflight_report_id": "preflight-REINVENTED-2026-06-13-001",
+    "verdict": "pass",
+    "lever3_signoff": null
+  },
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-06-13-001",
+    "platform_variants": [
+      {
+        "platform": "instagram-reels",
+        "aspect_ratio": "9:16",
+        "duration_s": 30,
+        "caption_burn": true
+      }
+    ]
+  },
+  "storyboard_ref": {
+    "storyboard_id": "storyboard-REINVENTED-2026-06-13-001",
+    "total_shots": 5
+  },
+  "brief_ref": {
+    "brief_id": "brief-REINVENTED-2026-06-13-001"
+  },
+  "metadata": {
+    "tier": "starter",
+    "production_mode": "A",
+    "lever_state": "lever-2",
+    "brand_id": "REINVENTED",
+    "session_id": "sess-reinvented-20260613-ars01",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-13-001",
+      "script-REINVENTED-2026-06-13-001",
+      "storyboard-REINVENTED-2026-06-13-001",
+      "productionplan-REINVENTED-2026-06-13-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-13-001"
+    ]
+  },
+  "footage_upload_manifest": {
+    "clips": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reinvented/a/shot-001_take2.mp4",
+        "take": 2,
+        "declared_spec": {
+          "duration_sec": 5
+        }
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reinvented/a/shot-002_take2.mp4",
+        "take": 2,
+        "declared_spec": {
+          "duration_sec": 5
+        }
+      },
+      {
+        "shot_ref": "shot-003",
+        "asset_uri": "ars://reinvented/a/shot-003_take2.mp4",
+        "take": 2,
+        "declared_spec": {
+          "duration_sec": 5
+        }
+      },
+      {
+        "shot_ref": "shot-005",
+        "asset_uri": "ars://reinvented/a/shot-005_take2.mp4",
+        "take": 2,
+        "declared_spec": {
+          "duration_sec": 5
+        }
+      },
+      {
+        "shot_ref": "shot-004",
+        "asset_uri": "ars://reinvented/a/shot-004_take1.mp4",
+        "take": 1,
+        "declared_spec": {
+          "duration_sec": 0
+        }
+      }
+    ],
+    "audio": [
+      {
+        "asset_uri": "ars://reinvented/a/vo_take1.wav"
+      }
+    ],
+    "music_bed": "ars://reinvented/a/bed_a.wav"
+  }
+}

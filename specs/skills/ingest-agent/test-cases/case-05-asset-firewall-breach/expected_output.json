@@ -1,0 +1,54 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "asset_firewall_breach",
+  "failed_check_id": 4,
+  "attempts": 1,
+  "route_back_to": "style-replication-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "brief_id": "brief-REINVENTED-2026-06-13-001",
+    "preflight_report_id": "preflight-REINVENTED-2026-06-13-001",
+    "asset_manifest_id": "018f7c9a-0005-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "cost_incurred_usd": 0.0,
+  "detail": {
+    "hits": 2,
+    "assets": [
+      "sln_cuts_promo_take2.mp4 (filename token 'sln')",
+      "shot-002 sidecar_caption_meta (URL token 'holdcogroup.com')"
+    ],
+    "upstream_stage": "style-replication-agent",
+    "recovery_path": "Strip the entity tokens from the asset layer; re-emit from style-replication-agent. The reel CONTENT is clean; all 7 prior content passes would pass it \u2014 this is the 8th-pass asset-layer catch."
+  },
+  "metadata": {
+    "agent_id": "ingest-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260613-ars01",
+    "production_mode": "B",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-13-001",
+      "script-REINVENTED-2026-06-13-001",
+      "storyboard-REINVENTED-2026-06-13-001",
+      "ai-video-gen-REINVENTED-2026-06-13-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-13-001",
+      "018f7c9a-0005-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-13T05:45:30Z",
+    "lever_state": "lever-3",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 4,
+    "latency_ms": 17100,
+    "asset_manifest_class": "pre_edit",
+    "manifest_evidence_hash": "2aac9e7dc45bcc4c04d29205ddadec51402a0db664be01f881b988a58e01bac1",
+    "runtime_environment_class": "staging",
+    "byte_probe_performed": false,
+    "asset_manifest_id": "018f7c9a-0005-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true
+}

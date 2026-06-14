@@ -1,0 +1,163 @@
+{
+  "preflight_report": {
+    "preflight_report_id": "preflight-REINVENTED-2026-06-13-001",
+    "verdict": "pass",
+    "lever3_signoff": null
+  },
+  "production_plan": {
+    "production_plan_id": "productionplan-REINVENTED-2026-06-13-001",
+    "platform_variants": [
+      {
+        "platform": "instagram-reels",
+        "aspect_ratio": "9:16",
+        "duration_s": 30,
+        "caption_burn": true
+      }
+    ],
+    "assets_pulled": [
+      "reinvented_logo_ivory.png",
+      "lower_third_serif.png"
+    ],
+    "music_bed": "ars://reinvented/audio/bed_operator_01.wav"
+  },
+  "storyboard_ref": {
+    "storyboard_id": "storyboard-REINVENTED-2026-06-13-001",
+    "total_shots": 6
+  },
+  "brief_ref": {
+    "brief_id": "brief-REINVENTED-2026-06-13-001"
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "B",
+    "lever_state": "lever-3",
+    "brand_id": "REINVENTED",
+    "session_id": "sess-reinvented-20260613-ars01",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-13-001",
+      "script-REINVENTED-2026-06-13-001",
+      "storyboard-REINVENTED-2026-06-13-001",
+      "ai-video-gen-REINVENTED-2026-06-13-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-13-001"
+    ]
+  },
+  "replicated_shots": [
+    {
+      "shot_ref": "shot-001",
+      "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_ref": "shot-002",
+      "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_ref": "shot-003",
+      "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_ref": "shot-004",
+      "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_ref": "shot-005",
+      "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    },
+    {
+      "shot_ref": "shot-006",
+      "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+      "declared_spec": {
+        "duration_sec": 5,
+        "aspect_ratio": "9:16"
+      },
+      "qc_pre_flags": [
+        "spec_targets_present",
+        "shot_list_resolved",
+        "firewall_clean_upstream",
+        "cost_within_ceiling"
+      ]
+    }
+  ],
+  "rendered_shots": [
+    {
+      "shot_ref": "shot-001",
+      "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+      "negative_prompt_sha256": "ba4b32abc361d38e79d817e4aec5c31203573c7e63120bc25a5fdd86ac18f429"
+    },
+    {
+      "shot_ref": "shot-002",
+      "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+      "negative_prompt_sha256": "4ff0ba5a6469fd10b6cd591da0f9ac9a55080556878c412a170cd76a20ca4bc3"
+    },
+    {
+      "shot_ref": "shot-003",
+      "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+      "negative_prompt_sha256": "8c76c4a117751d3d23451f1f737ab5e55e1630344364ea505fc8f38f65abbc79"
+    },
+    {
+      "shot_ref": "shot-004",
+      "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+      "negative_prompt_sha256": "448e4b66dbc0ec3861e29d425ca8a22a5f21c8ac94968cc70f05f595cbbf740d"
+    },
+    {
+      "shot_ref": "shot-005",
+      "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+      "negative_prompt_sha256": "9dcc71d9b4b054489fc658281948837da49ac9c04dfb9e088200126a0879dc55"
+    },
+    {
+      "shot_ref": "shot-006",
+      "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+      "negative_prompt_sha256": "d04b8ceaac257276ae2e7e7b602fc77c6838298745bcf4ccb6aee6e642b26623"
+    }
+  ]
+}
