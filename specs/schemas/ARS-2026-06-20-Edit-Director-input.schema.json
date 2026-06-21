@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/edit-director-agent/input.schema.json",
+  "title": "ARS Edit Director Agent — Input (Ingest precondition gate + mode-agnostic Asset Manifest + denormalized creative intent)",
+  "description": "Validates the v1.0 input of the Edit Director Agent (Agent #9 of 17 — the first creative-AUTHORING agent in the post tail, the 9th defense-in-depth firewall pass, the first contractually mode-BLIND agent). Authored Day 62 (Sat Jun 20 2026) from SPEC §2 Inputs (Day 58 outline) + §10 Field Map 27 rows (Day 59 partial 1) + §10.3 no-touch rows + §10.4 schema authoring note + §10.5 authoring-by-tier matrix + §16 metadata block (Day 60 partial 2). TWO defining input characteristics, both inherited from the proven Ingest input shape (5th reuse): (1) the Ingest precondition gate — Edit Director reads the Asset Manifest verdict FIRST and never directs an un-ingested reel (Hard Rule #4 / Decision D4 / Step 1 / Check #1); the runtime gate is asset_manifest.verdict == 'pass' OR a Lever-3 sign-off attached, else halt upstream_ingest_not_passed. (2) mode-BLINDNESS — production_mode is PRESENT in metadata for audit lineage but is the strongest no-touch field in the fleet (§10.3): Edit Director NEVER reads it as a branch discriminator (Hard Rule #6), and its output attests mode_blind_confirm.production_mode_read:false. UNLIKE Ingest, there is NO polymorphic-source oneOf split here — the Asset Manifest is already mode-converged (asset_bundle is byte-shape-identical regardless of origin mode, the TC-01/TC-02 convergence proof), so Edit Director consumes ONE source shape for all three modes. Like every prior ARS schema this is single-file (no external $ref resolution): the consumed Asset Manifest deep internals are validated by the LOCKED Ingest output.schema.json (read-only) and left permissive here (additionalProperties true) to avoid canon drift; this schema constrains the edit-relevant envelope + the fields the 11-check self-QC adjudicates. A consumed errorEnvelope (output_type != successAssetManifest) is a runtime halt (upstream_not_success — Check #2), NOT a schema rejection. parent_chain inbound = Ingest's 7-tuple, HELD ADDITIVELY (minItems 5 accepts the 5-tuple pre-ratification canon; maxItems 7 accepts the QC 6-tuple + Ingest 7-tuple extension previews; items false). Edit Director appends its own edit_plan_id at position 7 on OUTPUT (see output.schema.json — 8-tuple, also held additively). TODO@cross-spec-3.9-ratification: when the n-tuple amendment ratifies AND the Ingest 7-tuple LOCKs AND the QC 6-tuple LOCKs, flip inbound to minItems 7 (exact-7). The 7-tuple inbound + 8-tuple outbound are NOT auto-advanced this run (Decision D6 — triply-deferred).",
+
+  "type": "object",
+  "required": [
+    "asset_manifest",
+    "script_ref",
+    "storyboard_ref",
+    "brief_ref",
+    "metadata"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "asset_manifest": {
+      "type": "object",
+      "description": "§2 PRIMARY input + the Ingest precondition gate (Hard Rule #4 / Decision D4 / Step 1 / Checks #1+#2). Edit Director reads this FIRST. TWO runtime gates (both halts, NOT schema rejections — a non-pass / errorEnvelope manifest is a valid object, an invalid direction-source): (1) output_type == 'successAssetManifest' else halt upstream_not_success (Check #2 — cannot direct a failed ingest output); (2) verdict == 'pass' OR lever3_signoff_present == true else halt upstream_ingest_not_passed (Check #1). Deep manifest internals (the full Ingest successAssetManifest payload) are owned by the LOCKED Ingest output.schema.json (read-only); only the edit-relevant envelope is constrained here. Edit Director TRUSTS Ingest's asset_firewall_pass_8 (the assets are clean — §10.3 no-touch) and runs its OWN 9th firewall pass over AUTHORED text only.",
+      "required": ["output_type", "asset_manifest_id"],
+      "additionalProperties": true,
+      "properties": {
+        "output_type": {
+          "type": "string",
+          "description": "The Ingest output discriminator. Edit Director proceeds ONLY on 'successAssetManifest'; an inbound errorEnvelope => upstream_not_success at runtime (Check #2). Permissive enum accepts either Ingest branch value so the agent can READ + halt on a failed manifest rather than schema-rejecting it.",
+          "enum": ["successAssetManifest", "errorEnvelope"]
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["pass", "fail", "reshoot"],
+          "description": "The upstream Ingest verdict (Ingest emits pass | fail | reshoot — no 'hold'). Edit Director directs ONLY on 'pass' OR an attached Lever-3 sign-off; any other value with no sign-off => upstream_ingest_not_passed at runtime (Check #1)."
+        },
+        "asset_manifest_id": {
+          "$ref": "#/$defs/assetManifestId"
+        },
+        "lever3_signoff": {
+          "type": ["object", "null"],
+          "description": "OPTIONAL human Lever-3 sign-off — the ONLY bypass of the Ingest-pass precondition (Decision D4). Presence with signoff_present:true permits direction of a non-pass reel. Absent / null on the normal pass path.",
+          "additionalProperties": true,
+          "properties": {
+            "signoff_present": { "type": "boolean" },
+            "signoff_by":      { "type": "string", "minLength": 1, "maxLength": 128 },
+            "signoff_at":      { "type": "string", "format": "date-time" }
+          }
+        },
+        "asset_bundle": {
+          "type": "object",
+          "description": "§10 rows 11+17 — the mode-CONVERGED editor pull list (byte-shape-identical regardless of ingested mode — the convergence guarantee Edit Director consumes mode-blind). raw_footage is the cut basis (shot_ref + asset_uri + duration_sec authored into cut_order); audio + music_bed feed the swell map; assets_pulled names the lt_* mogrt templates. Deep internals owned by the Ingest schema (read-only).",
+          "required": ["raw_footage"],
+          "additionalProperties": true,
+          "properties": {
+            "raw_footage": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 240,
+              "description": "Normalized per-shot footage rows. The cut_order authoring basis (§10 row 11): shot_ref + asset_uri passthrough, duration_sec the bound for the authored in_ms/out_ms.",
+              "items": { "$ref": "#/$defs/normalizedFootageRow" }
+            },
+            "audio": {
+              "type": "array",
+              "description": "Flat normalized audio URI list (read context for the swell map; sync was already adjudicated at Ingest spec_check).",
+              "items": {
+                "type": "object",
+                "required": ["asset_uri"],
+                "additionalProperties": true,
+                "properties": {
+                  "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" }
+                }
+              }
+            },
+            "assets_pulled": {
+              "type": "array",
+              "description": "OPTIONAL — brand-asset filename list (logo, lt_* lower-third mogrt templates) — Ingest-firewall-confirmed (§10.3 no-touch), referenced by lower_thirds[*].style.",
+              "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+            },
+            "music_bed": {
+              "type": "string",
+              "description": "OPTIONAL — single music-bed URI passthrough into edit_plan.music_bed (§10 row 17). Platform-relative ars:// (Hard Rule #8).",
+              "pattern": "^ars://[a-zA-Z0-9_\\-./]+$"
+            }
+          }
+        },
+        "coverage_check": {
+          "type": "object",
+          "description": "§10.3 read-only — Edit Director reads coverage_complete + shots_required to DEFENSIVELY re-confirm coverage (Check #3, coverage part) before authoring a cut; it does NOT re-echo the per-asset spec adjudication (Ingest's jurisdiction). A coverage hole here => incomplete_shot_coverage (route back to Ingest).",
+          "additionalProperties": true,
+          "properties": {
+            "shots_required":    { "type": "integer", "minimum": 1, "maximum": 60 },
+            "shots_covered":     { "type": "integer", "minimum": 1, "maximum": 60 },
+            "coverage_complete": { "type": "boolean" }
+          }
+        }
+      }
+    },
+
+    "script_ref": {
+      "type": "object",
+      "description": "§2 / §10 rows 13–16 — denormalized Script Agent creative intent carried for the intent-TRANSFORM rows. voice_pacing (wpm) feeds pacing_bpm + cut_rhythm (declared-tempo heuristic — Hard Rule #9, NO byte-level beat detection v1.0); captions feed caption_style + caption_lines (copy passthrough, NOT re-authored — Hard Rule #8; at_ms AUTHORED to the cut); on_screen_text feeds lower_thirds. Deep internals owned by the Script Agent output.schema.json (read-only).",
+      "required": ["script_id"],
+      "additionalProperties": true,
+      "properties": {
+        "script_id": {
+          "type": "string",
+          "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "audio_track": {
+          "type": "object",
+          "description": "Carries voice_pacing (wpm) — the pacing-heuristic basis (§10 row 13). NO byte-level audio decode (Hard Rule #9).",
+          "additionalProperties": true,
+          "properties": {
+            "voice_pacing": {
+              "type": "number",
+              "minimum": 60,
+              "maximum": 260,
+              "description": "Declared narration tempo in words-per-minute (e.g. 165). Heuristic input to pacing_bpm + cut_rhythm; never decoded."
+            }
+          }
+        },
+        "captions": {
+          "type": "object",
+          "description": "Script caption strategy (§10 rows 15–16). The burn-in style + per-line copy. Copy is passthrough (Hard Rule #8 — Edit Director times it, never re-writes it). A line that cannot fit <=22 chars => caption_spec_violation (Check #8).",
+          "additionalProperties": true,
+          "properties": {
+            "style":              { "type": "string", "minLength": 1, "maxLength": 256 },
+            "max_chars_per_line": { "type": "integer", "minimum": 1, "maximum": 80 },
+            "max_lines_on_screen": { "type": "integer", "minimum": 1, "maximum": 4 }
+          }
+        },
+        "on_screen_text": {
+          "type": "array",
+          "description": "Script-authored lower-third / on-screen copy (§10 row 16). Content passthrough into lower_thirds[*].content; case 'lowercase' + align 'left' are ENFORCED brand rules on output; at_ms AUTHORED.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "text":         { "type": "string", "minLength": 1, "maxLength": 512 },
+              "second_start": { "type": "number", "minimum": 0 },
+              "anchor":       { "type": "string", "minLength": 1, "maxLength": 64 }
+            }
+          }
+        }
+      }
+    },
+
+    "storyboard_ref": {
+      "type": "object",
+      "description": "§2 / §10 row 12 — denormalized Storyboard frame language. shot_list[*].frame_language is joined onto each cut_order entry by shot_ref (passthrough — Edit Director directs WHICH ORDER, not HOW framed; framing is Storyboard's jurisdiction). total_shots is the coverage-cardinality re-confirm basis (Check #3).",
+      "required": ["storyboard_id"],
+      "additionalProperties": true,
+      "properties": {
+        "storyboard_id": {
+          "type": "string",
+          "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        },
+        "total_shots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60,
+          "description": "The required-coverage cardinality (coverage_remap.shots_required == storyboard_ref.total_shots — no phantom mapping, Check #3)."
+        },
+        "shot_list": {
+          "type": "array",
+          "description": "Per-shot frame language carried denormalized (joined by shot_ref onto cut_order). Deep internals owned by the Storyboard output.schema.json (read-only).",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "shot_ref":       { "type": "string", "pattern": "^shot-\\d{3}$" },
+              "frame_language": { "type": "string", "minLength": 1, "maxLength": 256 }
+            }
+          }
+        }
+      }
+    },
+
+    "brief_ref": {
+      "type": "object",
+      "required": ["brief_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        }
+      }
+    },
+
+    "preflight_report": {
+      "type": "object",
+      "description": "OPTIONAL §10.3 read-only context — denormalized QC Pre-flight cost-ledger reference. Edit Director carries NO cost fields beyond its own cost_incurred_usd (Hard Rule #10 — no cost re-litigation; the ceilings are QC Pre-flight's jurisdiction, restated here for traceability only, never re-adjudicated). Deep internals owned by the QC Pre-flight output.schema.json (read-only).",
+      "additionalProperties": true,
+      "properties": {
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" }
+      }
+    },
+
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" }
+  },
+
+  "$defs": {
+    "assetManifestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Ingest's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) + the 7th inbound parent_chain element (position 6). UUIDv7 validates under the uuid format. This is the manifest Edit Director directs over."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "normalizedFootageRow": {
+      "type": "object",
+      "description": "Ingest-relevant projection of a normalized footage row (the mode-converged shape — one shape regardless of origin mode). Edit Director reads shot_ref (cut census), asset_uri (ars:// platform-relative — Hard Rule #8 / echoed into cut_order), and duration_sec (the bound for the AUTHORED in_ms/out_ms). Deep internals owned by the Ingest schema (read-only).",
+      "required": ["shot_ref", "asset_uri", "duration_sec"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "Platform-relative ars:// URI (Hard Rule #8 — NO absolute URLs). Echoed verbatim into cut_order[*].asset_uri."
+        },
+        "duration_sec": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Declared shot duration — the upper bound for the authored in_ms/out_ms window (no double-spend, no timeline gap)."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["style-replication-agent", "ai-video-gen-agent", "videographer_upload"],
+          "description": "OPTIONAL read-context — the producing source (NOT read as a branch discriminator; Edit Director is mode-blind, Hard Rule #6)."
+        }
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Inbound session identifier. Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible — does not false-reject existing pipeline session ids). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+    "inboundParentChainHeld": {
+      "type": "array",
+      "description": "Inbound lineage = Ingest's 7-tuple, HELD ADDITIVELY. positions 0-5 inherit the QC Pre-flight 6-tuple canon verbatim (ARS-2026-06-12-Ingest-input.schema.json inboundParentChainHeld + the QC extension); position 6 = the Ingest extension (asset_manifest_id, UUIDv7). minItems 5 ACCEPTS the 5-tuple pre-ratification canon; maxItems 7 ACCEPTS the QC 6-tuple AND Ingest 7-tuple extension previews; items false. REJECTS a 4-tuple. Edit Director validates a well-formed inbound chain (Step 2 / Check #9); malformed => plan_lineage_failure at runtime. Edit Director appends its own edit_plan_id at position 7 on OUTPUT (see output.schema.json — 8-tuple, also held additively). TODO@cross-spec-3.9-ratification: flip to minItems 7 (exact-7) when the n-tuple amendment ratifies AND the Ingest 7-tuple LOCKs AND the QC 6-tuple LOCKs (Decision D6 — triply-deferred, NOT auto-advanced this run).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 7
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 inbound metadata carried from Ingest. Edit Director reads tier (authoring-richness scaling — §10.5; NOT verdict forking) / lever_state / parent_chain (7-tuple, held) / brand_id for context + the 9th-pass tier-mode re-validation (Check #4). production_mode is PRESENT for audit lineage but is the strongest NO-TOUCH field in the fleet (§10.3 / Hard Rule #6) — NEVER read as a branch discriminator; the output attests mode_blind_confirm.production_mode_read:false. There is NO source-shape oneOf in this schema BECAUSE the Asset Manifest is already mode-converged.",
+      "required": [
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "session_id",
+        "lever_state"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["pilot", "starter", "pro", "enterprise"],
+          "description": "Universal access — ALL 4 tiers traverse Edit Director at ~$0 (§4 / Decision D2). Plan RICHNESS scales by tier (§10.5 matrix); brand-rule compliance does NOT."
+        },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "Carried for audit lineage ONLY. NOT read as a branch (Hard Rule #6 / §10.3 — the strongest no-touch field). The output's mode_blind_confirm.production_mode_read:false attests it was never consulted."
+        },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "parent_chain":  { "$ref": "#/$defs/inboundParentChainHeld" }
+      }
+    }
+  }
+}

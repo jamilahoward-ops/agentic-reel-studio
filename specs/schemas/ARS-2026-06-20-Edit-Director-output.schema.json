@@ -1,0 +1,596 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/edit-director-agent/output.schema.json",
+  "title": "ARS Edit Director Agent — Output (successEditPlan | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Edit Director Agent (Agent #9 of 17 — first creative-AUTHORING agent in the post tail, 9th defense-in-depth firewall pass on the self-AUTHORED-text surface, first contractually mode-BLIND agent). Authored Day 62 (Sat Jun 20 2026) from SPEC §3 Outputs (Day 58 outline) + §6.3 9-code/slot-11 errorEnvelope mapping (Day 59 §6.3 LOCKED) + §10 Field Map 27 rows + §10.4 schema authoring note (Day 59) + §12 deterministic AND-of-11-gates verdict math (Day 60) + §16 metadata block (Day 60). Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 + Ingest Day 54 pattern — 5th reuse). DEFINING DIVERGENCE — the FIRST 3-verdict fleet agent with a SUCCESS-side third outcome: verdict enum is ['plan_ready','fail','revise']. successEditPlan <=> verdict in {plan_ready, revise}; errorEnvelope <=> verdict 'fail'. 'revise' is NOT an errorEnvelope — it is a successEditPlan-shaped payload carrying a revise_rationale, the QC-'hold' analog transplanted to the ONE genuinely subjective surface (soft brand-rule creative tension); it is reachable ONLY when EVERY hard gate term is true AND Check #7 surfaces a soft-rule tension; it routes to Lever-3 (route_back null) and never auto-resolves (§12 / Decision D10). The success branch encodes the §12 AND-of-11-gates HARD terms as const invariants (firewall hits==0 & status pass, coverage_remap unmapped arrays==[], the HARD brand_edit_check booleans all true, structure_check.duration_in_band true, transitions const hard-cuts-only, caption maxLength 22, lower-third case/align const, end-card const, mode_blind_confirm.production_mode_read const false) — making a false-plan-ready STRUCTURALLY impossible (false-plan-ready tolerance ZERO, §8.5 / Decision target). The two SOFT brand_edit_check booleans (one_text_reveal_per_8s, one_emotional_beat) are plain booleans (a soft tension may set one false on a 'revise' — the only success-branch surface where a brand_edit_check boolean may be false). 9 LOCKED failure codes (§6.3) + plan_lineage_failure (forensic halt) + slot-11 catch-all edit_director_agent_failed enumerated via enum; duration_envelope_breach is enumerated STANDALONE (NOT folded — the deliberate opposite of Ingest's fold-into-asset_spec_violation, per D7 — at the authoring layer an out-of-band duration has a distinct re-trim recovery). render_dispatched const false (Decision D11 / Hard Rule #2 — authors a plan, renders nothing; the forged-provenance honesty contract; flips relevance at Editor, position 11). plan_evidence_hash pattern ^[a-f0-9]{64}$. asset_uri ^ars:// platform-relative (Hard Rule #8). human_review_required const true on EVERY branch (recommend-don't-approve — Decision D12 / Hard Rule #12). TRIPLY-DEFERRED (Decision D6): parent_chain held additively (minItems 5, prefixItems 0-7, maxItems 8, items false) — accepts the 5-tuple, the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, AND the 8-tuple Edit Director append. TODO@cross-spec-3.9-ratification: flip to minItems 8 (exact-8) ONLY after the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. The 8-tuple is the one item NOT auto-advanced this run (Edit Director is the THIRD forcing function for the amendment).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successEditPlan" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successEditPlan": {
+      "type": "object",
+      "description": "verdict in {plan_ready, revise} branch (§3.1). Emitted ONLY when every HARD AND-of-gate term is true (§12 deterministic AND-of-11-gates, zero tunable thresholds on the hard rules): Ingest precondition met AND upstream success AND full coverage remap (unmapped arrays empty) AND cut order covers structure AND duration in band AND every HARD brand rule satisfied AND captions within limit AND the 9th-pass authored-text firewall clean (hits==0). The hard gate terms are schema-pinned as consts below, so a false-plan-ready (a clean envelope alongside a failing hard sub-status) is STRUCTURALLY impossible (false-plan-ready tolerance ZERO). 'plan_ready' = all hard AND soft rules green; 'revise' = all HARD rules green but Check #7 surfaced a SOFT brand-rule tension — the plan is authored + well-formed, but a creative judgment is held for Lever-3 (revise_rationale required; the ONE subjective surface). Any HARD defect routes to the errorEnvelope branch instead. human_review_required is const true even on plan_ready (a plan_ready = 'ready for the operator's approve-to-cut decision', NEVER 'approved' — Decision D12 / Hard Rule #12).",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "edit_plan",
+        "ingest_precondition_check",
+        "coverage_remap",
+        "structure_check",
+        "brand_edit_check",
+        "edit_plan_firewall_pass_9",
+        "mode_blind_confirm",
+        "tier_richness",
+        "qc_pre_flags",
+        "handoff_targets",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successEditPlan" },
+        "verdict": {
+          "type": "string",
+          "enum": ["plan_ready", "revise"],
+          "description": "The success-branch verdict. 'plan_ready' = all hard+soft rules green, cleared toward Editor. 'revise' = all HARD rules green but a soft brand-rule tension exists (Check #7 soft branch) — the FIRST fleet success-side third verdict; held for Lever-3, never auto-resolved. A 'revise' MUST carry revise_rationale (see allOf below)."
+        },
+        "reel_ref": { "$ref": "#/$defs/reelRefFull" },
+
+        "edit_plan": {
+          "type": "object",
+          "description": "§10 rows 11-20 — the AUTHORED edit plan (the core creative-direction output). cut_order is the authored, time-bounded, gap-free cut; pacing/rhythm derived from declared wpm+tempo (no byte decode — Hard Rule #9); caption/lower-third copy is Script passthrough (Hard Rule #8) with AUTHORED timing; transitions/end_card are const brand elements; music_swell_map authored at the per-tier count.",
+          "required": ["cut_order", "caption_style", "caption_lines", "lower_thirds", "transitions", "end_card"],
+          "additionalProperties": false,
+          "properties": {
+            "cut_order": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 240,
+              "description": "§10 row 11 — the authored ordered, time-bounded cut. shot_ref passthrough; in_ms/out_ms AUTHORED against duration_sec; frame_language joined from Storyboard (Edit Director directs order, not framing). No double-spend, no timeline gap.",
+              "items": { "$ref": "#/$defs/cutEntry" }
+            },
+            "pacing_bpm": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 300,
+              "description": "§10 row 13 — DERIVED from declared voice_pacing (wpm) + declared music tempo. Heuristic only; NO byte-level beat detection (Hard Rule #9)."
+            },
+            "cut_rhythm": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "description": "§10 row 13 — authored rhythm cue language (e.g. 'quarter-note on beats, syncopated on b-roll')."
+            },
+            "caption_style": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "description": "§10 row 14 — the burn-in style string (lowercase sans, one line at a time, <=22 chars/line). Burn-in MANDATORY for Pilot/Starter (§10.5)."
+            },
+            "caption_lines": {
+              "type": "array",
+              "description": "§10 row 15 — per-line caption rows. text is Script copy passthrough (NOT re-authored — Hard Rule #8); at_ms AUTHORED to the cut. text maxLength 22 is the brand caption rule, machine-enforced (a line that cannot fit => caption_spec_violation, errorEnvelope).",
+              "items": { "$ref": "#/$defs/captionLine" }
+            },
+            "lower_thirds": {
+              "type": "array",
+              "description": "§10 row 16 — lower-third rows. content is Script passthrough; case 'lowercase' + align 'left' are ENFORCED brand rules (const); at_ms AUTHORED; style references an lt_* mogrt from assets_pulled.",
+              "items": { "$ref": "#/$defs/lowerThird" }
+            },
+            "transitions": {
+              "type": "string",
+              "const": "hard cuts only — zero fades, zero wipes, zero zooms (brand rule)",
+              "description": "§10 row 18 — the hard-cuts-only brand rule encoded at the schema layer (not just the prompt). A fade/wipe/zoom the cut would need => brand_edit_rule_conflict (hard fail, errorEnvelope), never revise."
+            },
+            "music_bed": {
+              "type": "string",
+              "description": "§10 row 17 — single music-bed URI passthrough (platform-relative ars://, Hard Rule #8).",
+              "pattern": "^ars://[a-zA-Z0-9_\\-./]+$"
+            },
+            "music_swell_map": {
+              "type": "array",
+              "description": "§10 row 17 — AUTHORED swell map at the per-tier count (1/1/2/3 — §10.5). beat_synced is reserved v1.1 (needs byte decode).",
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": ["at_ms", "type"],
+                "additionalProperties": false,
+                "properties": {
+                  "at_ms": { "type": "integer", "minimum": 0 },
+                  "type":  { "type": "string", "minLength": 1, "maxLength": 64 }
+                }
+              }
+            },
+            "end_card": { "$ref": "#/$defs/endCard" }
+          }
+        },
+
+        "ingest_precondition_check": {
+          "type": "object",
+          "description": "§10 row 21 — the precondition evidence (Check #1). On the success branch: verdict_observed=='pass' OR lever3_signoff_present==true (the only bypass — Decision D4). A non-pass with no sign-off cannot reach this branch (it halts upstream_ingest_not_passed).",
+          "required": ["asset_manifest_id", "verdict_observed", "lever3_signoff_present"],
+          "additionalProperties": false,
+          "properties": {
+            "asset_manifest_id":     { "$ref": "#/$defs/assetManifestId" },
+            "verdict_observed":      { "type": "string", "enum": ["pass", "fail", "reshoot"] },
+            "lever3_signoff_present": { "type": "boolean" }
+          },
+          "allOf": [
+            {
+              "description": "Precondition gate (Decision D4): on the success branch the upstream verdict was 'pass' OR a Lever-3 sign-off was attached. A non-pass with no sign-off cannot reach this branch (it halts upstream_ingest_not_passed).",
+              "anyOf": [
+                { "properties": { "verdict_observed": { "const": "pass" } } },
+                { "properties": { "lever3_signoff_present": { "const": true } } }
+              ]
+            }
+          ]
+        },
+
+        "coverage_remap": {
+          "type": "object",
+          "description": "§10 row 22 — the coverage/mappability census (Check #3). shots_required == storyboard_ref.total_shots (no phantom mapping). unmapped_shot_refs==[] AND unmapped_beats==[] REQUIRED on the success branch (gate term). A coverage hole => incomplete_shot_coverage; an unmappable beat => beat_map_unmappable (both errorEnvelope).",
+          "required": ["shots_required", "shots_mapped", "unmapped_shot_refs", "unmapped_beats"],
+          "additionalProperties": false,
+          "properties": {
+            "shots_required": { "type": "integer", "minimum": 1, "maximum": 60 },
+            "shots_mapped":   { "type": "integer", "minimum": 1, "maximum": 60 },
+            "unmapped_shot_refs": {
+              "type": "array",
+              "const": [],
+              "description": "const empty on the success branch (the coverage invariant); populated only on incomplete_shot_coverage (errorEnvelope)."
+            },
+            "unmapped_beats": {
+              "type": "array",
+              "const": [],
+              "description": "const empty on the success branch (the mappability invariant); populated only on beat_map_unmappable (errorEnvelope)."
+            }
+          }
+        },
+
+        "structure_check": {
+          "type": "object",
+          "description": "§10 row 23 — the reel-structure adjudication (Checks #5+#6). duration_in_band == (45000 <= total_duration_ms <= 75000) and is const true on the success branch (gate term — Check #6; an out-of-band duration => duration_envelope_breach, errorEnvelope). cta_internal_question_ok enforces the no-sales-CTA brand rule. hook_window_ok + body_beats describe the hook->3-beat->CTA structure (Check #5).",
+          "required": ["hook_window_ok", "body_beats", "cta_internal_question_ok", "total_duration_ms", "duration_in_band"],
+          "additionalProperties": false,
+          "properties": {
+            "hook_window_ok":           { "type": "boolean", "const": true },
+            "body_beats":               { "type": "integer", "minimum": 1, "maximum": 12 },
+            "cta_internal_question_ok": { "type": "boolean", "const": true },
+            "total_duration_ms":        { "type": "integer", "minimum": 45000, "maximum": 75000, "description": "Authored total runtime; the 45-75s band is the structural envelope (Check #6)." },
+            "duration_in_band":         { "type": "boolean", "const": true, "description": "const true on success (gate term). false => duration_envelope_breach (errorEnvelope, standalone code — NOT folded)." }
+          }
+        },
+
+        "brand_edit_check": {
+          "type": "object",
+          "description": "§10 row 24 — the 7-boolean brand-edit adjudication (Check #7). The FIVE HARD booleans are const true on the success branch (a hard false => brand_edit_rule_conflict, errorEnvelope — zero tolerance, Decision D9). The TWO SOFT booleans (one_text_reveal_per_8s, one_emotional_beat) are plain booleans: a soft-rule tension may set one false on a 'revise' verdict (the ONLY success-branch surface where a brand_edit_check boolean may be false — surfaced to Lever-3, never silently overridden). All 7 booleans are required-present (the brand-compliance invariant, §10.4).",
+          "required": [
+            "hard_cuts_only",
+            "one_text_reveal_per_8s",
+            "one_emotional_beat",
+            "lower_thirds_lowercase_left",
+            "captions_within_char_limit",
+            "no_reel_level_sales_cta",
+            "end_card_present"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "hard_cuts_only":              { "type": "boolean", "const": true, "description": "HARD — const true on success. false => brand_edit_rule_conflict." },
+            "one_text_reveal_per_8s":      { "type": "boolean", "description": "SOFT — plain boolean; a tension here may surface a 'revise' (held for Lever-3), never a silent override." },
+            "one_emotional_beat":          { "type": "boolean", "description": "SOFT — plain boolean; e.g. a 4th emotional beat vs the one-beat rule is the canonical 'revise' surface (Lever-3 creative call)." },
+            "lower_thirds_lowercase_left": { "type": "boolean", "const": true, "description": "HARD — const true on success. false => brand_edit_rule_conflict." },
+            "captions_within_char_limit":  { "type": "boolean", "const": true, "description": "HARD — const true on success. A line that cannot fit => caption_spec_violation (errorEnvelope)." },
+            "no_reel_level_sales_cta":     { "type": "boolean", "const": true, "description": "HARD — const true on success. A reel-level sales CTA => brand_edit_rule_conflict." },
+            "end_card_present":            { "type": "boolean", "const": true, "description": "HARD — const true on success. A missing end-card => brand_edit_rule_conflict." }
+          }
+        },
+
+        "edit_plan_firewall_pass_9": {
+          "type": "object",
+          "description": "§10 row 25 — the 9th-pass firewall result on the NEW self-AUTHORED-text surface (Check #4) — every lower-third + caption line + the end-card Edit Director itself WROTE, a surface no prior content pass owned. hits MUST be 0 on the success branch (gate term); any hit => edit_plan_firewall_breach (errorEnvelope — the highest-stakes code: a leak here burns into the cut). authored_text_fields_scanned = the true authored-field census.",
+          "required": ["status", "authored_text_fields_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":                       { "type": "string", "const": "pass" },
+            "authored_text_fields_scanned": { "type": "integer", "minimum": 0 },
+            "hits":                         { "type": "integer", "const": 0 }
+          }
+        },
+
+        "mode_blind_confirm": { "$ref": "#/$defs/modeBlindConfirm" },
+
+        "tier_richness": {
+          "type": "object",
+          "description": "§10 row 19 / §10.5 — the only tier-sensitive block in the post tail. cut_beats / b_roll / music_swells / variants_planned scale by tier; brand-rule compliance does NOT. v1.0 flags variants_planned count; auto-authoring of variant_plans[] is reserved v1.1.",
+          "required": ["tier", "cut_beats", "b_roll", "music_swells", "variants_planned"],
+          "additionalProperties": false,
+          "properties": {
+            "tier":            { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+            "cut_beats":       { "type": "integer", "minimum": 1, "maximum": 12, "description": "<=8 Pilot/Starter; <=12 Pro/Enterprise (§10.5)." },
+            "b_roll":          { "type": "integer", "minimum": 0, "description": "<=3 Pilot/Starter; <=6 Pro; uncapped Enterprise (§10.5)." },
+            "music_swells":    { "type": "integer", "minimum": 0, "maximum": 3, "description": "1/1/2/3 by tier (== music_swell_map length cap)." },
+            "variants_planned": { "type": "integer", "minimum": 0, "maximum": 5, "description": "3/3/4/5 by tier; v1.0 flags the count only." }
+          }
+        },
+
+        "qc_pre_flags": { "$ref": "#/$defs/qcPreFlagsEmitted" },
+
+        "handoff_targets": {
+          "type": "array",
+          "description": "§10 — non-empty on the success branch. v1.0 logical target = editor-agent (Agent #10, not yet built). Physical destination is the Notion Edit Plan block holding store until Agent #10 LOCKs (Decision D15 PRELIMINARY — operator-pending; resolved jointly with Ingest Day 53 Item 8, the same seam from both ends); the LOGICAL handoff_targets value is unaffected.",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "const": "editor-agent" }
+        },
+
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "This agent's own self-cost (~$0.00 — reasoning + plan authoring only; $0.00 engine + $0.00 render structurally guaranteed). Generative engine spend + media render are FORBIDDEN ($0 invariant, not a bounded budget — Hard Rule #2). Reported to 2dp per Cross-SPEC §3.9. NO cost-ceiling authority (Hard Rule #10 — QC Pre-flight's jurisdiction). Ties Ingest / QC Pre-flight for lowest-cost agent in the fleet."
+        },
+
+        "revise_rationale": {
+          "type": "object",
+          "description": "REQUIRED only when verdict=='revise' (see allOf). Names the soft brand-rule tension being surfaced to Lever-3. Absent on plan_ready. The plan is well-formed; the creative call is the operator's (never auto-resolved — Decision D10).",
+          "additionalProperties": true,
+          "properties": {
+            "soft_rule":  { "type": "string", "minLength": 2, "maxLength": 64, "description": "The soft rule in tension (e.g. one_emotional_beat)." },
+            "tension":    { "type": "string", "minLength": 4, "maxLength": 1024, "description": "The creative judgment being surfaced." }
+          }
+        },
+
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+
+      "allOf": [
+        {
+          "description": "Decision D10 — a 'revise' verdict MUST carry a revise_rationale (the soft-rule tension surfaced to Lever-3). 'plan_ready' does not.",
+          "if": {
+            "properties": { "verdict": { "const": "revise" } },
+            "required": ["verdict"]
+          },
+          "then": { "required": ["revise_rationale"] }
+        }
+      ]
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict 'fail' branch (§3.2). The plan is unbuildable from current inputs (recoverable upstream) OR a hard brand-rule cannot be satisfied OR a halt fired (precondition / forensic / mode gate / self-QC exhaustion). DELIBERATE DIVERGENCE from Ingest: there is NO 'reshoot' verdict (Edit Director is two gates downstream of live footage — a coverage hole routes back to ingest-agent, never to a re-shoot) and NO 'hold' verdict (the soft-judgment slot lives on the SUCCESS branch as 'revise', not here). All halts emit verdict 'fail' with the failure_code naming the specific halt. human_review_required const true on every branch (the agent RECOMMENDS the verdict, the operator approves — Decision D12).",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "attempts",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "detail",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "const": "fail" },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_ingest_not_passed",
+            "upstream_not_success",
+            "incomplete_shot_coverage",
+            "beat_map_unmappable",
+            "cut_order_incomplete",
+            "duration_envelope_breach",
+            "brand_edit_rule_conflict",
+            "caption_spec_violation",
+            "edit_plan_firewall_breach",
+            "plan_lineage_failure",
+            "edit_director_agent_failed"
+          ],
+          "description": "The §6.3 LOCKED namespace: 9 substantive codes + plan_lineage_failure (forensic halt, Check #9) + slot-11 catch-all edit_director_agent_failed (Cross-SPEC §3.6). duration_envelope_breach is enumerated STANDALONE (NOT folded into a spec-violation code — the deliberate opposite of Ingest's fold, per D7: at the authoring layer an out-of-band duration has a distinct re-trim recovery, so folding would destroy the route signal). 'revise' is NOT here — it is a SUCCESS-branch verdict. edit_director_agent_failed accompanies attempts==2 (self-QC 2-strike exhaustion)."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 11,
+          "description": "Which §6.1 self-QC check produced the verdict (1..11 — the 11-check list, bipartite-covering the 9 codes + plan_lineage_failure + slot-11)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies edit_director_agent_failed (slot-11). No third attempt."
+        },
+        "route_back_to": {
+          "description": "§3.2 / §12.2 verdict<->route map. ingest-agent on an asset/coverage gap (incomplete_shot_coverage, beat_map_unmappable asset side); production-coord-agent on a creative-intent conflict needing a re-plan (cut_order_incomplete, beat_map_unmappable intent side); null on a halt that no upstream is at fault for (the precondition halts, plan_lineage_failure, and slot-11 edit_director_agent_failed — the agent's own self-QC failure).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "ingest-agent",
+                "production-coord-agent"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.10 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (the specific violation, affected_shots, recovery_path, upstream_failure, the brand-rule + conflict on a brand_edit_rule_conflict, the AUTHORED field + rule on a firewall breach, the unfilled window on a cut_order_incomplete, the beat to shorten on a duration_envelope_breach, etc.). Advisory recovery_path is surfaced, NOT auto-executed (v1.0 routes; it does not conform).",
+          "additionalProperties": true,
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 },
+            "violation":     { "type": "string", "minLength": 2, "maxLength": 1024 }
+          }
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+
+      "allOf": [
+        {
+          "description": "Slot-11 self-QC exhaustion: edit_director_agent_failed accompanies attempts==2 and routes nowhere upstream (route_back_to null — no upstream agent is at fault for the agent's own self-QC failure, incl. a mode-blind violation: a plan that read production_mode).",
+          "if": {
+            "properties": { "failure_code": { "const": "edit_director_agent_failed" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": {
+              "attempts":      { "const": 2 },
+              "route_back_to": { "const": null }
+            }
+          }
+        },
+        {
+          "description": "Forensic + precondition halts route nowhere upstream (route_back_to null): plan_lineage_failure (audit-trail break), upstream_ingest_not_passed + upstream_not_success (the precondition gates — the operator obtains an Ingest pass / re-runs the failed ingest, not an automatic route).",
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["plan_lineage_failure", "upstream_ingest_not_passed", "upstream_not_success"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": null } }
+          }
+        }
+      ]
+    },
+
+    "cutEntry": {
+      "type": "object",
+      "description": "§10 row 11 — one authored cut. shot_ref + asset_uri passthrough; in_ms/out_ms AUTHORED (out_ms > in_ms; bounded by the declared duration_sec — no double-spend, no gap). frame_language joined from Storyboard.",
+      "required": ["shot_ref", "asset_uri", "in_ms", "out_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "shot_ref":       { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri":      { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$", "description": "Platform-relative ars:// (Hard Rule #8)." },
+        "in_ms":          { "type": "integer", "minimum": 0 },
+        "out_ms":         { "type": "integer", "minimum": 1 },
+        "frame_language": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    },
+    "captionLine": {
+      "type": "object",
+      "description": "§10 row 15 — one caption line. text is Script copy passthrough (NOT re-authored — Hard Rule #8); at_ms AUTHORED. text maxLength 22 is the brand caption rule, machine-enforced at the schema layer.",
+      "required": ["at_ms", "text", "line"],
+      "additionalProperties": false,
+      "properties": {
+        "at_ms": { "type": "integer", "minimum": 0 },
+        "text":  { "type": "string", "minLength": 1, "maxLength": 22, "description": "<=22 chars — the brand caption rule (§10.4). A line that cannot fit => caption_spec_violation (errorEnvelope)." },
+        "line":  { "type": "integer", "minimum": 1, "maximum": 2, "description": "<=2 lines on screen (the brand caption rule)." }
+      }
+    },
+    "lowerThird": {
+      "type": "object",
+      "description": "§10 row 16 — one lower-third. content is Script passthrough; case 'lowercase' + align 'left' ENFORCED (const brand rules); at_ms AUTHORED; style references an lt_* mogrt from assets_pulled.",
+      "required": ["at_ms", "content", "case", "align"],
+      "additionalProperties": false,
+      "properties": {
+        "at_ms":   { "type": "integer", "minimum": 0 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "case":    { "type": "string", "const": "lowercase", "description": "ENFORCED brand rule (§10.4). all-caps => brand_edit_rule_conflict." },
+        "align":   { "type": "string", "const": "left", "description": "ENFORCED brand rule (§10.4)." },
+        "style":   { "type": "string", "minLength": 1, "maxLength": 128, "description": "OPTIONAL lt_* mogrt template reference from assets_pulled." }
+      }
+    },
+    "endCard": {
+      "type": "object",
+      "description": "§10 row 18 — the mandatory brand end-card. line + hold_ms are const (the brand element); absence of the end-card => brand_edit_rule_conflict (end_card_present false). doubles_as_thumbnail true.",
+      "required": ["at_ms", "line", "hold_ms"],
+      "additionalProperties": false,
+      "properties": {
+        "at_ms":   { "type": "integer", "minimum": 0 },
+        "line":    { "type": "string", "const": "REINVENTED — build on purpose.", "description": "const brand end-card copy (§10.4)." },
+        "font_class": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "hold_ms": { "type": "integer", "const": 1500, "description": "const 1500ms hold (§10.4)." },
+        "doubles_as_thumbnail": { "type": "boolean" }
+      }
+    },
+    "modeBlindConfirm": {
+      "type": "object",
+      "description": "The §16 companion block (NOT in metadata — root-level on the success payload). The machine-checkable convergence guarantee: production_mode_read const false attests Edit Director NEVER read production_mode as a branch discriminator (Hard Rule #6 / Decision D3 / §10.3) — the live proof that Ingest's mode-convergence seam holds end-to-end. consumed const the converged manifest shape. This is the structural difference from every prior agent's output (Edit Director is the first contractually mode-blind agent).",
+      "required": ["production_mode_read", "consumed"],
+      "additionalProperties": false,
+      "properties": {
+        "production_mode_read": { "type": "boolean", "const": false },
+        "consumed":             { "type": "string", "const": "mode_agnostic_manifest" }
+      }
+    },
+
+    "reelRefFull": {
+      "type": "object",
+      "description": "Full reel reference (§10 row 10) — the cross-record audit join keys. edit_plan_id is this agent's emitted identity (= parent_chain[7]); asset_manifest_id is the consumed Ingest identity (= parent_chain[6]).",
+      "required": ["brand_id", "brief_id", "asset_manifest_id", "edit_plan_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":          { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "brief_id":          { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "asset_manifest_id": { "$ref": "#/$defs/assetManifestId" },
+        "edit_plan_id":      { "$ref": "#/$defs/editPlanId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["edit_plan_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":          { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "brief_id":          { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        "asset_manifest_id": { "$ref": "#/$defs/assetManifestId" },
+        "edit_plan_id":      { "$ref": "#/$defs/editPlanId" }
+      }
+    },
+    "assetManifestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The consumed Ingest manifest identity (UUIDv7 per Cross-SPEC §3.9 ID canon) + the 7th parent_chain element (position 6). UUIDv7 validates under the uuid format."
+    },
+    "editPlanId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "This agent's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — also appended at parent_chain[7] (the 8-tuple extension, held additively). UUIDv7 validates under the uuid format."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Edit Director's own emitted predicates (§3.7 snake_case, >=4 — Check #11). e.g. hard_cuts_only_confirmed, end_card_present, authored_text_firewall_clean_pass_9, mode_blind_authored. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "TRIPLY-DEFERRED (Decision D6 / §10.4 / §16 addition 1). The 8-tuple, HELD ADDITIVELY: prefixItems positions 0-7 = [brief_id, script_id, storyboard_id, production_plan_id|rendered_shots_set_id|mode-c-direct, replication_set_id, preflight_report_id, asset_manifest_id, edit_plan_id]. minItems 5 ACCEPTS the 5-tuple inbound canon (pre-ratification); maxItems 8 ACCEPTS the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, AND the 8-tuple Edit Director append; items false. REJECTS a 4-tuple. positions 0-6 inherit the Ingest parentChainHeld verbatim; position 7 is Edit Director's append (edit_plan_id, UUIDv7). TODO@cross-spec-3.9-ratification: flip to minItems 8 (exact-8) ONLY after ALL THREE gates close — the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. This is the one item NOT auto-advanced this run (Edit Director is the THIRD forcing function for the amendment).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 8
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + 5 Edit-Director additions (§16): edit_plan_class, plan_evidence_hash, render_dispatched (const false), runtime_environment_class, edit_plan_id. human_review_required const true (Decision D12). render_dispatched const false is the declared-no-render honesty contract — a plan CLAIMING a render it never produced is forged provenance (Hard Rule #2). production_mode is PRESENT for audit lineage but the sibling root-level mode_blind_confirm attests it was never READ (Hard Rule #6).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "production_mode",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "edit_plan_class",
+        "plan_evidence_hash",
+        "render_dispatched",
+        "runtime_environment_class",
+        "edit_plan_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "edit-director-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "PRESENT for audit lineage; NOT read as a branch (Hard Rule #6). The sibling root-level mode_blind_confirm.production_mode_read:false attests it was never consulted."
+        },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "parent_chain":  { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "~$0 — reasoning + plan authoring only (Cross-SPEC §3.9). $0 engine + $0 render invariant."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "tier":          { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 11 }
+          ],
+          "description": "null on success, 1..11 on failure."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p50 <= 30000 / p95 <= 90000 (§8 performance portfolio)."
+        },
+
+        "edit_plan_class": {
+          "type": "string",
+          "enum": ["primary_9x16"],
+          "description": "Addition 1. v1.0 = primary_9x16; variant_cutdown reserved v1.1+ (§16)."
+        },
+        "plan_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Addition 2. SHA-256 (lowercase hex, 64) over the edit_plan + brand_edit_check block (§3.2). Tamper-evident plan; the audit anchor + recomputability basis for recommend-don't-approve."
+        },
+        "render_dispatched": {
+          "type": "boolean",
+          "const": false,
+          "description": "Addition 3. const false in v1.0 — the declared-no-render honesty contract (Decision D11 / Hard Rule #2). Edit Director authors a PLAN, renders nothing; a plan claiming a render is forged provenance. Flips relevance at Editor (position 11)."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Addition 4. Inherited from AI Video Gen §16."
+        },
+        "edit_plan_id": {
+          "$ref": "#/$defs/editPlanId",
+          "description": "Addition 5. This agent's emitted identity (UUIDv7) — mirrors reel_ref.edit_plan_id and parent_chain[7]."
+        }
+      }
+    }
+  }
+}
