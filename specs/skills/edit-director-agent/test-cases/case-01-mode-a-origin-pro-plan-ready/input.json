@@ -1,0 +1,138 @@
+{
+  "asset_manifest": {
+    "output_type": "successAssetManifest",
+    "verdict": "pass",
+    "asset_manifest_id": "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12",
+    "lever3_signoff": null,
+    "asset_bundle": {
+      "raw_footage": [
+        {
+          "shot_ref": "shot-001",
+          "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        },
+        {
+          "shot_ref": "shot-002",
+          "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        },
+        {
+          "shot_ref": "shot-003",
+          "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        },
+        {
+          "shot_ref": "shot-004",
+          "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        },
+        {
+          "shot_ref": "shot-005",
+          "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        },
+        {
+          "shot_ref": "shot-006",
+          "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+          "duration_sec": 12,
+          "source": "videographer_upload"
+        }
+      ],
+      "audio": [
+        {
+          "asset_uri": "ars://reinvented/audio/vo_master.wav"
+        }
+      ],
+      "assets_pulled": [
+        "reinvented_logo_ivory.png",
+        "lt_serif_ivory.png"
+      ],
+      "music_bed": "ars://reinvented/audio/bed_operator_01.wav"
+    },
+    "coverage_check": {
+      "shots_required": 6,
+      "shots_covered": 6,
+      "coverage_complete": true
+    }
+  },
+  "script_ref": {
+    "script_id": "script-REINVENTED-2026-06-22-001",
+    "audio_track": {
+      "voice_pacing": 165
+    },
+    "captions": {
+      "style": "burn-in lowercase sans",
+      "max_chars_per_line": 22,
+      "max_lines_on_screen": 2
+    },
+    "on_screen_text": [
+      {
+        "text": "jamila howard",
+        "second_start": 1.2,
+        "anchor": "lower-third"
+      },
+      {
+        "text": "operator, reinvented",
+        "second_start": 22.0,
+        "anchor": "lower-third"
+      }
+    ]
+  },
+  "storyboard_ref": {
+    "storyboard_id": "storyboard-REINVENTED-2026-06-22-001",
+    "total_shots": 6,
+    "shot_list": [
+      {
+        "shot_ref": "shot-001",
+        "frame_language": "medium push-in, eye-line left"
+      },
+      {
+        "shot_ref": "shot-002",
+        "frame_language": "wide static, rule-of-thirds"
+      },
+      {
+        "shot_ref": "shot-003",
+        "frame_language": "tight insert, hands on keys"
+      },
+      {
+        "shot_ref": "shot-004",
+        "frame_language": "over-shoulder monitor glow"
+      },
+      {
+        "shot_ref": "shot-005",
+        "frame_language": "low-angle hero, ivory key light"
+      },
+      {
+        "shot_ref": "shot-006",
+        "frame_language": "centered portrait, ink backdrop"
+      }
+    ]
+  },
+  "brief_ref": {
+    "brief_id": "brief-REINVENTED-2026-06-22-001"
+  },
+  "preflight_report": {
+    "preflight_report_id": "preflight-REINVENTED-2026-06-22-001"
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "A",
+    "lever_state": "lever-3",
+    "brand_id": "REINVENTED",
+    "session_id": "sess-reinvented-20260622-ars01",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12"
+    ]
+  }
+}

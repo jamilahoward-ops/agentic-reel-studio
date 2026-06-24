@@ -1,0 +1,7 @@
+# Case 01 — Mode-A-origin → manifest, Pro reel → PLAN_READY (full plan)
+
+**Verdict:** `plan_ready` → `successEditPlan` · **Code:** `null`
+
+The dominant happy path. An Ingest-passed (`verdict: pass`) Pro-tier reel whose Asset Manifest originated from Mode A (human footage): full `asset_bundle.raw_footage` (6 shots, declared `duration_sec` each), Storyboard frame-language per shot, a Script beat map (hook→3-beat→CTA, captions, on_screen_text, 165wpm `voice_pacing`), music bed present, full coverage, firewall-clean upstream, 7-tuple inbound `parent_chain`.
+
+**Proves:** a complete authored `edit_plan` — `cut_order[]` (Pro ≤12 beats, every `in_ms < out_ms`, no double-spend, no gap), `pacing_bpm` + `cut_rhythm` derived from 165wpm + declared music tempo, every `caption_lines[].text` ≤22 chars, every `lower_thirds[]` `case: lowercase` / `align: left`, `transitions` hard-cuts-only, `music_swell_map` length 2 (Pro), the mandatory `end_card` ("REINVENTED — build on purpose.", `hold_ms: 1500`), `structure_check.duration_in_band: true`, all 7 `brand_edit_check` booleans true, `edit_plan_firewall_pass_9 {status: pass, hits: 0}`, `mode_blind_confirm.production_mode_read: false`, `render_dispatched: false`, `handoff_targets: [editor-agent]`, `human_review_required: true` even on `plan_ready` (recommend-don't-approve), ≥4 snake_case `qc_pre_flags[]`, `plan_evidence_hash ^[a-f0-9]{64}$`, `parent_chain` extended to an 8-tuple additively.

@@ -1,0 +1,60 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "brand_edit_rule_conflict",
+  "failed_check_id": 7,
+  "attempts": 1,
+  "route_back_to": "production-coord-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "brief_id": "brief-REINVENTED-2026-06-22-001",
+    "asset_manifest_id": "018f9a04-0004-7d4e-8f5a-6b7c8d9e0f12",
+    "edit_plan_id": "018f9a04-ed04-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "cost_incurred_usd": 0.04,
+  "detail": {
+    "violation": "beats 2->3 cannot hard-cut cleanly; the only coherent transition needs a cross-fade",
+    "rule_violated": "hard_cuts_only",
+    "brand_edit_check": {
+      "hard_cuts_only": false,
+      "one_text_reveal_per_8s": true,
+      "one_emotional_beat": true,
+      "lower_thirds_lowercase_left": true,
+      "captions_within_char_limit": true,
+      "no_reel_level_sales_cta": true,
+      "end_card_present": true
+    },
+    "recovery_path": "Re-spec the shot coverage so beats 2->3 hard-cut. A fade must never survive to plan_ready (brand canon)."
+  },
+  "metadata": {
+    "agent_id": "edit-director-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260622-ars01",
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a04-0004-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a04-ed04-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.04,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-22T05:48:00Z",
+    "lever_state": "lever-3",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 7,
+    "latency_ms": 22400,
+    "edit_plan_class": "primary_9x16",
+    "plan_evidence_hash": "9cec390f73f80e1901e6c9e4c473450712ffd5b8150b264bee8a03d94c0fdb14",
+    "render_dispatched": false,
+    "runtime_environment_class": "staging",
+    "edit_plan_id": "018f9a04-ed04-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true
+}
