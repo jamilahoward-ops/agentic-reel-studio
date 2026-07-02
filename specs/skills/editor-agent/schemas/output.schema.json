@@ -1,0 +1,518 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/editor-agent/output.schema.json",
+  "title": "ARS Editor Agent — Output (successEdl | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Editor Agent (Agent #10 of 17 — first EXECUTOR agent in the post tail, 10th defense-in-depth firewall pass at COMMIT time on the committed passthrough-text surface, second contractually mode-BLIND agent). Authored Day 71 (Mon Jun 29 2026) from SPEC §3 Outputs (Day 66 outline) + §6.3 9-code/slot-11 errorEnvelope mapping (Day 67 §6.3 LOCKED) + §10 Field Map 26 rows + §10.4 schema authoring note (Day 67) + §12 deterministic AND-of-gates verdict math (Day 68) + §16 metadata block (Day 68). Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 + Ingest Day 54 + Edit Director Day 62 pattern — 6th reuse). DEFINING DIVERGENCE — the FIRST fleet agent to DROP a verdict its direct predecessor carries: verdict enum is ['edl_ready','fail'] — exactly TWO values, NO 'revise'. Editor is a fully-DETERMINISTIC executor (a timecode is in range or it isn't; copy is byte-faithful or it isn't; a transition is a cut or it isn't; the firewall is clean or it isn't), so there is NO subjective conform surface and NO held-creative-call verdict. successEdl <=> verdict 'edl_ready'; errorEnvelope <=> verdict 'fail'. Human deferral lives in human_review_required const true + render_target.conform_mode const 'human_in_the_loop' on EVERY emission (recommend-don't-render), NOT in a verdict branch — the subjective surface lives ONE stage upstream (Edit Director's one 'revise' slot), where the creativity is. The success branch encodes the §12 AND-of-gates HARD terms as const invariants (conform_check all-booleans const true, plan_fidelity_check all-6-booleans const true, edl_firewall_pass_10 status const pass + hits const 0, events[*].transition const 'cut', caption_events[*].text maxLength 22, lower_third_events[*].case const 'lowercase' + align const 'left', end_card_event.hold_ms const 1500, edl.frame_rate const 30 + aspect const '9:16' + resolution const '1080x1920', render_target.render_dispatched const false + conform_mode const 'human_in_the_loop', mode_blind_confirm.production_mode_read const false) — making a false-edl-ready STRUCTURALLY impossible (false-edl-ready tolerance ZERO target, §8). 9 LOCKED failure codes (§6.3) + slot-11 catch-all editor_agent_failed enumerated via enum; asset_unresolved is enumerated as a single FOLDED code (cut-asset + music-bed + voice-track resolution all route back to Ingest) and plan_fidelity_breach as a single FOLDED code (hash-tamper + copy/order deviation all route back to Edit Director) — the deliberate OPPOSITE of Edit Director keeping duration_envelope_breach standalone (per D8: Editor's defect surface clusters by ROUTE-BACK DESTINATION, not by defect taxonomy). render_dispatched const false (Hard Rule #3 — authors an EDL, renders nothing; the human conforms in v1.0; Week 4-5 automation is v1.1). edl_evidence_hash + plan_evidence_hash pattern ^[a-f0-9]{64}$. asset_uri ^ars:// platform-relative (Hard Rule inherit). human_review_required const true on EVERY branch (recommend-don't-render — Hard Rule #13). QUADRUPLY-DEFERRED (Decision D7): parent_chain held additively (minItems 5, prefixItems 0-8, maxItems 9, items false) — accepts the 5-tuple, the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, the 8-tuple Edit Director extension preview, AND the 9-tuple Editor append. TODO@cross-spec-3.9-ratification: flip to minItems 9 (exact-9) ONLY after the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. The 9-tuple is the one item NOT auto-advanced this run (Editor is the FOURTH forcing function for the amendment).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successEdl" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successEdl": {
+      "type": "object",
+      "description": "verdict == 'edl_ready' branch (§3.1) — the ONLY success verdict (NO 'revise'; the defining divergence from Edit Director). Emitted ONLY when every HARD AND-of-gate term is true (§12 deterministic AND-of-gates, zero tunable thresholds): Edit Director precondition met AND plan_evidence_hash verified AND all assets resolved AND all timecodes in range + frame-aligned AND timeline gap-free + no double-spend AND transitions hard-cuts-only AND duration in band AND committed copy byte-faithful AND the 10th-pass commit-time firewall clean (hits==0). The hard gate terms are schema-pinned as consts below, so a false-edl-ready (a clean envelope alongside a failing hard sub-status) is STRUCTURALLY impossible (false-edl-ready tolerance ZERO). human_review_required is const true even on edl_ready (an edl_ready = 'ready for the human conform', NEVER 'rendered' or 'approved' — Hard Rule #13). Any HARD defect routes to the errorEnvelope branch instead (verdict 'fail').",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "edl",
+        "plan_precondition_check",
+        "conform_check",
+        "plan_fidelity_check",
+        "edl_firewall_pass_10",
+        "mode_blind_confirm",
+        "render_target",
+        "qc_pre_flags",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successEdl" },
+        "verdict": {
+          "type": "string",
+          "const": "edl_ready",
+          "description": "The ONLY success verdict. NO 'revise' (the executor is deterministic — the defining divergence from Edit Director's ['plan_ready','fail','revise']). The two-verdict enum ['edl_ready','fail'] manifests across the two oneOf branches."
+        },
+        "reel_ref": { "$ref": "#/$defs/reelRefFull" },
+        "edl": {
+          "type": "object",
+          "description": "§10 rows 12-18 + the format header — the canonical Edit Decision List. The 9:16 / 1080x1920 / 30fps format spec (Brand-Voice Intake §8) is encoded as const at the schema layer (the conform target is canon, not folklore). events[] is the conformed cut timeline; caption_events/lower_third_events/end_card_event/music_event are the committed-copy + placement events.",
+          "required": ["frame_rate", "aspect", "resolution", "events", "end_card_event"],
+          "additionalProperties": false,
+          "properties": {
+            "frame_rate": { "type": "integer", "const": 30, "description": "Brand-Voice §8 — const 30fps (the conform grid; 33.333ms/frame)." },
+            "aspect":     { "type": "string", "const": "9:16", "description": "Brand-Voice §8 — const 9:16." },
+            "resolution": { "type": "string", "const": "1080x1920", "description": "Brand-Voice §8 — const 1080x1920." },
+            "events": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 240,
+              "description": "§10 rows 12-14 — the conformed cut timeline. Each event: shot_ref + asset_uri passthrough; src_in/out_ms TRANSFORMED to frame-aligned source timecodes (validated <= declared duration); rec_in/out_ms the gap-free record-timeline positions (each rec_in_ms == prior rec_out_ms); transition const 'cut' (hard-cuts-only at the event layer).",
+              "items": { "$ref": "#/$defs/edlEvent" }
+            },
+            "caption_events": {
+              "type": "array",
+              "description": "§10 row 15 — committed caption events. text BYTE-FAITHFUL from the plan (NOT re-authored — Hard Rule #9); text maxLength 22 (the brand rule, machine-enforced); at_ms on the conformed timeline.",
+              "items": { "$ref": "#/$defs/captionEvent" }
+            },
+            "lower_third_events": {
+              "type": "array",
+              "description": "§10 row 16 — committed lower-third events. content BYTE-FAITHFUL; case const 'lowercase' + align const 'left' (the brand rules at the event layer).",
+              "items": { "$ref": "#/$defs/lowerThirdEvent" }
+            },
+            "music_event": {
+              "type": "object",
+              "description": "§10 row 18 — the music bed at t0 (asset_uri passthrough, must have resolved against asset_bundle). Swell positions are markers only — Sound (#11) finalizes the mix, NOT Editor.",
+              "additionalProperties": false,
+              "properties": {
+                "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" },
+                "at_ms":     { "type": "integer", "const": 0, "description": "The bed lays at t0." },
+                "swell_markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": { "at_ms": { "type": "integer", "minimum": 0 } }
+                  }
+                }
+              }
+            },
+            "end_card_event": {
+              "type": "object",
+              "description": "§10 row 17 — the committed end card. line BYTE-FAITHFUL; hold_ms const 1500 (the brand end-card hold).",
+              "required": ["line", "hold_ms"],
+              "additionalProperties": false,
+              "properties": {
+                "line":    { "type": "string", "minLength": 1, "maxLength": 256, "description": "BYTE-FAITHFUL from the plan end_card.line (a deviation => plan_fidelity_breach)." },
+                "at_ms":   { "type": "integer", "minimum": 0 },
+                "hold_ms": { "type": "integer", "const": 1500, "description": "const 1500 — the brand end-card hold." }
+              }
+            }
+          }
+        },
+        "plan_precondition_check": {
+          "type": "object",
+          "description": "§10 row 21 — the precondition evidence (Step 1 / Checks #1+#2). edit_plan_id is the conformed plan; verdict_observed == 'plan_ready' OR lever3_signoff_present == true was required to proceed (else the run halted upstream_plan_not_ready).",
+          "required": ["edit_plan_id", "verdict_observed", "lever3_signoff_present"],
+          "additionalProperties": false,
+          "properties": {
+            "edit_plan_id":          { "$ref": "#/$defs/editPlanId" },
+            "verdict_observed":      { "type": "string", "enum": ["plan_ready", "fail", "revise"] },
+            "lever3_signoff_present": { "type": "boolean" }
+          }
+        },
+        "conform_check": {
+          "type": "object",
+          "description": "§10 row 22 — the conform-integrity adjudication (Steps 4-5,9 / Checks #4+#5). ALL booleans const true on the success branch (gate terms — Check #4/#5): any false routes to the errorEnvelope (timecode_out_of_range / timeline_gap_or_overlap). duration_in_band == (45000 <= total_timeline_ms <= 75000), const true on success.",
+          "required": ["timeline_gap_free", "no_double_spend", "all_events_bounded_by_declared_duration", "frame_aligned", "total_timeline_ms", "duration_in_band"],
+          "additionalProperties": false,
+          "properties": {
+            "timeline_gap_free":                        { "type": "boolean", "const": true, "description": "const true on success. false => timeline_gap_or_overlap (errorEnvelope, route Edit Director)." },
+            "no_double_spend":                          { "type": "boolean", "const": true, "description": "const true on success." },
+            "all_events_bounded_by_declared_duration":  { "type": "boolean", "const": true, "description": "const true on success. false => timecode_out_of_range (errorEnvelope, route Edit Director)." },
+            "frame_aligned":                            { "type": "boolean", "const": true, "description": "const true on success (every event on the 30fps grid)." },
+            "total_timeline_ms":                        { "type": "integer", "minimum": 45000, "maximum": 75000, "description": "The conformed runtime; in-band by construction on success." },
+            "duration_in_band":                         { "type": "boolean", "const": true, "description": "const true on success (45000 <= total_timeline_ms <= 75000)." }
+          }
+        },
+        "plan_fidelity_check": {
+          "type": "object",
+          "description": "§10 row 23 — the byte-faithful executor invariant (Steps 3,6-9 / Check #7). ALL 6 booleans const true on the success branch (gate terms): any false => plan_fidelity_breach (errorEnvelope, route Edit Director). This is the structural proof Editor authored NOTHING — every committed field matches the plan byte-for-byte, the cut count matches, the transition policy holds, and the plan anchor re-verifies.",
+          "required": ["cut_count_matches_plan", "caption_copy_byte_faithful", "lower_third_copy_byte_faithful", "end_card_byte_faithful", "transition_policy_hard_cuts_only", "plan_evidence_hash_verified"],
+          "additionalProperties": false,
+          "properties": {
+            "cut_count_matches_plan":           { "type": "boolean", "const": true },
+            "caption_copy_byte_faithful":       { "type": "boolean", "const": true },
+            "lower_third_copy_byte_faithful":   { "type": "boolean", "const": true },
+            "end_card_byte_faithful":           { "type": "boolean", "const": true },
+            "transition_policy_hard_cuts_only": { "type": "boolean", "const": true, "description": "const true on success. false => transition_policy_violation (errorEnvelope, route Edit Director)." },
+            "plan_evidence_hash_verified":      { "type": "boolean", "const": true, "description": "const true on success. false (tamper) => plan_fidelity_breach (errorEnvelope, route Edit Director)." }
+          }
+        },
+        "edl_firewall_pass_10": {
+          "type": "object",
+          "description": "§10 row 24 — the 10th-pass firewall result at COMMIT time on the committed passthrough-text surface (every caption event + lower-third event + the end-card — the last text checkpoint before pixels, Step 8 / Check #9). hits MUST be 0 on the success branch (gate term); any hit => edl_firewall_breach (errorEnvelope, route Edit Director — the highest-stakes code: a leak here burns into the cut). passthrough_text_fields_scanned = the true committed-field census.",
+          "required": ["status", "passthrough_text_fields_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":                          { "type": "string", "const": "pass" },
+            "passthrough_text_fields_scanned": { "type": "integer", "minimum": 0 },
+            "hits":                            { "type": "integer", "const": 0 }
+          }
+        },
+        "mode_blind_confirm":     { "$ref": "#/$defs/modeBlindConfirm" },
+        "render_target":          { "$ref": "#/$defs/renderTarget" },
+        "qc_pre_flags":           { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "tier_richness_echo": {
+          "type": "object",
+          "description": "OPTIONAL §10 — the echoed planned-variant count. v1.0 conforms ONLY the primary 9:16 (variant_edls[] reserved v1.1+). Echo only, NOT a conform of the variants.",
+          "additionalProperties": false,
+          "properties": {
+            "variants_planned":   { "type": "integer", "minimum": 1, "maximum": 8 },
+            "variants_conformed": { "type": "integer", "const": 1, "description": "const 1 in v1.0 — primary 9:16 only." }
+          }
+        },
+        "variant_edls": {
+          "type": "array",
+          "description": "RESERVED v1.1+ (§10.2) — the auto-conformed aspect-variant EDLs (1:1 LinkedIn cutdown, etc.). Empty / absent in v1.0 (a cutdown is a derived re-conform, lower-leverage than the primary — Open Question 5, deferred).",
+          "maxItems": 0
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true, "description": "const true even on edl_ready — an edl_ready is 'ready for the human conform', NEVER 'rendered'/'approved' (Hard Rule #13 — recommend-don't-render)." }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict == 'fail' branch (§3.2). The §6.3 LOCKED namespace: 9 substantive codes + slot-11 catch-all editor_agent_failed. asset_unresolved is FOLDED (cut-asset + music-bed + voice-track resolution — all route to Ingest) and plan_fidelity_breach is FOLDED (hash-tamper + copy/order deviation — all route to Edit Director); the deliberate OPPOSITE of Edit Director keeping duration_envelope_breach standalone (D8 — Editor folds by shared route-back destination). NO 'revise' here — Editor has no third verdict. human_review_required const true.",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "const": "fail" },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_plan_not_ready",
+            "upstream_not_success",
+            "asset_unresolved",
+            "timecode_out_of_range",
+            "timeline_gap_or_overlap",
+            "transition_policy_violation",
+            "plan_fidelity_breach",
+            "edl_firewall_breach",
+            "edl_lineage_failure",
+            "editor_agent_failed"
+          ],
+          "description": "The §6.3 LOCKED namespace: 9 substantive codes + slot-11 catch-all editor_agent_failed (Cross-SPEC §3.6). asset_unresolved is FOLDED (all asset-resolution failures route to Ingest); plan_fidelity_breach is FOLDED (hash-tamper + copy/order deviation route to Edit Director) — the OPPOSITE of Edit Director's standalone duration_envelope_breach (D8: fold by shared route-back). edl_lineage_failure = forensic halt (Check #10). editor_agent_failed accompanies attempts==2 (self-QC 2-strike exhaustion). NO 'revise' — Editor is two-verdict."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 11,
+          "description": "Which §6.1 self-QC check produced the verdict (1..11 — the 11-check list, bipartite-covering the 9 codes + slot-11)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies editor_agent_failed (slot-11). No third attempt."
+        },
+        "route_back_to": {
+          "description": "§3.2 / §12.2 verdict<->route map. ingest-agent on an asset-resolution gap (asset_unresolved — cut-asset / music-bed / voice-track); edit-director-agent on a conform-vs-plan defect needing a re-plan (timecode_out_of_range, timeline_gap_or_overlap, transition_policy_violation, plan_fidelity_breach, edl_firewall_breach — the committed copy is the plan's, so the leak/breach routes to the author); null on a halt that no upstream is at fault for (the precondition halts upstream_plan_not_ready + upstream_not_success, the forensic edl_lineage_failure, and slot-11 editor_agent_failed — the agent's own self-QC failure).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "ingest-agent",
+                "edit-director-agent"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.10 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (the specific violation, affected_events, recovery_path, upstream_failure, the out-of-range cut on a timecode_out_of_range, the unresolved asset_uri on an asset_unresolved, the deviating field on a plan_fidelity_breach, the committed field + banned token on an edl_firewall_breach, etc.). Advisory recovery_path is surfaced, NOT auto-executed (v1.0 routes; it does not re-conform).",
+          "additionalProperties": true,
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 },
+            "violation":     { "type": "string", "minLength": 2, "maxLength": 1024 }
+          }
+        },
+        "mode_blind_confirm":    { "$ref": "#/$defs/modeBlindConfirm" },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "failure_code": { "const": "editor_agent_failed" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": {
+              "attempts":      { "const": 2 },
+              "route_back_to": { "const": null }
+            },
+            "required": ["attempts"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["upstream_plan_not_ready", "upstream_not_success", "edl_lineage_failure"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": null } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "failure_code": { "const": "asset_unresolved" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "ingest-agent" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["timecode_out_of_range", "timeline_gap_or_overlap", "transition_policy_violation", "plan_fidelity_breach", "edl_firewall_breach"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "edit-director-agent" } }
+          }
+        }
+      ]
+    },
+
+    "edlEvent": {
+      "type": "object",
+      "description": "A conformed cut event. shot_ref + asset_uri passthrough; src_in/out_ms frame-aligned source timecodes (src_out_ms > src_in_ms, src_out_ms <= declared duration); rec_in/out_ms gap-free record positions; transition const 'cut'.",
+      "required": ["shot_ref", "asset_uri", "src_in_ms", "src_out_ms", "rec_in_ms", "rec_out_ms", "transition"],
+      "additionalProperties": false,
+      "properties": {
+        "shot_ref":   { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri":  { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$", "description": "Platform-relative ars:// (Hard Rule inherit). Passthrough from cut_order — no absolute URL introduced." },
+        "src_in_ms":  { "type": "integer", "minimum": 0 },
+        "src_out_ms": { "type": "integer", "minimum": 1, "description": "Frame-aligned; src_out_ms > src_in_ms AND <= declared media duration (else timecode_out_of_range)." },
+        "rec_in_ms":  { "type": "integer", "minimum": 0, "description": "Record-timeline in; == prior event's rec_out_ms (gap-free)." },
+        "rec_out_ms": { "type": "integer", "minimum": 1 },
+        "transition": { "type": "string", "const": "cut", "description": "const 'cut' — hard-cuts-only at the EDL-event layer (a demanded non-cut => transition_policy_violation)." }
+      }
+    },
+    "captionEvent": {
+      "type": "object",
+      "required": ["at_ms", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "at_ms": { "type": "integer", "minimum": 0 },
+        "text":  { "type": "string", "minLength": 1, "maxLength": 22, "description": "<=22 chars — the brand caption rule, machine-enforced at the EDL-event layer. BYTE-FAITHFUL from the plan (a deviation => plan_fidelity_breach)." },
+        "line":  { "type": "integer", "minimum": 1, "maximum": 4 }
+      }
+    },
+    "lowerThirdEvent": {
+      "type": "object",
+      "required": ["at_ms", "content", "case", "align"],
+      "additionalProperties": false,
+      "properties": {
+        "at_ms":   { "type": "integer", "minimum": 0 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 512, "description": "BYTE-FAITHFUL from the plan (a deviation => plan_fidelity_breach)." },
+        "case":    { "type": "string", "const": "lowercase", "description": "const 'lowercase' — the brand rule at the event layer." },
+        "align":   { "type": "string", "const": "left", "description": "const 'left' — the brand rule at the event layer." }
+      }
+    },
+    "modeBlindConfirm": {
+      "type": "object",
+      "description": "Root-level mode-blind self-attestation (§16 companion — NOT in metadata). Editor is the SECOND contractually mode-blind agent — the proof Ingest's convergence seam holds two stages deep. production_mode_read const false (Hard Rule #7); consumed const 'mode_agnostic_edit_plan'.",
+      "required": ["production_mode_read", "consumed"],
+      "additionalProperties": false,
+      "properties": {
+        "production_mode_read": { "type": "boolean", "const": false },
+        "consumed":             { "type": "string", "const": "mode_agnostic_edit_plan" }
+      }
+    },
+    "renderTarget": {
+      "type": "object",
+      "description": "Root-level render-target self-attestation (§16 companion — NOT in metadata). The machine-checkable no-render / human-in-the-loop guarantee at the executor seam (the field Edit Director's schema flagged as 'flips relevance at Editor' — v1.0 keeps it false). render_dispatched const false (Hard Rule #3); conform_mode const 'human_in_the_loop'; v1_edit_uri reserved (the human writes the v1.mp4 path on conform — active write deferred to v1.1 Week 4-5 automation).",
+      "required": ["render_dispatched", "conform_mode"],
+      "additionalProperties": false,
+      "properties": {
+        "render_dispatched": { "type": "boolean", "const": false, "description": "const false in v1.0 — Editor authors an EDL, renders nothing; the human conforms (Hard Rule #3). Automation is v1.1." },
+        "conform_mode":      { "type": "string", "const": "human_in_the_loop", "description": "const 'human_in_the_loop' in v1.0; 'automated' reserved v1.1 Week 4-5." },
+        "v1_edit_uri":       { "type": ["string", "null"], "description": "RESERVED v1.0 (null/placeholder — the human writes the v1.mp4 here on conform). Populated as a real render handle only when Week 4-5 automation ships (v1.1)." }
+      }
+    },
+    "reelRefFull": {
+      "type": "object",
+      "description": "§10 row 11 — the derived reel reference triple (the cross-record audit join keys). edl_id is this agent's emitted identity.",
+      "required": ["brand_id", "edit_plan_id", "edl_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":     { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "edit_plan_id": { "$ref": "#/$defs/editPlanId" },
+        "edl_id":       { "$ref": "#/$defs/edlId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["edl_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":     { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "edit_plan_id": { "$ref": "#/$defs/editPlanId" },
+        "edl_id":       { "$ref": "#/$defs/edlId" }
+      }
+    },
+    "editPlanId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Edit Director's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — the consumed plan + parent_chain[7] (the 8-tuple element). UUIDv7 validates under the uuid format."
+    },
+    "edlId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "This agent's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — also appended at parent_chain[8] (the 9-tuple extension, held additively). UUIDv7 validates under the uuid format."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Editor's own emitted predicates (§3.7 snake_case, >=4 — Check #11). e.g. timeline_gap_free, hard_cuts_only_conformed, commit_firewall_clean_pass_10, mode_blind_conformed. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "QUADRUPLY-DEFERRED (Decision D7 / §10.4 / §16 addition 1). The 9-tuple, HELD ADDITIVELY: prefixItems positions 0-8 = [brief_id, script_id, storyboard_id, production_plan_id|rendered_shots_set_id|mode-c-direct, replication_set_id, preflight_report_id, asset_manifest_id, edit_plan_id, edl_id]. minItems 5 ACCEPTS the 5-tuple inbound canon (pre-ratification); maxItems 9 ACCEPTS the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, the 8-tuple Edit Director extension preview, AND the 9-tuple Editor append; items false. REJECTS a 4-tuple. positions 0-7 inherit the Edit Director parentChainHeld verbatim; position 8 is Editor's append (edl_id, UUIDv7). TODO@cross-spec-3.9-ratification: flip to minItems 9 (exact-9) ONLY after ALL FOUR gates close — the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. This is the one item NOT auto-advanced this run (Editor is the FOURTH forcing function for the amendment).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 9
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + 6 Editor additions (§16): edl_class, edl_evidence_hash, render_dispatched (const false), conform_mode (const human_in_the_loop), runtime_environment_class, edl_id. human_review_required const true (Hard Rule #13). render_dispatched const false is the declared-no-render honesty contract — an EDL CLAIMING a render it never produced is forged provenance (Hard Rule #3). production_mode is PRESENT for audit lineage but the sibling root-level mode_blind_confirm attests it was never READ (Hard Rule #7).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "production_mode",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "edl_class",
+        "edl_evidence_hash",
+        "render_dispatched",
+        "conform_mode",
+        "runtime_environment_class",
+        "edl_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "editor-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "PRESENT for audit lineage; NOT read as a branch (Hard Rule #7). The sibling root-level mode_blind_confirm.production_mode_read:false attests it was never consulted."
+        },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "parent_chain":  { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "~$0 — conform reasoning + EDL authoring only (Cross-SPEC §3.9). $0 engine + $0 render + $0 decode invariant (ties Ingest / QC Pre-flight / Edit Director for lightest in the fleet)."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "tier":          { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 11 }
+          ],
+          "description": "null on success, 1..11 on failure."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p50 <= 25000 / p95 <= 75000 (§8 — lighter than Edit Director's authoring)."
+        },
+
+        "edl_class": {
+          "type": "string",
+          "enum": ["primary_9x16"],
+          "description": "Addition 1. v1.0 = primary_9x16; variant_cutdown reserved v1.1+ (§16)."
+        },
+        "edl_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Addition 2. SHA-256 (lowercase hex, 64) over the edl + conform_check + plan_fidelity_check block (§6.1 #11 / §3.2). Tamper-evident conform; the audit anchor + recomputability basis for recommend-don't-render."
+        },
+        "render_dispatched": {
+          "type": "boolean",
+          "const": false,
+          "description": "Addition 3. const false in v1.0 — the declared-no-render honesty contract (Hard Rule #3). Editor authors an EDL, renders nothing; the human conforms. Mirrors the root-level render_target.render_dispatched."
+        },
+        "conform_mode": {
+          "type": "string",
+          "enum": ["human_in_the_loop"],
+          "description": "Addition 4. const-equivalent ['human_in_the_loop'] in v1.0; 'automated' reserved v1.1 Week 4-5. Mirrors the root-level render_target.conform_mode."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Addition 5. Inherited from AI Video Gen §16."
+        },
+        "edl_id": {
+          "$ref": "#/$defs/edlId",
+          "description": "Addition 6. This agent's emitted identity (UUIDv7) — mirrors reel_ref.edl_id and parent_chain[8]."
+        }
+      }
+    }
+  }
+}

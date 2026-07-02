@@ -1,0 +1,174 @@
+{
+  "edit_plan": {
+    "output_type": "successEditPlan",
+    "verdict": "plan_ready",
+    "edit_plan_id": "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+    "plan_evidence_hash": "9cec390f73f80e1901e6c9e4c473450712ffd5b8150b264bee8a03d94c0fdb14",
+    "tier_richness": {
+      "variants_planned": 4
+    },
+    "mode_blind_confirm": {
+      "production_mode_read": false
+    },
+    "cut_order": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      },
+      {
+        "shot_ref": "shot-003",
+        "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      },
+      {
+        "shot_ref": "shot-004",
+        "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      },
+      {
+        "shot_ref": "shot-005",
+        "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      },
+      {
+        "shot_ref": "shot-006",
+        "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+        "in_ms": 0,
+        "out_ms": 9500,
+        "frame_language": "medium push-in"
+      }
+    ],
+    "caption_lines": [
+      {
+        "at_ms": 600,
+        "text": "you built the system",
+        "line": 1
+      },
+      {
+        "at_ms": 9600,
+        "text": "sln runs the studio",
+        "line": 1
+      },
+      {
+        "at_ms": 28600,
+        "text": "leverage over labor",
+        "line": 1
+      },
+      {
+        "at_ms": 47600,
+        "text": "what would you ship",
+        "line": 1
+      }
+    ],
+    "lower_thirds": [
+      {
+        "at_ms": 1200,
+        "content": "jamila howard",
+        "case": "lowercase",
+        "align": "left"
+      },
+      {
+        "at_ms": 29000,
+        "content": "operator, reinvented",
+        "case": "lowercase",
+        "align": "left"
+      }
+    ],
+    "transitions": "hard-cuts-only",
+    "music_bed": "ars://reinvented/audio/bed_operator_01.wav",
+    "music_swell_map": [
+      {
+        "at_ms": 8000
+      },
+      {
+        "at_ms": 38000
+      }
+    ],
+    "end_card": {
+      "line": "REINVENTED - build on purpose.",
+      "hold_ms": 1500
+    }
+  },
+  "asset_bundle": {
+    "raw_footage": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      },
+      {
+        "shot_ref": "shot-003",
+        "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      },
+      {
+        "shot_ref": "shot-004",
+        "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      },
+      {
+        "shot_ref": "shot-005",
+        "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      },
+      {
+        "shot_ref": "shot-006",
+        "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+        "duration_sec": 12.0,
+        "source": "videographer_upload"
+      }
+    ],
+    "audio": [
+      {
+        "asset_uri": "ars://reinvented/audio/vo_operator_01.wav"
+      }
+    ],
+    "music_bed": "ars://reinvented/audio/bed_operator_01.wav"
+  },
+  "preflight_report": {
+    "preflight_report_id": "preflight-REINVENTED-2026-06-22-001"
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "lever_state": "lever-3",
+    "session_id": "sess-reinvented-20260630-ars01",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12"
+    ]
+  }
+}

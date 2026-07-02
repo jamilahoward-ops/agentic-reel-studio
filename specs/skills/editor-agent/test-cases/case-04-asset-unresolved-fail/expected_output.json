@@ -1,0 +1,57 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "asset_unresolved",
+  "failed_check_id": 3,
+  "route_back_to": "ingest-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edit_plan_id": "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "cost_incurred_usd": 0.0,
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_edit_plan"
+  },
+  "metadata": {
+    "agent_id": "editor-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260630-ars01",
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-30T05:45:00Z",
+    "lever_state": "lever-3",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 3,
+    "latency_ms": 9100,
+    "edl_class": "primary_9x16",
+    "edl_evidence_hash": "262c7a81d173add88d938f43a056d3c9b50b1f656eb1a53f9d9b80273e6fa845",
+    "render_dispatched": false,
+    "conform_mode": "human_in_the_loop",
+    "runtime_environment_class": "staging",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true,
+  "detail": {
+    "violation": "cut_order asset_uri ars://reinvented/shots/shot-099.mp4 does not resolve",
+    "unresolved_asset_uris": [
+      "ars://reinvented/shots/shot-099.mp4"
+    ],
+    "recovery_path": "re-confirm the Ingest asset bundle carries shot-099"
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/editor-agent/input.schema.json",
+  "title": "ARS Editor Agent — Input (Edit Director plan_ready precondition gate + mode-converged Edit Plan + Ingest asset_bundle resolution reference)",
+  "description": "Validates the v1.0 input of the Editor Agent (Agent #10 of 17 — the first EXECUTOR agent in the post tail, the 10th defense-in-depth firewall pass at COMMIT time, the SECOND contractually mode-BLIND agent — the continued proof Ingest's mode-convergence seam holds two stages deep). Authored Day 71 (Mon Jun 29 2026) from SPEC §2 Inputs (Day 66 outline) + §10 Field Map 26 rows (Day 67 partial 1) + §10.3 no-touch rows + §10.4 schema authoring note + §16 metadata block (Day 68 partial 2). TWO defining input characteristics, both inherited from the proven Edit Director input shape (6th reuse): (1) the Edit Director precondition gate — Editor reads the Edit Plan verdict FIRST and never conforms an un-directed reel (Hard Rule #1 / Step 1 / Check #1); the runtime gate is edit_plan.verdict == 'plan_ready' OR a Lever-3 sign-off attached, else halt upstream_plan_not_ready; a non-successEditPlan output_type halts upstream_not_success (Check #2). A consumed 'revise'-verdict plan is NOT auto-conformed — it needs the Lever-3 sign-off, like any non-pass. (2) mode-BLINDNESS — production_mode is PRESENT in metadata for audit lineage but is the strongest no-touch field in the fleet (§10.3): Editor NEVER reads it as a branch discriminator (Hard Rule #7), and its output attests mode_blind_confirm.production_mode_read:false. Like Edit Director there is NO polymorphic-source oneOf split here — the Edit Plan is already mode-converged (one plan shape for all three production modes — the TC-01/TC-02 convergence proof two stages deep), so Editor consumes ONE source shape for all modes. Like every prior ARS schema this is single-file (no external $ref resolution): the consumed Edit Plan deep internals are validated by the LOCKED Edit Director output.schema.json (read-only) and the asset_bundle deep internals by the LOCKED Ingest output.schema.json (read-only); both are left permissive here (additionalProperties true) to avoid canon drift; this schema constrains the conform-relevant envelope + the fields the 11-check self-QC adjudicates. A consumed errorEnvelope (output_type != successEditPlan) is a runtime halt (upstream_not_success — Check #2), NOT a schema rejection. parent_chain inbound = Edit Director's 8-tuple, HELD ADDITIVELY (minItems 5 accepts the 5-tuple pre-ratification canon; maxItems 8 accepts the QC 6-tuple + Ingest 7-tuple + Edit Director 8-tuple extension previews; items false). Editor appends its own edl_id at position 8 on OUTPUT (see output.schema.json — 9-tuple, also held additively). TODO@cross-spec-3.9-ratification: when the n-tuple amendment ratifies AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC 6-tuple LOCKs, flip inbound to minItems 8 (exact-8). The 8-tuple inbound + 9-tuple outbound are NOT auto-advanced this run (Decision D7 — QUADRUPLY-deferred; Editor is the FOURTH forcing function for the amendment).",
+
+  "type": "object",
+  "required": [
+    "edit_plan",
+    "asset_bundle",
+    "metadata"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "edit_plan": {
+      "type": "object",
+      "description": "§2 PRIMARY input + the Edit Director precondition gate (Hard Rule #1 / Step 1 / Checks #1+#2). Editor reads this FIRST. TWO runtime gates (both halts, NOT schema rejections — a non-plan_ready / errorEnvelope plan is a valid object, an invalid conform-source): (1) output_type == 'successEditPlan' else halt upstream_not_success (Check #2 — cannot conform a failed direction output); (2) verdict == 'plan_ready' OR lever3_signoff_present == true else halt upstream_plan_not_ready (Check #1 — a 'revise' or 'fail' verdict with no sign-off is not conformable). Deep plan internals (the full Edit Director successEditPlan payload) are owned by the LOCKED Edit Director output.schema.json (read-only); only the conform-relevant envelope is constrained here. Editor TRUSTS Edit Director's brand_edit_check + edit_plan_firewall_pass_9 (the plan is brand-compliant; the AUTHORED copy was clean — §10.3 no-touch) and runs its OWN 10th firewall pass over the COMMITTED passthrough copy.",
+      "required": ["output_type", "edit_plan_id"],
+      "additionalProperties": true,
+      "properties": {
+        "output_type": {
+          "type": "string",
+          "description": "The Edit Director output discriminator. Editor proceeds ONLY on 'successEditPlan'; an inbound errorEnvelope => upstream_not_success at runtime (Check #2). Permissive enum accepts either Edit Director branch value so the agent can READ + halt on a failed plan rather than schema-rejecting it.",
+          "enum": ["successEditPlan", "errorEnvelope"]
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["plan_ready", "fail", "revise"],
+          "description": "The upstream Edit Director verdict (Edit Director emits plan_ready | fail | revise). Editor conforms ONLY on 'plan_ready' OR an attached Lever-3 sign-off; a 'revise' (held creative call) or 'fail' with no sign-off => upstream_plan_not_ready at runtime (Check #1)."
+        },
+        "edit_plan_id": { "$ref": "#/$defs/editPlanId" },
+        "lever3_signoff": {
+          "type": ["object", "null"],
+          "description": "OPTIONAL human Lever-3 sign-off — the ONLY bypass of the plan_ready precondition (Decision D4 inherit). Presence with signoff_present:true permits conform of a non-plan_ready (e.g. a 'revise') plan. Absent / null on the normal plan_ready path.",
+          "additionalProperties": true,
+          "properties": {
+            "signoff_present": { "type": "boolean" },
+            "signoff_by":      { "type": "string", "minLength": 1, "maxLength": 128 },
+            "signoff_at":      { "type": "string", "format": "date-time" }
+          }
+        },
+        "plan_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "§10 row 23 (derived) — Edit Director's SHA-256 plan anchor (lowercase hex, 64). Editor RE-VERIFIES it against the consumed plan body (plan_fidelity_check.plan_evidence_hash_verified); a mismatch => plan_fidelity_breach (route back to Edit Director). The tamper-evidence carried forward, not re-authored."
+        },
+        "tier_richness": {
+          "type": "object",
+          "description": "§10 read context — the tier's planned variant count. Editor echoes variants_planned (tier_richness_echo) but v1.0 conforms ONLY the primary 9:16 (variant_edls[] reserved v1.1+, §10.2). NOT a verdict fork — conform fidelity is identical across tiers (the §10.5 tier-FLAT matrix).",
+          "additionalProperties": true,
+          "properties": {
+            "variants_planned": { "type": "integer", "minimum": 1, "maximum": 8 }
+          }
+        },
+        "mode_blind_confirm": {
+          "type": "object",
+          "description": "§10.3 read context — Edit Director's OWN mode-blind self-attestation (production_mode_read:false). Editor reads it as the upstream convergence proof and emits its OWN attestation (the second mode-blind agent). NOT re-adjudicated.",
+          "additionalProperties": true,
+          "properties": {
+            "production_mode_read": { "type": "boolean" }
+          }
+        },
+        "cut_order": {
+          "type": "array",
+          "description": "§10 rows 12-13 — the directed cut list. Editor conforms each entry: shot_ref + asset_uri passthrough; in_ms/out_ms TRANSFORMED to 30fps-frame-aligned src timecodes validated against asset_bundle.raw_footage[].duration_sec (over-range => timecode_out_of_range). The cut identity + order are the plan's, NOT re-decided (zero authorship — Hard Rule #2).",
+          "minItems": 1,
+          "maxItems": 240,
+          "items": { "$ref": "#/$defs/cutOrderEntry" }
+        },
+        "caption_lines": {
+          "type": "array",
+          "description": "§10 row 15 — per-line caption rows. text is COMMITTED BYTE-FOR-BYTE into caption_events (NO re-authoring — Hard Rule #9); at_ms placed on the conformed timeline. A deviation => plan_fidelity_breach. text maxLength 22 is the brand caption rule (re-asserted from the plan, not re-derived).",
+          "items": { "$ref": "#/$defs/captionLine" }
+        },
+        "lower_thirds": {
+          "type": "array",
+          "description": "§10 row 16 — per lower-third rows. content COMMITTED byte-for-byte; case 'lowercase' / align 'left' re-asserted. A deviation => plan_fidelity_breach.",
+          "items": { "$ref": "#/$defs/lowerThird" }
+        },
+        "transitions": {
+          "type": "string",
+          "const": "hard-cuts-only",
+          "description": "§10 row 14 — the hard-cuts-only brand rule carried from the plan. Editor emits every event boundary as transition:'cut' (TRANSFORM at the timeline layer); a demanded non-cut => transition_policy_violation."
+        },
+        "music_bed": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "§10 row 18 — single music-bed URI passthrough into edl.music_event at t0. Platform-relative ars:// (Hard Rule inherit). An unresolvable bed (not in asset_bundle) => asset_unresolved."
+        },
+        "music_swell_map": {
+          "type": "array",
+          "description": "§10 row 18 — swell positions. Editor places them as conform MARKERS only; Sound (#11) finalizes (Editor does NOT mix). Passthrough placement, not authored.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "at_ms": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "end_card": {
+          "type": "object",
+          "description": "§10 row 17 — the end-card. line COMMITTED byte-faithful into end_card_event; hold_ms re-asserted (const 1500 on output). A deviation => plan_fidelity_breach.",
+          "additionalProperties": true,
+          "properties": {
+            "line":    { "type": "string", "minLength": 1, "maxLength": 256 },
+            "hold_ms": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+
+    "asset_bundle": {
+      "type": "object",
+      "description": "§10 rows 19-20 — the resolved Ingest pull list (the timecode-validation REFERENCE, read-only). raw_footage[].duration_sec is the bound each cut_order[].out_ms is validated against (no double-spend, no over-range — NO byte-level decode, declared duration only, Hard Rule). audio[] + music_bed resolve the voice track + bed (an unresolvable handle => asset_unresolved, route to Ingest). Deep internals owned by the LOCKED Ingest output.schema.json (read-only) — left permissive here to avoid canon drift.",
+      "required": ["raw_footage"],
+      "additionalProperties": true,
+      "properties": {
+        "raw_footage": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 240,
+          "description": "Normalized per-shot footage rows (mode-converged — one shape regardless of origin mode). Editor resolves each cut_order[].asset_uri against this set and validates timecodes against duration_sec.",
+          "items": { "$ref": "#/$defs/normalizedFootageRow" }
+        },
+        "audio": {
+          "type": "array",
+          "description": "Flat normalized audio URI list (the voice track resolution reference; sync was already adjudicated at Ingest). An unresolvable handle => asset_unresolved.",
+          "items": {
+            "type": "object",
+            "required": ["asset_uri"],
+            "additionalProperties": true,
+            "properties": {
+              "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" }
+            }
+          }
+        },
+        "music_bed": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "OPTIONAL — the resolvable music-bed handle reference. edit_plan.music_bed must resolve against this (or audio[]) else asset_unresolved."
+        }
+      }
+    },
+
+    "preflight_report": {
+      "type": "object",
+      "description": "OPTIONAL §10.3 read-only context — denormalized QC Pre-flight cost-ledger reference. Editor carries NO cost fields beyond its own cost_incurred_usd (Hard Rule #11 — no cost re-litigation; the ceilings are QC Pre-flight's jurisdiction, restated for traceability only, never re-adjudicated). Deep internals owned by the QC Pre-flight output.schema.json (read-only).",
+      "additionalProperties": true,
+      "properties": {
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" }
+      }
+    },
+
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" }
+  },
+
+  "$defs": {
+    "editPlanId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Edit Director's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) + the 8th inbound parent_chain element (position 7). UUIDv7 validates under the uuid format. This is the plan Editor conforms over."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "cutOrderEntry": {
+      "type": "object",
+      "description": "A directed cut. Editor passes through shot_ref + asset_uri (ars:// platform-relative) and TRANSFORMS in_ms/out_ms to frame-aligned src timecodes validated against the matching raw_footage row's duration_sec (over-range => timecode_out_of_range). NO creative re-decision (zero authorship).",
+      "required": ["shot_ref", "asset_uri", "in_ms", "out_ms"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "Platform-relative ars:// URI (Hard Rule — NO absolute URLs). Echoed verbatim into edl.events[*].asset_uri; must resolve against asset_bundle.raw_footage (else asset_unresolved)."
+        },
+        "in_ms":  { "type": "integer", "minimum": 0, "description": "Plan source-in intent (ms). TRANSFORMED to a 30fps-frame-aligned src_in_ms." },
+        "out_ms": { "type": "integer", "minimum": 1, "description": "Plan source-out intent (ms). Must satisfy out_ms > in_ms AND out_ms <= duration_sec*1000 (else timecode_out_of_range)." }
+      }
+    },
+    "captionLine": {
+      "type": "object",
+      "required": ["at_ms", "text"],
+      "additionalProperties": true,
+      "properties": {
+        "at_ms": { "type": "integer", "minimum": 0 },
+        "text":  { "type": "string", "minLength": 1, "maxLength": 22, "description": "<=22 chars — the brand caption rule (re-asserted, not re-derived). COMMITTED byte-faithful into caption_events[*].text (a deviation => plan_fidelity_breach)." },
+        "line":  { "type": "integer", "minimum": 1, "maximum": 4 }
+      }
+    },
+    "lowerThird": {
+      "type": "object",
+      "required": ["at_ms", "content"],
+      "additionalProperties": true,
+      "properties": {
+        "at_ms":   { "type": "integer", "minimum": 0 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 512, "description": "COMMITTED byte-faithful into lower_third_events[*].content (a deviation => plan_fidelity_breach)." },
+        "case":    { "type": "string", "enum": ["lowercase"], "description": "Re-asserted as const 'lowercase' on output." },
+        "align":   { "type": "string", "enum": ["left"], "description": "Re-asserted as const 'left' on output." }
+      }
+    },
+    "normalizedFootageRow": {
+      "type": "object",
+      "description": "Ingest-relevant projection of a normalized footage row (the mode-converged shape — one shape regardless of origin mode). Editor reads shot_ref (cut resolution), asset_uri (ars:// platform-relative / resolution key), and duration_sec (the upper bound for the conformed src_out_ms — the no-over-range / no-double-spend basis). Deep internals owned by the Ingest schema (read-only).",
+      "required": ["shot_ref", "asset_uri", "duration_sec"],
+      "additionalProperties": true,
+      "properties": {
+        "shot_ref":  { "type": "string", "pattern": "^shot-\\d{3}$" },
+        "asset_uri": {
+          "type": "string",
+          "pattern": "^ars://[a-zA-Z0-9_\\-./]+$",
+          "description": "Platform-relative ars:// URI (Hard Rule — NO absolute URLs). The resolution key for cut_order[*].asset_uri."
+        },
+        "duration_sec": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Declared shot duration — the upper bound the conformed src_out_ms is validated against (src_out_ms <= duration_sec*1000). NO byte-level decode."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["style-replication-agent", "ai-video-gen-agent", "videographer_upload"],
+          "description": "OPTIONAL read-context — the producing source (NOT read as a branch discriminator; Editor is mode-blind, Hard Rule #7)."
+        }
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Inbound session identifier. Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible — does not false-reject existing pipeline session ids). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+    "inboundParentChainHeld": {
+      "type": "array",
+      "description": "Inbound lineage = Edit Director's 8-tuple, HELD ADDITIVELY. positions 0-6 inherit the Edit Director inbound chain verbatim (ARS-2026-06-20-Edit-Director-output.schema.json parentChainHeld 0-6); position 7 = the Edit Director extension (edit_plan_id, UUIDv7). minItems 5 ACCEPTS the 5-tuple pre-ratification canon; maxItems 8 ACCEPTS the QC 6-tuple, Ingest 7-tuple AND Edit Director 8-tuple extension previews; items false. REJECTS a 4-tuple. Editor validates a well-formed inbound chain (Step 2 / Check #10); malformed => edl_lineage_failure at runtime. Editor appends its own edl_id at position 8 on OUTPUT (see output.schema.json — 9-tuple, also held additively). TODO@cross-spec-3.9-ratification: flip to minItems 8 (exact-8) when the n-tuple amendment ratifies AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC 6-tuple LOCKs (Decision D7 — QUADRUPLY-deferred, NOT auto-advanced this run).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 8
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 inbound metadata carried from Edit Director. Editor reads tier (variant-count awareness — §10.5; NOT verdict forking) / lever_state / parent_chain (8-tuple, held) / brand_id for context. production_mode is PRESENT for audit lineage but is the strongest NO-TOUCH field in the fleet (§10.3 / Hard Rule #7) — NEVER read as a branch discriminator; the output attests mode_blind_confirm.production_mode_read:false. There is NO source-shape oneOf in this schema BECAUSE the Edit Plan is already mode-converged.",
+      "required": [
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "session_id",
+        "lever_state"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["pilot", "starter", "pro", "enterprise"],
+          "description": "Universal access — ALL 4 tiers traverse Editor at ~$0 (§4 / tier-FLAT). Conform fidelity does NOT scale by tier; only the echoed variants_planned count does (§10.5)."
+        },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "Carried for audit lineage ONLY. NOT read as a branch (Hard Rule #7 / §10.3 — the strongest no-touch field). The output's mode_blind_confirm.production_mode_read:false attests it was never consulted — the second mode-blind agent, convergence two stages deep."
+        },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "parent_chain":  { "$ref": "#/$defs/inboundParentChainHeld" }
+      }
+    }
+  }
+}

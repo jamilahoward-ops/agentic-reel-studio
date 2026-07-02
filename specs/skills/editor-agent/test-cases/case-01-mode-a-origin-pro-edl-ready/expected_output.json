@@ -1,0 +1,202 @@
+{
+  "output_type": "successEdl",
+  "verdict": "edl_ready",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edit_plan_id": "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "edl": {
+    "frame_rate": 30,
+    "aspect": "9:16",
+    "resolution": "1080x1920",
+    "events": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reinvented/shots/shot-001.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 0,
+        "rec_out_ms": 9500,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reinvented/shots/shot-002.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 9500,
+        "rec_out_ms": 19000,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-003",
+        "asset_uri": "ars://reinvented/shots/shot-003.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 19000,
+        "rec_out_ms": 28500,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-004",
+        "asset_uri": "ars://reinvented/shots/shot-004.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 28500,
+        "rec_out_ms": 38000,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-005",
+        "asset_uri": "ars://reinvented/shots/shot-005.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 38000,
+        "rec_out_ms": 47500,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-006",
+        "asset_uri": "ars://reinvented/shots/shot-006.mp4",
+        "src_in_ms": 0,
+        "src_out_ms": 9500,
+        "rec_in_ms": 47500,
+        "rec_out_ms": 57000,
+        "transition": "cut"
+      }
+    ],
+    "caption_events": [
+      {
+        "at_ms": 600,
+        "text": "you built the system",
+        "line": 1
+      },
+      {
+        "at_ms": 9600,
+        "text": "now it runs itself",
+        "line": 1
+      },
+      {
+        "at_ms": 28600,
+        "text": "leverage over labor",
+        "line": 1
+      },
+      {
+        "at_ms": 47600,
+        "text": "what would you ship",
+        "line": 1
+      }
+    ],
+    "lower_third_events": [
+      {
+        "at_ms": 1200,
+        "content": "jamila howard",
+        "case": "lowercase",
+        "align": "left"
+      },
+      {
+        "at_ms": 29000,
+        "content": "operator, reinvented",
+        "case": "lowercase",
+        "align": "left"
+      }
+    ],
+    "music_event": {
+      "asset_uri": "ars://reinvented/audio/bed_operator_01.wav",
+      "at_ms": 0,
+      "swell_markers": [
+        {
+          "at_ms": 8000
+        },
+        {
+          "at_ms": 38000
+        }
+      ]
+    },
+    "end_card_event": {
+      "at_ms": 57000,
+      "line": "REINVENTED - build on purpose.",
+      "hold_ms": 1500
+    }
+  },
+  "plan_precondition_check": {
+    "edit_plan_id": "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+    "verdict_observed": "plan_ready",
+    "lever3_signoff_present": false
+  },
+  "conform_check": {
+    "timeline_gap_free": true,
+    "no_double_spend": true,
+    "all_events_bounded_by_declared_duration": true,
+    "frame_aligned": true,
+    "total_timeline_ms": 58500,
+    "duration_in_band": true
+  },
+  "plan_fidelity_check": {
+    "cut_count_matches_plan": true,
+    "caption_copy_byte_faithful": true,
+    "lower_third_copy_byte_faithful": true,
+    "end_card_byte_faithful": true,
+    "transition_policy_hard_cuts_only": true,
+    "plan_evidence_hash_verified": true
+  },
+  "edl_firewall_pass_10": {
+    "status": "pass",
+    "passthrough_text_fields_scanned": 7,
+    "hits": 0
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_edit_plan"
+  },
+  "render_target": {
+    "render_dispatched": false,
+    "conform_mode": "human_in_the_loop",
+    "v1_edit_uri": null
+  },
+  "qc_pre_flags": [
+    "timeline_gap_free",
+    "hard_cuts_only_conformed",
+    "commit_firewall_clean_pass_10",
+    "mode_blind_conformed",
+    "duration_in_band"
+  ],
+  "tier_richness_echo": {
+    "variants_planned": 4,
+    "variants_conformed": 1
+  },
+  "metadata": {
+    "agent_id": "editor-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260630-ars01",
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-30T05:45:00Z",
+    "lever_state": "lever-3",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "latency_ms": 18200,
+    "edl_class": "primary_9x16",
+    "edl_evidence_hash": "3d9ad71d3b7b1827b89abbc71173fea12df53d0cfe2bfe831f3b51fce018ec44",
+    "render_dispatched": false,
+    "conform_mode": "human_in_the_loop",
+    "runtime_environment_class": "staging",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true
+}

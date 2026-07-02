@@ -1,0 +1,57 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "timecode_out_of_range",
+  "failed_check_id": 4,
+  "route_back_to": "edit-director-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edit_plan_id": "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "cost_incurred_usd": 0.0,
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_edit_plan"
+  },
+  "metadata": {
+    "agent_id": "editor-agent",
+    "agent_version": "1.0",
+    "session_id": "sess-reinvented-20260630-ars01",
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-06-22-001",
+      "script-REINVENTED-2026-06-22-001",
+      "storyboard-REINVENTED-2026-06-22-001",
+      "productionplan-REINVENTED-2026-06-22-001",
+      "0190f8a1-7c2b-7e3a-9f1a-2b3c4d5e6f70",
+      "preflight-REINVENTED-2026-06-22-001",
+      "018f9a01-0001-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed01-7d4e-8f5a-6b7c8d9e0f12",
+      "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-06-30T05:45:00Z",
+    "lever_state": "lever-3",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 4,
+    "latency_ms": 9100,
+    "edl_class": "primary_9x16",
+    "edl_evidence_hash": "7954f59f6f20a4d64d154de3890bc9914b24ca28ab358b01891ac17f3f232757",
+    "render_dispatched": false,
+    "conform_mode": "human_in_the_loop",
+    "runtime_environment_class": "staging",
+    "edl_id": "018f9a01-ed10-7d4e-8f5a-6b7c8d9e0f12"
+  },
+  "human_review_required": true,
+  "detail": {
+    "violation": "cut event shot-003 src_out_ms 15000 exceeds declared media 12000",
+    "affected_events": [
+      "shot-003"
+    ],
+    "recovery_path": "re-trim shot-003 in the Edit Plan to fit available media"
+  }
+}
