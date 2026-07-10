@@ -1,0 +1,90 @@
+{
+  "edl": {
+    "output_type": "successEdl",
+    "verdict": "edl_ready",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "edl_evidence_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00",
+    "conform_check": {
+      "total_timeline_ms": 60000
+    },
+    "events": [
+      {
+        "shot_ref": "shot-001",
+        "asset_uri": "ars://reel/shot-001.mp4",
+        "rec_in_ms": 0,
+        "rec_out_ms": 30000,
+        "transition": "cut"
+      },
+      {
+        "shot_ref": "shot-002",
+        "asset_uri": "ars://reel/shot-002.mp4",
+        "rec_in_ms": 30000,
+        "rec_out_ms": 60000,
+        "transition": "cut"
+      }
+    ],
+    "music_event": {
+      "asset_uri": "ars://reel/music-bed.mp3",
+      "at_ms": 0,
+      "swell_markers": [
+        {
+          "at_ms": 12000
+        },
+        {
+          "at_ms": 42000
+        },
+        {
+          "at_ms": 90000
+        }
+      ]
+    },
+    "vo_transcript": [
+      {
+        "at_ms": 1000,
+        "text": "build on purpose. reinvent the standard."
+      },
+      {
+        "at_ms": 31000,
+        "text": "the operators who win build the system once."
+      }
+    ],
+    "tier_richness_echo": {
+      "variants_planned": 1,
+      "loudness_variants_planned": 1
+    },
+    "mode_blind_confirm": {
+      "production_mode_read": false
+    },
+    "render_target": {
+      "render_dispatched": false,
+      "conform_mode": "human_in_the_loop",
+      "v1_edit_uri": "ars://reel/v1.mp4"
+    }
+  },
+  "asset_bundle": {
+    "music_bed": "ars://reel/music-bed.mp3",
+    "audio": [
+      {
+        "asset_uri": "ars://reel/vo-track.wav"
+      }
+    ]
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "A",
+    "lever_state": "lever-1",
+    "brand_id": "REINVENTED",
+    "session_id": "ars-2026-07-08-sound-001",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-08-001",
+      "script-REINVENTED-2026-07-08-001",
+      "storyboard-REINVENTED-2026-07-08-001",
+      "productionplan-REINVENTED-2026-07-08-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "preflight-REINVENTED-2026-07-08-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73"
+    ]
+  }
+}

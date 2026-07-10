@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/sound-agent/output.schema.json",
+  "title": "ARS Sound Agent — Output (successAudioSpec | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Sound Agent (Agent #11 of 17 — second faithful-EXECUTOR agent in the post tail, 11th defense-in-depth firewall pass over the passthrough VO transcript, third contractually mode-BLIND agent — the continued proof Ingest's mode-convergence seam holds THREE stages deep). Authored Day 79 (Tue Jul 7 2026) from SPEC §3 Outputs (Day 74 outline) + §6.3 9-code/slot-11 errorEnvelope mapping (Day 75 §6.3 LOCKED) + §10 Field Map + §10.4 schema authoring note (Day 75) + §12 deterministic AND-of-gates verdict math (Day 76) + §16 metadata block (Day 76) + the Day 78 LOCK CANDIDATE reconciliation. Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 + Ingest Day 54 + Edit Director Day 62 + Editor Day 71 pattern — 7th reuse). DEFINING POSTURE — INHERITS Editor's two-verdict determinism: verdict enum is ['audio_ready','fail'] — exactly TWO values, NO 'revise' (the second fleet agent after Editor to carry only two verdicts). Sound is a fully-DETERMINISTIC executor (an asset resolves or it doesn't; a marker is in the timeline or it isn't; the loudness target is the platform const or it isn't; the VO transcript is byte-faithful or it isn't; the firewall is clean or it isn't), so there is NO subjective finish surface and NO held-creative-call verdict — the subjective slot stays ONE stage upstream at Edit Director's one 'revise'. successAudioSpec <=> verdict 'audio_ready'; errorEnvelope <=> verdict 'fail'. Human deferral lives in human_review_required const true + finish_target.finish_mode const 'human_in_the_loop' + finish_target.audio_processed const false on EVERY emission (recommend-don't-process), NOT in a verdict branch. The success branch encodes the §12 AND-of-gates HARD terms as const invariants (audio_conform_check all-booleans const true, spec_fidelity_check all-5-booleans const true, audio_firewall_pass_11 status const pass + hits const 0, loudness_target.primary const '-14 LUFS (IG/TT)' + true_peak_ceiling_dbtp const -1.0, finish_target.audio_processed const false + finish_mode const 'human_in_the_loop', mode_blind_confirm.production_mode_read const false) — making a false-audio-ready STRUCTURALLY impossible (false-audio-ready tolerance ZERO target, §8). 9 LOCKED failure codes (§6.3) + slot-11 catch-all sound_agent_failed enumerated via enum. DEFINING NAMESPACE DIVERGENCE: vo_track_missing and audio_asset_unresolved are each enumerated as a SEPARATE code (NOT folded — the deliberate OPPOSITE of Editor folding all resolution into one asset_unresolved) because the two Ingest-routed asset gaps carry distinct operator recovery diagnostics (re-confirm the VO voice track vs re-confirm the music bed — D8); spec_fidelity_breach is kept FOLDED (hash-tamper + duration mismatch + mix-directive/VO deviation, all route back to Editor). audio_processed const false (Hard Rule #3/#12 — authors an audio spec, processes no waveform; the human mixes in v1.0; Week 4-5 DSP automation is v1.1). audio_spec_evidence_hash + edl_evidence_hash pattern ^[a-f0-9]{64}$. asset_uri ^ars:// platform-relative (Hard Rule inherit). human_review_required const true on EVERY branch (recommend-don't-process — Hard Rule #13). QUINTUPLY-DEFERRED (Decision D7): parent_chain held additively (minItems 5, prefixItems 0-9, maxItems 10, items false) — accepts the 5-tuple, the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, the 8-tuple Edit Director extension preview, the 9-tuple Editor extension preview, AND the 10-tuple Sound append. TODO@cross-spec-3.9-ratification: flip to minItems 10 (exact-10) ONLY after the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Editor 9-tuple LOCKs AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. The 10-tuple is the one item NOT auto-advanced this run (Sound is the FIFTH forcing function for the amendment).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successAudioSpec" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successAudioSpec": {
+      "type": "object",
+      "description": "verdict == 'audio_ready' branch (§3.1) — the ONLY success verdict (NO 'revise'; inherits Editor's deterministic two-verdict posture). Emitted ONLY when every HARD AND-of-gate term is true (§12 deterministic AND-of-gates, zero tunable thresholds): Editor precondition met AND edl_evidence_hash verified AND the VO voice track resolved AND the music bed resolved AND all mix/SFX/duck markers in the timeline AND the loudness target is the platform const AND the audio timeline duration matches the EDL AND the VO transcript byte-faithful AND the 11th-pass audio-domain firewall clean (hits==0). The hard-gate terms are schema-pinned as consts below, so a false-audio-ready (a clean envelope alongside a failing hard sub-status) is STRUCTURALLY impossible (false-audio-ready tolerance ZERO). human_review_required is const true even on audio_ready (an audio_ready = 'ready for the human's finish-into-v2 decision', NEVER 'mixed' or 'approved' — Hard Rule #13). Any HARD defect routes to the errorEnvelope branch instead (verdict 'fail').",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "audio_spec",
+        "edl_precondition_check",
+        "audio_conform_check",
+        "spec_fidelity_check",
+        "audio_firewall_pass_11",
+        "mode_blind_confirm",
+        "finish_target",
+        "qc_pre_flags",
+        "handoff_targets",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successAudioSpec" },
+        "verdict": {
+          "type": "string",
+          "const": "audio_ready",
+          "description": "The ONLY success verdict. NO 'revise' (the executor is deterministic — inherits Editor's posture). The two-verdict enum ['audio_ready','fail'] manifests across the two oneOf branches."
+        },
+        "reel_ref": { "$ref": "#/$defs/reelRefFull" },
+        "audio_spec": {
+          "type": "object",
+          "description": "§10 — the canonical audio conform spec (the buildable, highest-leverage $0 slice — D1). loudness_target + vo_polish + music_bed mix + duck_envelope + sfx_accents + the byte-faithful vo_transcript passthrough. This is a DECLARED spec — level targets, duck-dB, SFX placement — NOT applied DSP (finish_target.audio_processed const false). The human (or the Week 4-5 automation) runs the mix + loudness pass into the v2.mp4.",
+          "required": ["loudness_target", "music_bed"],
+          "additionalProperties": false,
+          "properties": {
+            "loudness_target": {
+              "type": "object",
+              "description": "§10 — the platform loudness spec (D14: single -14 LUFS master in v1.0; the -16 LUFS YT variant flagged + deferred). primary const '-14 LUFS (IG/TT)' + true_peak_ceiling_dbtp const -1.0 (zero-tolerance — a deviation => loudness_target_out_of_spec, route Editor). The target is a DECLARED conform goal, NOT a measured value (no LUFS measurement in v1.0 — no decode, Hard Rule #12).",
+              "required": ["primary", "true_peak_ceiling_dbtp"],
+              "additionalProperties": false,
+              "properties": {
+                "primary":               { "type": "string", "const": "-14 LUFS (IG/TT)", "description": "const platform loudness target for IG/TikTok in v1.0 (a deviation => loudness_target_out_of_spec)." },
+                "true_peak_ceiling_dbtp": { "type": "number", "const": -1.0, "description": "const -1.0 dBTP true-peak ceiling (a deviation => loudness_target_out_of_spec)." }
+              }
+            },
+            "vo_polish": {
+              "type": "object",
+              "description": "§10 — the VO polish directives authored to the brand voice cadence (declared spec, not applied DSP). Absent / empty on a music-only reel (no resolved VO track).",
+              "additionalProperties": true,
+              "properties": {
+                "level_lufs_target": { "type": ["number", "string"] },
+                "de_ess":            { "type": ["boolean", "string"] },
+                "breath_trim":       { "type": ["boolean", "string"] },
+                "voice_cadence":     { "type": "string" }
+              }
+            },
+            "music_bed": {
+              "type": "object",
+              "description": "§10 — the music-bed mix directive bound to the resolved bed. asset_uri passthrough from edl.music_event (must have resolved against asset_bundle.music_bed); at_ms const 0 (bed at t0); base_level_db + duck_under_vo_db the declared mix levels.",
+              "required": ["asset_uri", "at_ms"],
+              "additionalProperties": false,
+              "properties": {
+                "asset_uri":       { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" },
+                "at_ms":           { "type": "integer", "const": 0, "description": "The bed lays at t0 (faithful to the EDL music_event)." },
+                "base_level_db":   { "type": "number" },
+                "duck_under_vo_db": { "type": "number" }
+              }
+            },
+            "duck_envelope": {
+              "type": "array",
+              "description": "§10 — the duck moves covering the VO spans, with swell moves mapped byte-position-faithful from the EDL music_swell_map (spec_fidelity_check.swell_markers_match_edl). Each from_ms/to_ms MUST be inside the timeline (from_ms >= 0, to_ms <= total_timeline_ms — else audio_marker_out_of_range).",
+              "items": {
+                "type": "object",
+                "required": ["from_ms", "to_ms"],
+                "additionalProperties": true,
+                "properties": {
+                  "from_ms": { "type": "integer", "minimum": 0 },
+                  "to_ms":   { "type": "integer", "minimum": 1 }
+                }
+              }
+            },
+            "sfx_accents": {
+              "type": "array",
+              "description": "§10 — the SFX accents. Each at_ms MUST be inside the timeline (0 <= at_ms <= total_timeline_ms — else audio_marker_out_of_range).",
+              "items": {
+                "type": "object",
+                "required": ["at_ms"],
+                "additionalProperties": true,
+                "properties": {
+                  "at_ms": { "type": "integer", "minimum": 0 }
+                }
+              }
+            },
+            "vo_transcript": {
+              "type": "array",
+              "description": "§10 — the Script/Editor-authored VO transcript, PASSTHROUGH byte-faithful (Hard Rule #10 — Sound authors no spoken copy; a deviation => spec_fidelity_breach). Also the 11th-firewall scan surface.",
+              "items": {
+                "type": "object",
+                "required": ["text"],
+                "additionalProperties": true,
+                "properties": {
+                  "at_ms": { "type": "integer", "minimum": 0 },
+                  "text":  { "type": "string", "minLength": 1, "maxLength": 2048 }
+                }
+              }
+            }
+          }
+        },
+        "edl_precondition_check": {
+          "type": "object",
+          "description": "§10 — the precondition evidence (Step 1 / Checks #1+#2). edl_id is the finished EDL; verdict_observed == 'edl_ready' OR lever3_signoff_present == true was required to proceed (else the run halted upstream_edl_not_ready).",
+          "required": ["edl_id", "verdict_observed", "lever3_signoff_present"],
+          "additionalProperties": false,
+          "properties": {
+            "edl_id":                 { "$ref": "#/$defs/edlId" },
+            "verdict_observed":       { "type": "string", "enum": ["edl_ready", "fail"] },
+            "lever3_signoff_present": { "type": "boolean" }
+          }
+        },
+        "audio_conform_check": {
+          "type": "object",
+          "description": "§10 — the audio-conform adjudication (Steps 3-4,9 / Checks #3-#5). ALL booleans const true on the success branch (gate terms): any false routes to the errorEnvelope (vo_track_missing / audio_asset_unresolved / audio_marker_out_of_range / loudness_target_out_of_spec). duration_in_band == (45000 <= total_timeline_ms <= 75000), const true on success.",
+          "required": ["vo_track_resolved", "music_bed_resolved", "all_markers_in_timeline", "loudness_target_in_spec", "total_timeline_ms", "duration_in_band"],
+          "additionalProperties": false,
+          "properties": {
+            "vo_track_resolved":       { "type": "boolean", "const": true, "description": "const true on success. false => vo_track_missing (errorEnvelope, route Ingest — SPLIT code)." },
+            "music_bed_resolved":      { "type": "boolean", "const": true, "description": "const true on success. false => audio_asset_unresolved (errorEnvelope, route Ingest — SPLIT code)." },
+            "all_markers_in_timeline": { "type": "boolean", "const": true, "description": "const true on success. false => audio_marker_out_of_range (errorEnvelope, route Editor)." },
+            "loudness_target_in_spec": { "type": "boolean", "const": true, "description": "const true on success. false => loudness_target_out_of_spec (errorEnvelope, route Editor)." },
+            "total_timeline_ms":       { "type": "integer", "minimum": 45000, "maximum": 75000, "description": "The audio timeline runtime; equals the EDL total_timeline_ms on success (a mismatch => spec_fidelity_breach)." },
+            "duration_in_band":        { "type": "boolean", "const": true, "description": "const true on success (45000 <= total_timeline_ms <= 75000)." }
+          }
+        },
+        "spec_fidelity_check": {
+          "type": "object",
+          "description": "§10 — the faithful-finish invariant (Steps 3,9 / Check #6). ALL 5 booleans const true on the success branch (gate terms): any false => spec_fidelity_breach (errorEnvelope, route Editor). This is the structural proof Sound RE-CUT NOTHING (Hard Rule #2) — the music event + swell markers + timeline duration match the EDL byte-position-faithful, the VO transcript is byte-faithful, and the EDL anchor re-verifies.",
+          "required": ["music_event_matches_edl", "swell_markers_match_edl", "timeline_duration_matches_edl", "vo_transcript_byte_faithful", "edl_evidence_hash_verified"],
+          "additionalProperties": false,
+          "properties": {
+            "music_event_matches_edl":       { "type": "boolean", "const": true },
+            "swell_markers_match_edl":       { "type": "boolean", "const": true },
+            "timeline_duration_matches_edl": { "type": "boolean", "const": true },
+            "vo_transcript_byte_faithful":   { "type": "boolean", "const": true, "description": "const true on success. false => spec_fidelity_breach (route Editor)." },
+            "edl_evidence_hash_verified":    { "type": "boolean", "const": true, "description": "const true on success. false (tamper) => spec_fidelity_breach (route Editor)." }
+          }
+        },
+        "audio_firewall_pass_11": {
+          "type": "object",
+          "description": "§10 — the 11th-pass firewall result over the passthrough VO transcript (the spoken-word surface Editor's 10th commit-text pass does not cover — the last audio checkpoint before Motion typography, Step 8 / Check #8). hits MUST be 0 on the success branch (gate term); any hit => audio_firewall_breach (errorEnvelope, route Editor — the GATING §9 TC-05 case). passthrough_transcript_fields_scanned = the true VO-transcript-field census.",
+          "required": ["status", "passthrough_transcript_fields_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":                              { "type": "string", "const": "pass" },
+            "passthrough_transcript_fields_scanned": { "type": "integer", "minimum": 0 },
+            "hits":                                { "type": "integer", "const": 0 }
+          }
+        },
+        "mode_blind_confirm": { "$ref": "#/$defs/modeBlindConfirm" },
+        "finish_target":      { "$ref": "#/$defs/finishTarget" },
+        "qc_pre_flags":       { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "handoff_targets":    { "$ref": "#/$defs/handoffTargets" },
+        "tier_richness_echo": {
+          "type": "object",
+          "description": "OPTIONAL §10 — the echoed planned loudness-variant count. v1.0 specs ONLY the primary -14 LUFS master (loudness_variants_specced const 1; the -16 LUFS YT variant reserved v1.1+, flagged). Echo only, NOT a spec of the variants.",
+          "additionalProperties": false,
+          "properties": {
+            "loudness_variants_planned": { "type": "integer", "minimum": 1, "maximum": 8 },
+            "loudness_variants_specced": { "type": "integer", "const": 1, "description": "const 1 in v1.0 — the primary -14 LUFS master only." }
+          }
+        },
+        "variant_masters": {
+          "type": "array",
+          "description": "RESERVED v1.1+ (§16 D14) — the auto-specced loudness-variant masters (the -16 LUFS YT variant, etc.). Empty / absent in v1.0 (a variant master is a derived re-spec, lower-leverage than the primary).",
+          "maxItems": 0
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true, "description": "const true even on audio_ready — an audio_ready is 'ready for the human's finish-into-v2 decision', NEVER 'mixed'/'approved' (Hard Rule #13 — recommend-don't-process)." }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict == 'fail' branch (§3.2). The §6.3 LOCKED namespace: 9 substantive codes + slot-11 catch-all sound_agent_failed. vo_track_missing and audio_asset_unresolved are each a SEPARATE code (the deliberate OPPOSITE of Editor folding all resolution into one asset_unresolved) — the two Ingest-routed asset gaps carry distinct operator recovery diagnostics (D8). spec_fidelity_breach is FOLDED (hash-tamper + duration mismatch + mix-directive/VO deviation — all route to Editor). NO 'revise' here — Sound has no third verdict. human_review_required const true.",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "const": "fail" },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_edl_not_ready",
+            "upstream_not_success",
+            "vo_track_missing",
+            "audio_asset_unresolved",
+            "audio_marker_out_of_range",
+            "loudness_target_out_of_spec",
+            "spec_fidelity_breach",
+            "audio_firewall_breach",
+            "audio_lineage_failure",
+            "sound_agent_failed"
+          ],
+          "description": "The §6.3 LOCKED namespace: 9 substantive codes + slot-11 catch-all sound_agent_failed (Cross-SPEC §3.6). vo_track_missing + audio_asset_unresolved are kept SPLIT (distinct Ingest recovery diagnostics — the OPPOSITE of Editor's single folded asset_unresolved, D8); spec_fidelity_breach is FOLDED (hash-tamper + duration + mix-directive/VO deviation route to Editor). audio_lineage_failure = forensic halt (Check #10). sound_agent_failed accompanies attempts==2 (self-QC 2-strike exhaustion). NO 'revise' — Sound is two-verdict."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 11,
+          "description": "Which §6.1 self-QC check produced the verdict (1..11 — the 11-check list, bipartite-covering the 9 codes + slot-11)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies sound_agent_failed (slot-11). No third attempt."
+        },
+        "route_back_to": {
+          "description": "§3.2 / §12.2 verdict<->route map. ingest-agent on an asset-resolution gap (vo_track_missing — the VO voice track; audio_asset_unresolved — the music bed); editor-agent on a finish-vs-EDL defect needing a re-cut/re-conform (audio_marker_out_of_range, loudness_target_out_of_spec, spec_fidelity_breach, audio_firewall_breach — the timeline/committed surface is Editor's, so the defect/leak routes to the conformer); null on a halt that no upstream is at fault for (the precondition halts upstream_edl_not_ready + upstream_not_success, the forensic audio_lineage_failure, and slot-11 sound_agent_failed — the agent's own self-QC failure).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "ingest-agent",
+                "editor-agent"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.10 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (the specific violation, affected markers, recovery_path, upstream_failure, the unresolved VO track on a vo_track_missing, the unresolvable bed on an audio_asset_unresolved, the offending marker + timeline bound on an audio_marker_out_of_range, the out-of-spec target on a loudness_target_out_of_spec, the leaking VO transcript field + banned token on an audio_firewall_breach, etc.). Advisory recovery_path is surfaced, NOT auto-executed (v1.0 routes; it does not re-finish).",
+          "additionalProperties": true,
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 },
+            "violation":     { "type": "string", "minLength": 2, "maxLength": 1024 }
+          }
+        },
+        "mode_blind_confirm":    { "$ref": "#/$defs/modeBlindConfirm" },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "failure_code": { "const": "sound_agent_failed" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": {
+              "attempts":      { "const": 2 },
+              "route_back_to": { "const": null }
+            },
+            "required": ["attempts"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["upstream_edl_not_ready", "upstream_not_success", "audio_lineage_failure"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": null } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["vo_track_missing", "audio_asset_unresolved"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "ingest-agent" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["audio_marker_out_of_range", "loudness_target_out_of_spec", "spec_fidelity_breach", "audio_firewall_breach"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "editor-agent" } }
+          }
+        }
+      ]
+    },
+
+    "modeBlindConfirm": {
+      "type": "object",
+      "description": "Root-level mode-blind self-attestation (§16 companion — NOT in metadata). Sound is the THIRD contractually mode-blind agent — the proof Ingest's convergence seam holds THREE stages deep (Edit Director -> Editor -> Sound). production_mode_read const false (Hard Rule #7); consumed const 'mode_agnostic_edl'.",
+      "required": ["production_mode_read", "consumed"],
+      "additionalProperties": false,
+      "properties": {
+        "production_mode_read": { "type": "boolean", "const": false },
+        "consumed":             { "type": "string", "const": "mode_agnostic_edl" }
+      }
+    },
+    "finishTarget": {
+      "type": "object",
+      "description": "Root-level finish-target self-attestation (§16 companion — NOT in metadata). The machine-checkable no-DSP / human-in-the-loop guarantee at the audio-executor seam (the direct analog of Editor's render_target block — v1.0 keeps audio_processed false). audio_processed const false (Hard Rule #3/#12); finish_mode const 'human_in_the_loop'; v2_edit_uri reserved (the human writes the v2.mp4 path on finish — active write deferred to v1.1 Week 4-5 DSP automation).",
+      "required": ["audio_processed", "finish_mode"],
+      "additionalProperties": false,
+      "properties": {
+        "audio_processed": { "type": "boolean", "const": false, "description": "const false in v1.0 — Sound authors an audio spec, touches no waveform (no DSP, no LUFS measurement, no decode); the human mixes (Hard Rule #3/#12). An audio spec claiming a processed waveform it never touched is forged provenance. Automation is v1.1." },
+        "finish_mode":     { "type": "string", "const": "human_in_the_loop", "description": "const 'human_in_the_loop' in v1.0; 'automated' reserved v1.1 Week 4-5." },
+        "v2_edit_uri":     { "type": ["string", "null"], "description": "RESERVED v1.0 (null/placeholder — the human writes the v2.mp4 here on finish). Populated as a real render handle only when Week 4-5 DSP automation ships (v1.1)." }
+      }
+    },
+    "handoffTargets": {
+      "type": "array",
+      "description": "§7 Step 10 — the downstream handoff. v1.0 = ['motion-agent'] (Sound hands the finalized-audio v2 edit to Motion #12 for typography). D15 (PRELIMINARY): Motion does not exist yet, so the handoff target is drafted to the Drive conform-queue holding store to prevent an audit-trail break; operator ratifies at the Day 78 LOCK walk.",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "string",
+        "enum": ["motion-agent"]
+      }
+    },
+    "reelRefFull": {
+      "type": "object",
+      "description": "§10 — the derived reel reference triple (the cross-record audit join keys). audio_spec_id is this agent's emitted identity.",
+      "required": ["brand_id", "edl_id", "audio_spec_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "edl_id":        { "$ref": "#/$defs/edlId" },
+        "audio_spec_id": { "$ref": "#/$defs/audioSpecId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["audio_spec_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "edl_id":        { "$ref": "#/$defs/edlId" },
+        "audio_spec_id": { "$ref": "#/$defs/audioSpecId" }
+      }
+    },
+    "edlId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Editor's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — the consumed EDL + parent_chain[8] (the 9-tuple element). UUIDv7 validates under the uuid format."
+    },
+    "audioSpecId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "This agent's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — also appended at parent_chain[9] (the 10-tuple extension, held additively). UUIDv7 validates under the uuid format."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Sound's own emitted predicates (§3.7 snake_case, >=4 — Check #11). e.g. loudness_target_in_spec, vo_track_resolved, audio_firewall_clean_pass_11, mode_blind_finished. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "QUINTUPLY-DEFERRED (Decision D7 / §10.4 / §16 addition 1). The 10-tuple, HELD ADDITIVELY: prefixItems positions 0-9 = [brief_id, script_id, storyboard_id, production_plan_id|rendered_shots_set_id|mode-c-direct, replication_set_id, preflight_report_id, asset_manifest_id, edit_plan_id, edl_id, audio_spec_id]. minItems 5 ACCEPTS the 5-tuple inbound canon (pre-ratification); maxItems 10 ACCEPTS the 6-tuple QC extension preview, the 7-tuple Ingest extension preview, the 8-tuple Edit Director extension preview, the 9-tuple Editor extension preview, AND the 10-tuple Sound append; items false. REJECTS a 4-tuple. positions 0-8 inherit the Editor parentChainHeld verbatim; position 9 is Sound's append (audio_spec_id, UUIDv7). TODO@cross-spec-3.9-ratification: flip to minItems 10 (exact-10) ONLY after ALL FIVE gates close — the Cross-SPEC §3.9 n-tuple amendment ratifies AND the Editor 9-tuple LOCKs AND the Edit Director 8-tuple LOCKs AND the Ingest 7-tuple LOCKs AND the QC Pre-flight 6-tuple LOCKs. This is the one item NOT auto-advanced this run (Sound is the FIFTH forcing function for the amendment).",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 10
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + 6 Sound additions (§16): audio_spec_class, audio_spec_evidence_hash, audio_processed (const false), finish_mode (const human_in_the_loop), runtime_environment_class, audio_spec_id. human_review_required const true (Hard Rule #13). audio_processed const false is the declared-no-DSP honesty contract — an audio spec CLAIMING a mix it never processed is forged provenance (Hard Rule #3/#12). production_mode is PRESENT for audit lineage but the sibling root-level mode_blind_confirm attests it was never READ (Hard Rule #7).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "production_mode",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "audio_spec_class",
+        "audio_spec_evidence_hash",
+        "audio_processed",
+        "finish_mode",
+        "runtime_environment_class",
+        "audio_spec_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "sound-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "PRESENT for audit lineage; NOT read as a branch (Hard Rule #7). The sibling root-level mode_blind_confirm.production_mode_read:false attests it was never consulted."
+        },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "parent_chain":  { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "~$0 — finish reasoning + audio-spec authoring only (Cross-SPEC §3.9). $0 engine + $0 DSP + $0 decode + $0 LUFS-measurement invariant (ties Ingest / QC Pre-flight / Edit Director / Editor for lightest in the fleet)."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "tier":          { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 11 }
+          ],
+          "description": "null on success, 1..11 on failure."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p50 <= 22000 / p95 <= 70000 (§8 — lighter than Editor's authoring; ties Ingest for a resolution-only surface)."
+        },
+
+        "audio_spec_class": {
+          "type": "string",
+          "enum": ["primary_master_-14lufs"],
+          "description": "Addition 1. v1.0 = primary_master_-14lufs; variant_master_-16lufs reserved v1.1+ (§16 / D14)."
+        },
+        "audio_spec_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Addition 2. SHA-256 (lowercase hex, 64) over the audio_spec + audio_conform_check + spec_fidelity_check block (§6.1 #11 / §3.2). Tamper-evident finish; the audit anchor + recomputability basis for recommend-don't-process."
+        },
+        "audio_processed": {
+          "type": "boolean",
+          "const": false,
+          "description": "Addition 3. const false in v1.0 — the declared-no-DSP honesty contract (Hard Rule #3/#12). Sound authors an audio spec, processes no waveform; the human mixes. Mirrors the root-level finish_target.audio_processed."
+        },
+        "finish_mode": {
+          "type": "string",
+          "enum": ["human_in_the_loop"],
+          "description": "Addition 4. const-equivalent ['human_in_the_loop'] in v1.0; 'automated' reserved v1.1 Week 4-5. Mirrors the root-level finish_target.finish_mode."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Addition 5. Inherited from AI Video Gen §16."
+        },
+        "audio_spec_id": {
+          "$ref": "#/$defs/audioSpecId",
+          "description": "Addition 6. This agent's emitted identity (UUIDv7) — mirrors reel_ref.audio_spec_id and parent_chain[9]."
+        }
+      }
+    }
+  }
+}

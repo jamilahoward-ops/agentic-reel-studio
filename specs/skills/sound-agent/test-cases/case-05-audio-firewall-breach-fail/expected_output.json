@@ -1,0 +1,63 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "audio_firewall_breach",
+  "failed_check_id": 8,
+  "route_back_to": "editor-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+  },
+  "cost_incurred_usd": 0.0,
+  "detail": {
+    "violation": "banned entity token 'sln cuts' present in passthrough vo_transcript[0].text",
+    "recovery_path": "route to editor: strip the banned token from the committed vo copy, re-conform.",
+    "leaking_field": "edl.vo_transcript[0].text",
+    "banned_token": "sln cuts",
+    "audio_firewall_pass_11": {
+      "status": "fail",
+      "passthrough_transcript_fields_scanned": 2,
+      "hits": 1
+    }
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_edl"
+  },
+  "metadata": {
+    "agent_id": "sound-agent",
+    "agent_version": "1.0",
+    "session_id": "ars-2026-07-08-sound-001",
+    "trace_id": null,
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-08-001",
+      "script-REINVENTED-2026-07-08-001",
+      "storyboard-REINVENTED-2026-07-08-001",
+      "productionplan-REINVENTED-2026-07-08-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "preflight-REINVENTED-2026-07-08-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-08T22:45:00Z",
+    "lever_state": "lever-1",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "latency_ms": 14200,
+    "audio_spec_class": "primary_master_-14lufs",
+    "audio_spec_evidence_hash": "b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff0011",
+    "audio_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "runtime_environment_class": "production",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+  },
+  "human_review_required": true
+}

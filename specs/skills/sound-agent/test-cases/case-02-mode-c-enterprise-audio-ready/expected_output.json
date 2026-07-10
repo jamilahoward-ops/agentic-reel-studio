@@ -1,0 +1,154 @@
+{
+  "output_type": "successAudioSpec",
+  "verdict": "audio_ready",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+  },
+  "audio_spec": {
+    "loudness_target": {
+      "primary": "-14 LUFS (IG/TT)",
+      "true_peak_ceiling_dbtp": -1.0
+    },
+    "vo_polish": {
+      "level_lufs_target": -16,
+      "de_ess": true,
+      "breath_trim": true,
+      "voice_cadence": "brand_voice_v3"
+    },
+    "music_bed": {
+      "asset_uri": "ars://reel/music-bed.mp3",
+      "at_ms": 0,
+      "base_level_db": -18,
+      "duck_under_vo_db": -9
+    },
+    "duck_envelope": [
+      {
+        "from_ms": 1000,
+        "to_ms": 8000,
+        "duck_db": -9
+      },
+      {
+        "from_ms": 12000,
+        "to_ms": 12500,
+        "swell_db": 3
+      },
+      {
+        "from_ms": 31000,
+        "to_ms": 40000,
+        "duck_db": -9
+      },
+      {
+        "from_ms": 42000,
+        "to_ms": 42500,
+        "swell_db": 3
+      }
+    ],
+    "sfx_accents": [
+      {
+        "at_ms": 12000,
+        "type": "riser",
+        "level_db": -12
+      },
+      {
+        "at_ms": 42000,
+        "type": "impact",
+        "level_db": -10
+      }
+    ],
+    "vo_transcript": [
+      {
+        "at_ms": 1000,
+        "text": "build on purpose. reinvent the standard."
+      },
+      {
+        "at_ms": 31000,
+        "text": "the operators who win build the system once."
+      }
+    ]
+  },
+  "edl_precondition_check": {
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "verdict_observed": "edl_ready",
+    "lever3_signoff_present": false
+  },
+  "audio_conform_check": {
+    "vo_track_resolved": true,
+    "music_bed_resolved": true,
+    "all_markers_in_timeline": true,
+    "loudness_target_in_spec": true,
+    "total_timeline_ms": 60000,
+    "duration_in_band": true
+  },
+  "spec_fidelity_check": {
+    "music_event_matches_edl": true,
+    "swell_markers_match_edl": true,
+    "timeline_duration_matches_edl": true,
+    "vo_transcript_byte_faithful": true,
+    "edl_evidence_hash_verified": true
+  },
+  "audio_firewall_pass_11": {
+    "status": "pass",
+    "passthrough_transcript_fields_scanned": 2,
+    "hits": 0
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_edl"
+  },
+  "finish_target": {
+    "audio_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "v2_edit_uri": null
+  },
+  "qc_pre_flags": [
+    "loudness_target_in_spec",
+    "vo_track_resolved",
+    "audio_firewall_clean_pass_11",
+    "mode_blind_finished"
+  ],
+  "handoff_targets": [
+    "motion-agent"
+  ],
+  "tier_richness_echo": {
+    "loudness_variants_planned": 1,
+    "loudness_variants_specced": 1
+  },
+  "variant_masters": [],
+  "metadata": {
+    "agent_id": "sound-agent",
+    "agent_version": "1.0",
+    "session_id": "ars-2026-07-08-sound-001",
+    "trace_id": null,
+    "production_mode": "C",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-08-001",
+      "script-REINVENTED-2026-07-08-001",
+      "storyboard-REINVENTED-2026-07-08-001",
+      "mode-c-direct",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "preflight-REINVENTED-2026-07-08-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-08T22:45:00Z",
+    "lever_state": "lever-1",
+    "tier": "enterprise",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "latency_ms": 14200,
+    "audio_spec_class": "primary_master_-14lufs",
+    "audio_spec_evidence_hash": "b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff0011",
+    "audio_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "runtime_environment_class": "production",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+  },
+  "human_review_required": true
+}
