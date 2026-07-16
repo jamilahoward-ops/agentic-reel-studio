@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/motion-agent/input.schema.json",
+  "title": "ARS Motion Agent — Input (Sound audio_ready precondition gate + mode-converged EDL typography source + Sound v2-edit finish reference)",
+  "description": "Validates the v1.0 input of the Motion Agent (Agent #12 of 17 — the THIRD faithful-executor agent in the post tail and the FINAL finisher before full QC: it authors the typography + motion-graphics conform spec over the cut Editor conformed and the audio Sound finished, and makes NO creative call; the 12th defense-in-depth firewall pass over the passthrough on-screen typography — the LAST visual-text checkpoint before the master reaches full QC; the FOURTH contractually mode-BLIND agent — the live proof Ingest's mode-convergence seam holds FOUR stages deep: Edit Director -> Editor -> Sound -> Motion, which completes the mode-agnosticism proof across the entire post-production tail). Authored Day 87 (Wed Jul 15 2026) from SPEC §2/§7 Inputs (Day 82 outline + Day 83 partial 1 §7) + §10 Field Map (Day 83) + §10.3 no-touch rows + §10.4 schema authoring note (Day 83) + §16 metadata block (Day 85 partial 2) + the Day 86 LOCK CANDIDATE reconciliation. TWO defining input characteristics, both inherited from the proven Sound input shape (8th reuse of the precondition-gate + mode-blind pattern): (1) the Sound precondition gate — Motion reads the audio spec verdict FIRST and never finishes the graphics on an unfinished-audio cut (Hard Rule #4 / Step 1 / Check #1); the runtime gate is audio_spec.verdict == 'audio_ready', else halt upstream_audio_not_ready; a non-successAudioSpec output_type halts upstream_not_success (Check #2). A consumed 'fail'-verdict / errorEnvelope audio spec is NOT auto-finished — the fix belongs upstream (Motion inherits the recommend-don't-override discipline). (2) mode-BLINDNESS — production_mode is PRESENT in metadata for audit lineage but is a strict no-touch field (§10.3): Motion NEVER reads it as a branch discriminator (Hard Rule #7), and its output attests mode_blind_confirm.production_mode_read:false. Like Sound there is NO polymorphic-source oneOf split here — the v2 edit + EDL typography is already mode-converged (one shape for all three production modes — the TC-01/TC-02 convergence proof FOUR stages deep), so Motion consumes ONE source shape for all modes. Like every prior ARS schema this is single-file (no external $ref resolution): the consumed audio_spec deep internals are validated by the LOCKED Sound output.schema.json (read-only), the consumed EDL deep internals by the LOCKED Editor output.schema.json (read-only), and the asset_bundle deep internals by the LOCKED Ingest output.schema.json (read-only); all are left permissive here (additionalProperties true) to avoid canon drift; this schema constrains the finish-relevant envelope + the fields the 11-check self-QC adjudicates. A consumed errorEnvelope (output_type != successAudioSpec) is a runtime halt (upstream_not_success — Check #2), NOT a schema rejection. parent_chain inbound = Sound's 10-tuple, HELD ADDITIVELY (minItems 5 accepts the 5-tuple pre-ratification canon; maxItems 10 accepts the QC 6-tuple + Ingest 7-tuple + Edit Director 8-tuple + Editor 9-tuple + Sound 10-tuple extension previews; items false). Motion appends its own motion_spec_id at position 10 on OUTPUT (see output.schema.json — 11-tuple, also held additively). TODO@cross-spec-3.9-ratification: when the n-tuple amendment hardening migration runs AND the Sound 10-tuple LOCKs, flip inbound to minItems 10 (exact-10). The Cross-SPEC §3.9 n-tuple amendment is itself RATIFIED (Day 79); what remains is the exact-N tightening, deferred to a single separately-validated migration. The 10-tuple inbound + 11-tuple outbound are NOT auto-advanced this run (Decision D7 — SEXTUPLY-deferred; Motion is the SIXTH forcing function for the amendment).",
+
+  "type": "object",
+  "required": [
+    "audio_spec",
+    "edl",
+    "metadata"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "audio_spec": {
+      "type": "object",
+      "description": "§2/§7 PRIMARY input + the Sound precondition gate (Hard Rule #4 / Step 1 / Checks #1+#2). Motion reads this FIRST. TWO runtime gates (both halts, NOT schema rejections — a non-audio_ready / errorEnvelope audio spec is a valid object, an invalid finish-source): (1) output_type == 'successAudioSpec' else halt upstream_not_success (Check #2 — cannot finish the graphics over a failed audio-finish output); (2) verdict == 'audio_ready' else halt upstream_audio_not_ready (Check #1 — a 'fail' verdict is not finishable; Motion does NOT auto-resolve a failed audio spec). Deep audio_spec internals (the full Sound successAudioSpec payload — mix directives, loudness target, duck envelope, SFX accents) are owned by the LOCKED Sound output.schema.json (read-only) and are §10.3 no-touch: Motion TRUSTS the mix and re-asserts only the audio-layer facts it depends on (the v2-edit handle + the evidence hash). Only the finish-relevant envelope is constrained here (additionalProperties true).",
+      "required": ["output_type", "audio_spec_id"],
+      "additionalProperties": true,
+      "properties": {
+        "output_type": {
+          "type": "string",
+          "description": "The Sound output discriminator. Motion proceeds ONLY on 'successAudioSpec'; an inbound errorEnvelope => upstream_not_success at runtime (Check #2). Permissive enum accepts either Sound branch value so the agent can READ + halt on a failed audio spec rather than schema-rejecting it.",
+          "enum": ["successAudioSpec", "errorEnvelope"]
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["audio_ready", "fail"],
+          "description": "The upstream Sound verdict (Sound emits audio_ready | fail — two-verdict, NO 'revise'). Motion finishes ONLY on 'audio_ready'; a 'fail' => upstream_audio_not_ready at runtime (Check #1)."
+        },
+        "audio_spec_id": { "$ref": "#/$defs/audioSpecId" },
+        "audio_spec_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "§10 (derived) — Sound's SHA-256 audio-spec anchor (lowercase hex, 64) over the audio_spec + audio_conform_check + spec_fidelity_check block. Motion RE-VERIFIES it against the consumed audio spec body (spec_fidelity_check.audio_spec_evidence_hash_verified); a mismatch => spec_fidelity_breach (route back to Editor). The FIRST of the TWO upstream evidence hashes Motion machine-verifies (D10 — the byte-faithful executor invariant, doubled). Tamper-evidence carried forward, not re-authored."
+        },
+        "finish_target": {
+          "type": "object",
+          "description": "§10.3 read context — Sound's no-DSP / human-in-the-loop attestation. Motion resolves finish_target.v2_edit_uri (the audio-final cut handle) as the media handle every motion directive binds to (motion_conform_check.v2_edit_resolved). Unresolvable => v2_edit_unresolved (route back to Sound — the SPLIT-analog to Sound's vo_track_missing->Ingest). Motion consumes this as a fixed fact — it does NOT decode the frame (Hard Rule #12). Sound's own finish_target.audio_processed const false is upstream context, not re-adjudicated.",
+          "additionalProperties": true,
+          "properties": {
+            "audio_processed": { "type": "boolean" },
+            "finish_mode":     { "type": "string" },
+            "v2_edit_uri":     {
+              "type": ["string", "null"],
+              "description": "Sound's audio-final cut handle. Platform-relative ars:// (Hard Rule #8 inherit — no absolute URL introduced). Motion resolves it as the finish reference; an unresolvable / null handle for a declared finish => v2_edit_unresolved (route to Sound)."
+            }
+          }
+        },
+        "audio_conform_check": {
+          "type": "object",
+          "description": "§10 read context — Sound's audio-conform block. Motion reads total_timeline_ms as the timeline bound every reveal/overlay/lower-third/end-card at_ms is validated against (Check #4 — no marker past the timeline); a Motion-side timeline duration != total_timeline_ms => spec_fidelity_breach. NOT re-adjudicated (Sound already gated the audio conform; §10.3 no-touch beyond the duration re-assert).",
+          "additionalProperties": true,
+          "properties": {
+            "total_timeline_ms": { "type": "integer", "minimum": 45000, "maximum": 75000, "description": "Sound's audio-conformed runtime — the marker-in-timeline bound + the timeline-duration reference (re-asserted, NOT re-derived)." }
+          }
+        },
+        "mode_blind_confirm": {
+          "type": "object",
+          "description": "§10.3 read context — Sound's OWN mode-blind self-attestation (production_mode_read:false). Motion reads it as the upstream convergence proof (three stages deep) and emits its OWN attestation (the FOURTH mode-blind agent — convergence four stages deep, completing the post-tail mode-agnosticism proof). NOT re-adjudicated.",
+          "additionalProperties": true,
+          "properties": {
+            "production_mode_read": { "type": "boolean" },
+            "consumed":             { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "edl": {
+      "type": "object",
+      "description": "§2/§7 SECONDARY input — the EDL typography source (the on-screen text surface Motion burns into the picture as declared directives). Carries the caption_events[] + lower_third_events[] + end_card_event + frame_rate + total_timeline_ms + the edl_evidence_hash. The passthrough typography text is Editor/EDL-authored — Motion authors NO copy (Hard Rule #10 — byte-faithful) and forces the brand style consts (lowercase-sans lower-thirds, serif-ivory end-card). Deep EDL internals (the full Editor successEdl payload — the conformed cut events) are owned by the LOCKED Editor output.schema.json (read-only) and are §10.3 no-touch (Motion re-cuts nothing); only the typography-relevant envelope is constrained here (additionalProperties true). Empty caption/lower-third/end-card text => text_asset_unresolved (route to Editor). A banned-entity token that survives into any of these fields => motion_firewall_breach (the 12th-pass GATING catch — the highest-stakes code in the namespace, a leak would be burned into the delivered picture).",
+      "required": ["edl_id"],
+      "additionalProperties": true,
+      "properties": {
+        "edl_id": { "$ref": "#/$defs/edlId" },
+        "edl_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "§10 (derived) — Editor's SHA-256 EDL anchor (lowercase hex, 64). Motion RE-VERIFIES it against the consumed EDL body (spec_fidelity_check.edl_evidence_hash_verified); a mismatch => spec_fidelity_breach (route back to Editor). The SECOND of the TWO upstream evidence hashes Motion machine-verifies (D10)."
+        },
+        "total_timeline_ms": {
+          "type": "integer",
+          "minimum": 45000,
+          "maximum": 75000,
+          "description": "§10 — the EDL conformed runtime. Motion re-asserts it (NOT re-derived); duration_in_band == (45000 <= total_timeline_ms <= 75000). Every reveal/overlay/lower-third/end-card at_ms is bound to it (Check #4); a mismatch against the audio timeline => spec_fidelity_breach."
+        },
+        "frame_rate": {
+          "type": "integer",
+          "description": "§10 — the EDL frame rate. Echoed as the finish-target format const (30fps per Brand-Voice Intake §8). Universal — not tier-scaled.",
+          "enum": [30]
+        },
+        "aspect": {
+          "type": "string",
+          "description": "§10 read context — the EDL aspect. v1.0 primary master is 9:16 (Brand-Voice Intake §8). The 1:1 LinkedIn cutdown master is v1.1 (D13).",
+          "enum": ["9:16", "1:1"]
+        },
+        "resolution": {
+          "type": "string",
+          "description": "§10 read context — the EDL resolution (Brand-Voice Intake §8: 1080x1920 for the 9:16 primary). Declared format only — Motion MEASURES nothing (the resolution/fps probe is full QC's; Hard Rule #12).",
+          "pattern": "^[0-9]{3,5}x[0-9]{3,5}$"
+        },
+        "caption_events": {
+          "type": "array",
+          "description": "§10 — the EDL caption events. Motion transforms each into a caption_reveals[] directive (timing/reveal derived; text PASSTHROUGH byte-faithful — Hard Rule #10, no re-case/re-punctuate/truncate). The 12th-firewall scan surface (part 1). Empty text field => text_asset_unresolved (route Editor). A reveal at_ms > total_timeline_ms or < 0 => motion_marker_out_of_range (route Editor). Consecutive at_ms closer than 8000ms => motion_token_out_of_spec (runtime cross-item assertion).",
+          "maxItems": 240,
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "additionalProperties": true,
+            "properties": {
+              "at_ms": { "type": "integer", "minimum": 0 },
+              "text":  { "type": "string", "minLength": 1, "maxLength": 2048, "description": "PASSTHROUGH byte-faithful (a deviation => spec_fidelity_breach); scanned at the 12th typography-domain firewall pass (a banned token => motion_firewall_breach). Empty/missing => text_asset_unresolved." },
+              "line":  { "type": "string", "description": "The single caption line (one line at a time — no stacked multi-line reveal; a multi-line reveal => typography_out_of_spec)." }
+            }
+          }
+        },
+        "lower_third_events": {
+          "type": "array",
+          "description": "§10 — the EDL lower-third / super events. Motion transforms each into a lower_thirds[] placement directive (text PASSTHROUGH byte-faithful; style FORCED to the brand const 'lowercase_sans_left_underline'; all_caps FORCED false). The 12th-firewall scan surface (part 2). An all-caps or non-brand style on the emitted spec => typography_out_of_spec (route Editor — the all-caps screamer is a hard brand violation, Brand-Voice Intake §7). Empty text => text_asset_unresolved.",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "additionalProperties": true,
+            "properties": {
+              "at_ms": { "type": "integer", "minimum": 0 },
+              "text":  { "type": "string", "minLength": 1, "maxLength": 2048, "description": "PASSTHROUGH byte-faithful; scanned at the 12th firewall pass. Empty/missing => text_asset_unresolved." },
+              "style": { "type": "string", "description": "The inbound super style; Motion forces the emitted spec to the brand const 'lowercase_sans_left_underline' (a non-brand emitted style => typography_out_of_spec)." }
+            }
+          }
+        },
+        "end_card_event": {
+          "type": "object",
+          "description": "§10 — the EDL end-card hold (the last frame the viewer sees). Motion PASSES the text through byte-faithful and BRAND-CONST-asserts the style (serif / ivory / 1.5s). text MUST be byte-identical to 'REINVENTED — build on purpose.' (a deviation => spec_fidelity_breach); font 'serif', bg 'ivory', hold/duration 1500ms (a style deviation => typography_out_of_spec). The 12th-firewall scan surface (part 3). Zero tolerance.",
+          "additionalProperties": true,
+          "properties": {
+            "at_ms":       { "type": "integer", "minimum": 0 },
+            "text":        { "type": "string", "minLength": 1, "maxLength": 256, "description": "PASSTHROUGH — must byte-match 'REINVENTED — build on purpose.' on the emitted spec (a deviation => spec_fidelity_breach)." },
+            "font":        { "type": "string" },
+            "bg":          { "type": "string" },
+            "duration_ms": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+
+    "asset_bundle": {
+      "type": "object",
+      "description": "OPTIONAL §10.3 read-only context — the resolved Ingest pull list (the finish-resolution REFERENCE). Motion resolves the v2-edit handle (from audio_spec.finish_target.v2_edit_uri) as a fixed fact; the asset bundle is denormalized context for that resolution. NO byte-level frame decode — declared resolution only (Hard Rule #12). Deep internals owned by the LOCKED Ingest output.schema.json (read-only) — left permissive here to avoid canon drift.",
+      "additionalProperties": true,
+      "properties": {
+        "video": {
+          "type": "array",
+          "description": "The resolved video/edit handle list (the v2-edit resolution reference). An unresolvable handle for the declared v2 edit => v2_edit_unresolved (route to Sound).",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "asset_uri": { "type": "string", "pattern": "^ars://[a-zA-Z0-9_\\-./]+$" }
+            }
+          }
+        }
+      }
+    },
+
+    "preflight_report": {
+      "type": "object",
+      "description": "OPTIONAL §10.3 read-only context — denormalized QC Pre-flight cost-ledger reference. Motion carries NO cost fields beyond its own cost_incurred_usd (Hard Rule #11 — no cost re-litigation; the ceilings are QC Pre-flight's jurisdiction, restated for traceability only, never re-adjudicated). Deep internals owned by the QC Pre-flight output.schema.json (read-only).",
+      "additionalProperties": true,
+      "properties": {
+        "preflight_report_id": { "$ref": "#/$defs/preflightReportId" }
+      }
+    },
+
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" }
+  },
+
+  "$defs": {
+    "edlId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Editor's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) + the 9th inbound parent_chain element (position 8). UUIDv7 validates under the uuid format. This is the EDL Motion reads the typography source from."
+    },
+    "audioSpecId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Sound's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — the consumed audio spec + the 10th inbound parent_chain element (position 9, Sound's append). UUIDv7 validates under the uuid format. This is the audio finish Motion specs the typography over."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Inbound session identifier. Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible — does not false-reject existing pipeline session ids). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+    "inboundParentChainHeld": {
+      "type": "array",
+      "description": "Inbound lineage = Sound's 10-tuple, HELD ADDITIVELY. positions 0-8 inherit the Sound inbound chain verbatim (ARS-2026-07-07-Sound-output.schema.json parentChainHeld 0-8); position 9 = the Sound extension (audio_spec_id, UUIDv7). minItems 5 ACCEPTS the 5-tuple pre-ratification canon; maxItems 10 ACCEPTS the QC 6-tuple, Ingest 7-tuple, Edit Director 8-tuple, Editor 9-tuple AND Sound 10-tuple extension previews; items false. REJECTS a 4-tuple. Motion validates a well-formed inbound chain (Step 2 / Check #10); malformed => motion_lineage_failure at runtime. Motion appends its own motion_spec_id at position 10 on OUTPUT (see output.schema.json — 11-tuple, also held additively). TODO@exact-n-hardening-migration: flip to minItems 10 (exact-10) inside the single separately-validated hardening migration, once the Sound 10-tuple LOCKs (Decision D7 — SEXTUPLY-deferred, NOT auto-advanced this run; Motion is the SIXTH forcing function). The §3.9 n-tuple amendment itself is RATIFIED (Day 79) — this is a fixture-compatibility deferral, not an unratified-design deferral.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 10
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 inbound metadata carried from Sound. Motion reads tier (aspect-variant-count awareness — §10.5; NOT verdict forking) / lever_state / parent_chain (10-tuple, held) / brand_id for context. production_mode is PRESENT for audit lineage but is a strict NO-TOUCH field (§10.3 / Hard Rule #7) — NEVER read as a branch discriminator; the output attests mode_blind_confirm.production_mode_read:false (the FOURTH mode-blind agent — convergence four stages deep). There is NO source-shape oneOf in this schema BECAUSE the v2 edit + EDL typography is already mode-converged.",
+      "required": [
+        "tier",
+        "production_mode",
+        "parent_chain",
+        "session_id",
+        "lever_state"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["pilot", "starter", "pro", "enterprise"],
+          "description": "Universal access — ALL 4 tiers traverse Motion at ~$0 (§4 / tier-FLAT). Finish fidelity does NOT scale by tier; only the echoed aspect_variants_planned count does (§10.5)."
+        },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "Carried for audit lineage ONLY. NOT read as a branch (Hard Rule #7 / §10.3). The output's mode_blind_confirm.production_mode_read:false attests it was never consulted — the FOURTH mode-blind agent, convergence four stages deep. The strongest no-touch field in the fleet — reading it would break the convergence contract."
+        },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "parent_chain":  { "$ref": "#/$defs/inboundParentChainHeld" }
+      }
+    }
+  }
+}
