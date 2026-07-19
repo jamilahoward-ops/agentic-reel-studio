@@ -1,0 +1,76 @@
+{
+  "audio_spec": {
+    "output_type": "successAudioSpec",
+    "verdict": "audio_ready",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+    "audio_spec_evidence_hash": "b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff0011",
+    "finish_target": {
+      "audio_processed": false,
+      "finish_mode": "human_in_the_loop",
+      "v2_edit_uri": null
+    },
+    "audio_conform_check": {
+      "total_timeline_ms": 60000
+    },
+    "mode_blind_confirm": {
+      "production_mode_read": false,
+      "consumed": "mode_agnostic_edl"
+    }
+  },
+  "edl": {
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "edl_evidence_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00",
+    "total_timeline_ms": 60000,
+    "frame_rate": 30,
+    "aspect": "9:16",
+    "resolution": "1080x1920",
+    "caption_events": [
+      {
+        "at_ms": 1000,
+        "text": "build on purpose. reinvent the standard.",
+        "line": "build on purpose. reinvent the standard."
+      },
+      {
+        "at_ms": 31000,
+        "text": "the operators who win build the system once.",
+        "line": "the operators who win build the system once."
+      }
+    ],
+    "lower_third_events": [
+      {
+        "at_ms": 2000,
+        "text": "jamila howard",
+        "style": "lowercase_sans_left_underline"
+      }
+    ],
+    "end_card_event": {
+      "at_ms": 58500,
+      "text": "REINVENTED — build on purpose.",
+      "font": "serif",
+      "bg": "ivory",
+      "duration_ms": 1500
+    }
+  },
+  "asset_bundle": {
+    "video": []
+  },
+  "metadata": {
+    "tier": "pro",
+    "production_mode": "A",
+    "lever_state": "lever-1",
+    "brand_id": "REINVENTED",
+    "session_id": "ars-2026-07-17-motion-004",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-17-004",
+      "script-REINVENTED-2026-07-17-004",
+      "storyboard-REINVENTED-2026-07-17-004",
+      "productionplan-REINVENTED-2026-07-17-004",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6d70",
+      "preflight-REINVENTED-2026-07-17-004",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6d71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6d72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74"
+    ]
+  }
+}

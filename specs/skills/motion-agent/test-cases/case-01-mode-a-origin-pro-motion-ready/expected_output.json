@@ -1,0 +1,154 @@
+{
+  "output_type": "successMotionSpec",
+  "verdict": "motion_ready",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a75"
+  },
+  "motion_spec": {
+    "caption_reveals": [
+      {
+        "at_ms": 1000,
+        "text": "build on purpose. reinvent the standard.",
+        "line": "build on purpose. reinvent the standard.",
+        "reveal": "line_in",
+        "ease": "ease_in_out_120ms"
+      },
+      {
+        "at_ms": 31000,
+        "text": "the operators who win build the system once.",
+        "line": "the operators who win build the system once.",
+        "reveal": "line_in",
+        "ease": "ease_in_out_120ms"
+      }
+    ],
+    "reveal_cadence": {
+      "one_line_at_a_time": true,
+      "max_reveals_per_8s": 1,
+      "brand_cadence": "reinvented_v3"
+    },
+    "lower_thirds": [
+      {
+        "at_ms": 2000,
+        "text": "jamila howard",
+        "style": "lowercase_sans_left_underline",
+        "all_caps": false
+      }
+    ],
+    "motion_tokens": {
+      "applied": ["slow_push_in", "static_hold", "subtle_parallax"],
+      "ease": "120ms ease-in-out",
+      "bounce_policy": "zero_bounce"
+    },
+    "overlays": [
+      {
+        "from_ms": 0,
+        "to_ms": 30000,
+        "type": "subtle_parallax",
+        "intensity": "low"
+      }
+    ],
+    "end_card": {
+      "at_ms": 58500,
+      "text": "REINVENTED — build on purpose.",
+      "font": "serif",
+      "bg": "ivory",
+      "hold_ms": 1500
+    }
+  },
+  "audio_precondition_check": {
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+    "verdict_observed": "audio_ready"
+  },
+  "motion_conform_check": {
+    "v2_edit_resolved": true,
+    "all_text_fields_resolved": true,
+    "all_markers_in_timeline": true,
+    "reveal_cadence_in_spec": true,
+    "motion_tokens_in_brand_set": true,
+    "total_timeline_ms": 60000,
+    "duration_in_band": true
+  },
+  "spec_fidelity_check": {
+    "caption_text_byte_faithful": true,
+    "lower_third_text_byte_faithful": true,
+    "end_card_matches_brand_const": true,
+    "timeline_duration_matches_edl": true,
+    "audio_spec_evidence_hash_verified": true,
+    "edl_evidence_hash_verified": true
+  },
+  "motion_self_check": {
+    "voice_markers_in_captions": 2,
+    "truth_echoes": 1,
+    "banned_vocab_hits": 0,
+    "motion_tokens_applied": true
+  },
+  "motion_firewall_pass_12": {
+    "status": "pass",
+    "passthrough_typography_fields_scanned": 4,
+    "hits": 0
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_v2_edit"
+  },
+  "finish_target": {
+    "motion_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "v3_final_uri": null
+  },
+  "qc_pre_flags": [
+    "motion_tokens_in_brand_set",
+    "reveal_cadence_in_spec",
+    "motion_firewall_clean_pass_12",
+    "mode_blind_finished"
+  ],
+  "handoff_targets": [
+    "qc-agent"
+  ],
+  "tier_richness_echo": {
+    "tier": "pro",
+    "aspect_variants_planned": 1,
+    "aspect_variants_specced": 1,
+    "primary_aspect": "9:16"
+  },
+  "variant_masters": [],
+  "metadata": {
+    "agent_id": "motion-agent",
+    "agent_version": "1.0",
+    "session_id": "ars-2026-07-17-motion-001",
+    "trace_id": null,
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-17-001",
+      "script-REINVENTED-2026-07-17-001",
+      "storyboard-REINVENTED-2026-07-17-001",
+      "productionplan-REINVENTED-2026-07-17-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "preflight-REINVENTED-2026-07-17-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a75"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-17T22:45:00Z",
+    "lever_state": "lever-1",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": null,
+    "latency_ms": 15200,
+    "motion_spec_class": "primary_master_9x16",
+    "motion_spec_evidence_hash": "c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff001122",
+    "motion_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "runtime_environment_class": "production",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a75"
+  },
+  "human_review_required": true
+}

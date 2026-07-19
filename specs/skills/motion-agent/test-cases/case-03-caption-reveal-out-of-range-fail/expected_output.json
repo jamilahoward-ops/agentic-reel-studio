@@ -1,0 +1,60 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "motion_marker_out_of_range",
+  "failed_check_id": 4,
+  "route_back_to": "editor-agent",
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c75"
+  },
+  "cost_incurred_usd": 0.0,
+  "detail": {
+    "violation": "caption reveal at 90000ms exceeds total_timeline_ms 60000",
+    "recovery_path": "route to editor: re-place the caption event inside the 60000ms timeline.",
+    "offending_marker_at_ms": 90000,
+    "timeline_bound_ms": 60000
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_v2_edit"
+  },
+  "metadata": {
+    "agent_id": "motion-agent",
+    "agent_version": "1.0",
+    "session_id": "ars-2026-07-17-motion-003",
+    "trace_id": null,
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-17-003",
+      "script-REINVENTED-2026-07-17-003",
+      "storyboard-REINVENTED-2026-07-17-003",
+      "productionplan-REINVENTED-2026-07-17-003",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c70",
+      "preflight-REINVENTED-2026-07-17-003",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c75"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-17T22:45:20Z",
+    "lever_state": "lever-1",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 4,
+    "latency_ms": 12800,
+    "motion_spec_class": "primary_master_9x16",
+    "motion_spec_evidence_hash": "d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00112233",
+    "motion_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "runtime_environment_class": "production",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6c75"
+  },
+  "human_review_required": true
+}

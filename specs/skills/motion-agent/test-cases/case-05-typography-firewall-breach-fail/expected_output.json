@@ -1,0 +1,67 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "motion_firewall_breach",
+  "failed_check_id": 8,
+  "route_back_to": null,
+  "reel_ref": {
+    "brand_id": "REINVENTED",
+    "edl_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+    "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e75"
+  },
+  "cost_incurred_usd": 0.0,
+  "detail": {
+    "violation": "two banned entity tokens survived into the passthrough on-screen typography",
+    "recovery_path": "forensic hold — do NOT route. escalate: the banned tokens must be scrubbed at Script/Editor before this reel re-enters the pipeline.",
+    "motion_firewall_pass_12": {
+      "status": "breach",
+      "passthrough_typography_fields_scanned": 4,
+      "hits": 2
+    },
+    "leaking_fields": [
+      { "field": "caption_reveals[0].text", "banned_token": "sln", "rule": "sln (sln cuts)" },
+      { "field": "lower_thirds[0].text", "banned_token": "holdco group", "rule": "holdco group" }
+    ]
+  },
+  "mode_blind_confirm": {
+    "production_mode_read": false,
+    "consumed": "mode_agnostic_v2_edit"
+  },
+  "metadata": {
+    "agent_id": "motion-agent",
+    "agent_version": "1.0",
+    "session_id": "ars-2026-07-17-motion-005",
+    "trace_id": null,
+    "production_mode": "A",
+    "brand_id": "REINVENTED",
+    "parent_chain": [
+      "brief-REINVENTED-2026-07-17-005",
+      "script-REINVENTED-2026-07-17-005",
+      "storyboard-REINVENTED-2026-07-17-005",
+      "productionplan-REINVENTED-2026-07-17-005",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e70",
+      "preflight-REINVENTED-2026-07-17-005",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e71",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e72",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a73",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a74",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e75"
+    ],
+    "cost_incurred_usd": 0.0,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-17T22:45:40Z",
+    "lever_state": "lever-1",
+    "tier": "pro",
+    "self_qc_attempts": 1,
+    "self_qc_failed_check_id": 8,
+    "latency_ms": 13100,
+    "motion_spec_class": "primary_master_9x16",
+    "motion_spec_evidence_hash": "f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff001122334455",
+    "motion_processed": false,
+    "finish_mode": "human_in_the_loop",
+    "runtime_environment_class": "production",
+    "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6e75"
+  },
+  "human_review_required": true
+}

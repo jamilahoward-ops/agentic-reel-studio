@@ -1,0 +1,8 @@
+# TC-02 — Clean Mode-C-origin Enterprise reel → MOTION_READY (mode-blind finish-convergence proof · FOUR stages deep)
+
+**Input:** A Sound-passed Enterprise reel whose chain originated from a Mode-C (replicated hot-path) production. The typography set is held IDENTICAL to TC-01 to isolate the single variable under test — the origin mode. The only input differences from TC-01 are `metadata.production_mode == "C"`, `metadata.tier == "enterprise"`, the richer Enterprise envelope (`tier_richness_echo.aspect_variants_planned: 2`), the `mode-c-direct` `parent_chain[3]` sentinel, and the session/id set.
+
+**Expected verdict:** `motion_ready` (`successMotionSpec`).
+**Expected code:** `null`.
+
+**Proves:** THE mode-blind finish-convergence proof, now FOUR stages deep (Edit Director → Editor → Sound → Motion) — the fourth machine-checkable confirmation that Ingest's mode-convergence seam holds through the ENTIRE post-production tail. The authored `motion_spec`, `motion_conform_check`, `spec_fidelity_check`, `motion_self_check`, `motion_firewall_pass_12`, `mode_blind_confirm`, and `finish_target` are BYTE-IDENTICAL to TC-01's despite the different origin mode — produced by an IDENTICAL executor code path. `mode_blind_confirm.production_mode_read: false` (the agent never consulted the origin mode). `tier_richness_echo` honors the Enterprise envelope (`aspect_variants_planned: 2`) while `aspect_variants_specced: 1` + `primary_aspect: "9:16"` (v1.0 specs the 9:16 primary only — D13). The finish behavior does not scale by tier and does not branch on mode. **With Motion, the post-production tail is proven mode-agnostic end to end.**

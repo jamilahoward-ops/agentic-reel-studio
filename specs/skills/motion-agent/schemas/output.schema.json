@@ -1,0 +1,561 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/motion-agent/output.schema.json",
+  "title": "ARS Motion Agent — Output (successMotionSpec | errorEnvelope)",
+  "description": "Validates the polymorphic v1.0 output of the Motion Agent (Agent #12 of 17 — the THIRD faithful-EXECUTOR agent in the post tail and the FINAL finisher before full QC, the 12th defense-in-depth firewall pass over the passthrough on-screen typography — the LAST visual-text checkpoint before the master reaches full QC, the FOURTH contractually mode-BLIND agent — the proof Ingest's mode-convergence seam holds FOUR stages deep, completing the mode-agnosticism proof across the entire post-production tail). Authored Day 87 (Wed Jul 15 2026) from SPEC §3 Outputs (Day 82 outline) + §6.3 10-code/slot-11 errorEnvelope mapping (Day 83 §6.3 LOCKED-as-drafted) + §10 Field Map + §10.4 schema authoring note (Day 83) + §12 deterministic AND-of-gates verdict math (Day 85) + §16 metadata block (Day 85) + the Day 86 LOCK CANDIDATE reconciliation. Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 + Ingest Day 54 + Edit Director Day 62 + Editor Day 71 + Sound Day 79 pattern — 8th reuse). DEFINING POSTURE — INHERITS Editor's + Sound's two-verdict determinism: verdict enum is ['motion_ready','fail'] — exactly TWO values, NO 'revise' (the third fleet agent after Editor + Sound to carry only two verdicts). Motion is a fully-DETERMINISTIC executor (a motion token is in the allowed set or it isn't; a lower-third is lowercase-sans or it's an all-caps screamer; two reveals are 8s apart or they collide; the end-card is the brand const or it's a deviation; the typography is byte-faithful to the EDL or it's an override; the firewall is clean or it isn't), so there is NO subjective finish surface and NO held-creative-call verdict — the subjective slot stays THREE stages upstream at Edit Director's one 'revise'. successMotionSpec <=> verdict 'motion_ready'; errorEnvelope <=> verdict 'fail'. Human deferral lives in human_review_required const true + finish_target.finish_mode const 'human_in_the_loop' + finish_target.motion_processed const false on EVERY emission (recommend-don't-render), NOT in a verdict branch. The success branch encodes the §12 AND-of-gates HARD terms as const invariants (motion_conform_check all-booleans const true, spec_fidelity_check all-6-booleans const true, motion_firewall_pass_12 status const pass + hits const 0, motion_tokens.applied[] enum-restricted to the allowed brand set so the banned tokens are UNREPRESENTABLE, motion_tokens.ease const '120ms ease-in-out' + bounce_policy const 'zero_bounce', reveal_cadence.one_line_at_a_time const true + max_reveals_per_8s const 1, lower_thirds[*].all_caps const false so the all-caps screamer is UNREPRESENTABLE, end_card.{font const serif, bg const ivory, hold_ms const 1500, text const 'REINVENTED — build on purpose.'}, finish_target.motion_processed const false + finish_mode const 'human_in_the_loop', mode_blind_confirm.production_mode_read const false) — making a false-motion-ready STRUCTURALLY impossible (false-motion-ready tolerance ZERO target, §8). This is the STRONGEST brand-policy encoding in the fleet: TWO §12 AND-terms are enforced in the TYPE SYSTEM, not just the composition (the banned motion tokens are enum-excluded AND all_caps is const false — a spec that violates them cannot even serialize; §12.3). 10 LOCKED-as-drafted failure codes (§6.3) + slot-11 catch-all motion_agent_failed enumerated via enum — ONE larger than Sound's namespace, structurally justified: the motion domain carries TWO distinct brand-policy surfaces (motion-behavior tokens and typographic style) where the audio domain carried ONE (loudness), so motion_token_out_of_spec and typography_out_of_spec are SEPARATE codes (distinct defects, distinct operator recovery). DEFINING NAMESPACE DIVERGENCE (inherited from Sound's split posture): v2_edit_unresolved (route Sound) and text_asset_unresolved (route Editor) are each a SEPARATE code — split by route-back target (the OPPOSITE of Editor folding all resolution into one asset_unresolved). spec_fidelity_breach is kept FOLDED (hash-tamper + duration mismatch + non-byte-faithful end-card, all route back to Editor). Motion is the FIRST agent to verify TWO upstream evidence hashes (the EDL's edl_evidence_hash AND the audio spec's audio_spec_evidence_hash — the byte-faithful executor invariant, doubled, D10). motion_processed const false (Hard Rule #3/#12 — authors a motion spec, renders no frame; the human finishes in v1.0; Week 4-5 render automation is v1.1). motion_spec_evidence_hash + audio_spec_evidence_hash + edl_evidence_hash pattern ^[a-f0-9]{64}$. asset_uri ^ars:// platform-relative (Hard Rule inherit). human_review_required const true on EVERY branch (recommend-don't-render — Hard Rule #13). SEXTUPLY-DEFERRED (Decision D7): parent_chain held additively (minItems 5, prefixItems 0-10, maxItems 11, items false) — accepts the 5-tuple, the 6-tuple QC extension preview, the 7-tuple Ingest, the 8-tuple Edit Director, the 9-tuple Editor, the 10-tuple Sound, AND the 11-tuple Motion append. TODO@exact-n-hardening-migration: flip to minItems 11 (exact-11) ONLY inside the single separately-validated hardening migration, once the Sound 10-tuple LOCKs. The 11-tuple is the one item NOT auto-advanced this run (Motion is the SIXTH forcing function for the amendment; the §3.9 amendment itself is RATIFIED Day 79).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successMotionSpec" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successMotionSpec": {
+      "type": "object",
+      "description": "verdict == 'motion_ready' branch (§3.1) — the ONLY success verdict (NO 'revise'; inherits Editor's + Sound's deterministic two-verdict posture). Emitted ONLY when every HARD AND-of-gate term is true (§12 deterministic AND-of-gates, zero tunable thresholds): Sound precondition met AND audio_spec_evidence_hash verified AND edl_evidence_hash verified AND the v2 edit resolved AND all text fields resolved AND all markers in the timeline AND the reveal cadence in spec AND the motion tokens in the brand set AND the typography style in spec AND the timeline duration matches the EDL AND the typography byte-faithful AND the 12th-pass typography-domain firewall clean (hits==0). The hard-gate terms are schema-pinned as consts below — and TWO of them (the banned tokens, the all-caps screamer) are pinned in the TYPE SYSTEM itself (enum-exclusion + const false) — so a false-motion-ready (a clean envelope alongside a failing hard sub-status) is STRUCTURALLY impossible (false-motion-ready tolerance ZERO). human_review_required is const true even on motion_ready (a motion_ready = 'ready for the human's finish-into-v3 decision', NEVER 'rendered' or 'approved for QC' — Hard Rule #13). Any HARD defect routes to the errorEnvelope branch instead (verdict 'fail').",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "motion_spec",
+        "audio_precondition_check",
+        "motion_conform_check",
+        "spec_fidelity_check",
+        "motion_self_check",
+        "motion_firewall_pass_12",
+        "mode_blind_confirm",
+        "finish_target",
+        "qc_pre_flags",
+        "handoff_targets",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successMotionSpec" },
+        "verdict": {
+          "type": "string",
+          "const": "motion_ready",
+          "description": "The ONLY success verdict. NO 'revise' (the executor is deterministic — inherits Editor's + Sound's posture). The two-verdict enum ['motion_ready','fail'] manifests across the two oneOf branches."
+        },
+        "reel_ref": { "$ref": "#/$defs/reelRefFull" },
+        "motion_spec": {
+          "type": "object",
+          "description": "§10 — the canonical motion conform spec (the buildable, highest-leverage $0 slice — D1). caption_reveals + reveal_cadence + lower_thirds + motion_tokens + overlays + the end_card hold. This is a DECLARED spec — reveal timings, placements, token directives, holds — NOT a rendered composite (finish_target.motion_processed const false). The human (or the Week 4-5 automation) burns the graphics into the v3-final.mp4. Mode-agnostic — identical shape for production modes A, B, C. Target format 9:16 / 1080x1920 / 30fps (Brand-Voice Intake §8).",
+          "required": ["caption_reveals", "reveal_cadence", "lower_thirds", "motion_tokens", "end_card"],
+          "additionalProperties": false,
+          "properties": {
+            "caption_reveals": {
+              "type": "array",
+              "description": "§10 — the caption reveal directives. Text PASSTHROUGH byte-faithful from edl.caption_events (Hard Rule #10). reveal 'line_in' + ease 'ease_in_out_120ms' derived from the brand const. Each at_ms inside the timeline (0 <= at_ms <= total_timeline_ms — else motion_marker_out_of_range); consecutive at_ms >= 8000ms apart (one reveal per 8s — else motion_token_out_of_spec, a runtime cross-item assertion JSON Schema cannot express). One line at a time.",
+              "items": {
+                "type": "object",
+                "required": ["at_ms", "text", "reveal", "ease"],
+                "additionalProperties": true,
+                "properties": {
+                  "at_ms":  { "type": "integer", "minimum": 0 },
+                  "text":   { "type": "string", "minLength": 1, "maxLength": 2048, "description": "Byte-faithful EDL caption passthrough (a deviation => spec_fidelity_breach; empty => text_asset_unresolved)." },
+                  "line":   { "type": "string", "description": "The single reveal line (one line at a time)." },
+                  "reveal": { "type": "string", "const": "line_in", "description": "Brand const reveal transition." },
+                  "ease":   { "type": "string", "const": "ease_in_out_120ms", "description": "Brand const ease (a deviation => motion_token_out_of_spec)." }
+                }
+              }
+            },
+            "reveal_cadence": {
+              "type": "object",
+              "description": "§10 — the brand reveal cadence (DERIVED from the brand const, NOT any input value). All three fields const-pinned: one_line_at_a_time true, max_reveals_per_8s 1, brand_cadence 'reinvented_v3'. A deviation => motion_token_out_of_spec. (The >=8000ms inter-reveal gap is a runtime cross-item assertion — expressible only in the composition, not the type.)",
+              "required": ["one_line_at_a_time", "max_reveals_per_8s", "brand_cadence"],
+              "additionalProperties": false,
+              "properties": {
+                "one_line_at_a_time": { "type": "boolean", "const": true },
+                "max_reveals_per_8s": { "type": "integer", "const": 1 },
+                "brand_cadence":      { "type": "string", "const": "reinvented_v3" }
+              }
+            },
+            "lower_thirds": {
+              "type": "array",
+              "description": "§10 — the lower-third / super placement directives. Text PASSTHROUGH byte-faithful from edl.lower_third_events. style const 'lowercase_sans_left_underline'; all_caps const false — THE ALL-CAPS SCREAMER IS UNREPRESENTABLE AT THE SCHEMA LAYER (Brand-Voice Intake §7; §12.3 TYPE-SYSTEM enforcement — a spec with an all-caps lower-third cannot serialize). A non-brand style => typography_out_of_spec.",
+              "items": {
+                "type": "object",
+                "required": ["at_ms", "text", "style", "all_caps"],
+                "additionalProperties": true,
+                "properties": {
+                  "at_ms":    { "type": "integer", "minimum": 0 },
+                  "text":     { "type": "string", "minLength": 1, "maxLength": 2048, "description": "Byte-faithful EDL super passthrough (empty => text_asset_unresolved)." },
+                  "style":    { "type": "string", "const": "lowercase_sans_left_underline", "description": "Brand const lower-third style (a deviation => typography_out_of_spec)." },
+                  "all_caps": { "type": "boolean", "const": false, "description": "const false — the all-caps screamer is a hard brand violation, UNREPRESENTABLE at the schema layer (§12.3)." }
+                }
+              }
+            },
+            "motion_tokens": {
+              "type": "object",
+              "description": "§10 — the motion-token application map (DERIVED from the brand const — Brand-Voice Intake §7 visual.motion). applied[] enum-restricted to the allowed set — THE BANNED SET (whip_pan / shake / meme_transition / trending_transition) IS UNREPRESENTABLE AT THE SCHEMA LAYER (the strongest possible encoding of the brand motion policy; §12.3 TYPE-SYSTEM enforcement — a spec with a banned token cannot serialize). ease const '120ms ease-in-out'; bounce_policy const 'zero_bounce'. A non-const value => motion_token_out_of_spec. NO keyframe render — declared tokens only (Hard Rule #12).",
+              "required": ["applied", "ease", "bounce_policy"],
+              "additionalProperties": false,
+              "properties": {
+                "applied": {
+                  "type": "array",
+                  "description": "The applied motion tokens. enum-restricted to {slow_push_in, static_hold, subtle_parallax} — the banned set cannot even be expressed.",
+                  "items": {
+                    "type": "string",
+                    "enum": ["slow_push_in", "static_hold", "subtle_parallax"]
+                  }
+                },
+                "ease":          { "type": "string", "const": "120ms ease-in-out" },
+                "bounce_policy": { "type": "string", "const": "zero_bounce" }
+              }
+            },
+            "overlays": {
+              "type": "array",
+              "description": "§10 — the subtle parallax / overlay directives (timeline spans -> timed directives). Each type ∈ the allowed token set (a banned type => motion_token_out_of_spec); intensity 'low'. Assert 0 <= from_ms <= to_ms <= total_timeline_ms (a violation => motion_marker_out_of_range). Declared directives, NOT rendered keyframes.",
+              "items": {
+                "type": "object",
+                "required": ["from_ms", "to_ms", "type"],
+                "additionalProperties": true,
+                "properties": {
+                  "from_ms":   { "type": "integer", "minimum": 0 },
+                  "to_ms":     { "type": "integer", "minimum": 1 },
+                  "type":      { "type": "string", "enum": ["slow_push_in", "static_hold", "subtle_parallax"], "description": "enum-restricted to the allowed brand token set — a banned overlay type is unrepresentable." },
+                  "intensity": { "type": "string", "enum": ["low"], "description": "Subtle only — the brand motion posture (never aggressive)." }
+                }
+              }
+            },
+            "end_card": {
+              "type": "object",
+              "description": "§10 — the end-card hold (the last frame the viewer sees). text const 'REINVENTED — build on purpose.' (byte-identical — a deviation => spec_fidelity_breach); font const 'serif'; bg const 'ivory'; hold_ms const 1500 (a style deviation => typography_out_of_spec). The brand end-card encoded at the schema layer — Brand-Voice Intake §8. Zero tolerance.",
+              "required": ["at_ms", "text", "font", "bg", "hold_ms"],
+              "additionalProperties": false,
+              "properties": {
+                "at_ms":   { "type": "integer", "minimum": 0 },
+                "text":    { "type": "string", "const": "REINVENTED — build on purpose.", "description": "Byte-identical brand end-card const (a deviation => spec_fidelity_breach)." },
+                "font":    { "type": "string", "const": "serif" },
+                "bg":      { "type": "string", "const": "ivory" },
+                "hold_ms": { "type": "integer", "const": 1500 }
+              }
+            }
+          }
+        },
+        "audio_precondition_check": {
+          "type": "object",
+          "description": "§10 — the precondition evidence (Step 1 / Checks #1+#2). audio_spec_id is the finished audio spec; verdict_observed == 'audio_ready' was required to proceed (else the run halted upstream_audio_not_ready).",
+          "required": ["audio_spec_id", "verdict_observed"],
+          "additionalProperties": false,
+          "properties": {
+            "audio_spec_id":    { "$ref": "#/$defs/audioSpecId" },
+            "verdict_observed": { "type": "string", "enum": ["audio_ready", "fail"] }
+          }
+        },
+        "motion_conform_check": {
+          "type": "object",
+          "description": "§10 — the motion-conform adjudication (Steps 3-5,9 / Checks #3-#5,#9). ALL booleans const true on the success branch (gate terms): any false routes to the errorEnvelope (v2_edit_unresolved / text_asset_unresolved / motion_marker_out_of_range / motion_token_out_of_spec). duration_in_band == (45000 <= total_timeline_ms <= 75000), const true on success.",
+          "required": ["v2_edit_resolved", "all_text_fields_resolved", "all_markers_in_timeline", "reveal_cadence_in_spec", "motion_tokens_in_brand_set", "total_timeline_ms", "duration_in_band"],
+          "additionalProperties": false,
+          "properties": {
+            "v2_edit_resolved":           { "type": "boolean", "const": true, "description": "const true on success. false => v2_edit_unresolved (errorEnvelope, route Sound — SPLIT code)." },
+            "all_text_fields_resolved":   { "type": "boolean", "const": true, "description": "const true on success. false => text_asset_unresolved (errorEnvelope, route Editor — SPLIT code)." },
+            "all_markers_in_timeline":    { "type": "boolean", "const": true, "description": "const true on success. false => motion_marker_out_of_range (errorEnvelope, route Editor)." },
+            "reveal_cadence_in_spec":     { "type": "boolean", "const": true, "description": "const true on success. false => motion_token_out_of_spec (errorEnvelope, route Editor)." },
+            "motion_tokens_in_brand_set": { "type": "boolean", "const": true, "description": "const true on success. false => motion_token_out_of_spec (errorEnvelope, route Editor)." },
+            "total_timeline_ms":          { "type": "integer", "minimum": 45000, "maximum": 75000, "description": "The motion timeline runtime; equals the EDL total_timeline_ms on success (a mismatch => spec_fidelity_breach)." },
+            "duration_in_band":           { "type": "boolean", "const": true, "description": "const true on success (45000 <= total_timeline_ms <= 75000)." }
+          }
+        },
+        "spec_fidelity_check": {
+          "type": "object",
+          "description": "§10 — the faithful-finish invariant (Steps 3,6,9 / Check #6). ALL 6 booleans const true on the success branch (gate terms): any false => spec_fidelity_breach (errorEnvelope, route Editor). This is the structural proof Motion RE-CUT NOTHING + RE-AUTHORED NO COPY (Hard Rule #2/#10) — the caption / lower-third / end-card text is byte-faithful, the timeline duration matches the EDL, and BOTH upstream evidence hashes re-verify. Motion is the FIRST agent to machine-verify TWO upstream evidence hashes (the EDL's AND the audio spec's — the byte-faithful executor invariant, doubled, D10).",
+          "required": ["caption_text_byte_faithful", "lower_third_text_byte_faithful", "end_card_matches_brand_const", "timeline_duration_matches_edl", "audio_spec_evidence_hash_verified", "edl_evidence_hash_verified"],
+          "additionalProperties": false,
+          "properties": {
+            "caption_text_byte_faithful":        { "type": "boolean", "const": true },
+            "lower_third_text_byte_faithful":    { "type": "boolean", "const": true },
+            "end_card_matches_brand_const":      { "type": "boolean", "const": true },
+            "timeline_duration_matches_edl":     { "type": "boolean", "const": true },
+            "audio_spec_evidence_hash_verified": { "type": "boolean", "const": true, "description": "const true on success. false (tamper) => spec_fidelity_breach (route Editor). Hash #1 of 2." },
+            "edl_evidence_hash_verified":        { "type": "boolean", "const": true, "description": "const true on success. false (tamper) => spec_fidelity_breach (route Editor). Hash #2 of 2." }
+          }
+        },
+        "motion_self_check": {
+          "type": "object",
+          "description": "§10 (Blueprint §4.12) — the block full QC reads WITHOUT re-deriving the motion. voice_markers_in_captions + truth_echoes counts; banned_vocab_hits (MUST equal motion_firewall_pass_12.hits — an inconsistency = self-QC FAIL, so const 0 on success); motion_tokens_applied (const true on success).",
+          "required": ["voice_markers_in_captions", "truth_echoes", "banned_vocab_hits", "motion_tokens_applied"],
+          "additionalProperties": false,
+          "properties": {
+            "voice_markers_in_captions": { "type": "integer", "minimum": 0 },
+            "truth_echoes":              { "type": "integer", "minimum": 0 },
+            "banned_vocab_hits":         { "type": "integer", "const": 0, "description": "const 0 on success AND MUST equal motion_firewall_pass_12.hits (an inconsistency = self-QC FAIL)." },
+            "motion_tokens_applied":     { "type": "boolean", "const": true }
+          }
+        },
+        "motion_firewall_pass_12": {
+          "type": "object",
+          "description": "§10 — the 12th-pass firewall result over the passthrough ON-SCREEN typography (captions + lower-thirds + end-card — the surface Editor's 10th commit-text pass and Sound's 11th VO pass do not cover; the LAST visual-text checkpoint before full QC, Step 8 / Check #8). hits MUST be 0 on the success branch (gate term); any hit => motion_firewall_breach (errorEnvelope, forensic hold — the GATING §9 TC-05 case, the highest-stakes code: a leak here would be burned into the delivered picture). passthrough_typography_fields_scanned = the true typography-field census (captions + lower-thirds + end-card).",
+          "required": ["status", "passthrough_typography_fields_scanned", "hits"],
+          "additionalProperties": false,
+          "properties": {
+            "status":                               { "type": "string", "const": "pass" },
+            "passthrough_typography_fields_scanned": { "type": "integer", "minimum": 0 },
+            "hits":                                 { "type": "integer", "const": 0 }
+          }
+        },
+        "mode_blind_confirm": { "$ref": "#/$defs/modeBlindConfirm" },
+        "finish_target":      { "$ref": "#/$defs/finishTarget" },
+        "qc_pre_flags":       { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "handoff_targets":    { "$ref": "#/$defs/handoffTargets" },
+        "tier_richness_echo": {
+          "type": "object",
+          "description": "OPTIONAL §10 — the echoed planned aspect-variant count. v1.0 specs ONLY the primary 9:16 master (aspect_variants_specced const 1; the 1:1 LinkedIn cutdown reserved v1.1+, flagged — D13). primary_aspect const '9:16'. Echo only, NOT a spec of the variants. The ONLY tier-varying field (the §10.5 tier-FLAT matrix: finish fidelity is identical across tiers).",
+          "additionalProperties": false,
+          "properties": {
+            "tier":                    { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+            "aspect_variants_planned": { "type": "integer", "minimum": 1, "maximum": 8 },
+            "aspect_variants_specced": { "type": "integer", "const": 1, "description": "const 1 in v1.0 — the primary 9:16 master only." },
+            "primary_aspect":          { "type": "string", "const": "9:16" }
+          }
+        },
+        "variant_masters": {
+          "type": "array",
+          "description": "RESERVED v1.1+ (§16 D13) — the auto-specced aspect-variant masters (the 1:1 LinkedIn cutdown, etc.). Empty / absent in v1.0 (a variant master is a derived re-conform, lower-leverage than the primary).",
+          "maxItems": 0
+        },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true, "description": "const true even on motion_ready — a motion_ready is 'ready for the human's finish-into-v3 decision', NEVER 'rendered'/'approved for QC' (Hard Rule #13 — recommend-don't-render)." }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict == 'fail' branch (§3.2). The §6.3 LOCKED-as-drafted namespace: 10 substantive codes + slot-11 catch-all motion_agent_failed. ONE larger than Sound's namespace — structurally justified (the motion domain carries TWO distinct brand-policy surfaces, so motion_token_out_of_spec and typography_out_of_spec are SEPARATE codes). v2_edit_unresolved (route Sound) and text_asset_unresolved (route Editor) are each a SEPARATE code — split by route-back target (inherits Sound's split posture, the OPPOSITE of Editor folding all resolution into one asset_unresolved). spec_fidelity_breach is FOLDED (hash-tamper + duration mismatch + non-byte-faithful end-card — all route to Editor). motion_firewall_breach + motion_lineage_failure are forensic holds (route null). NO 'revise' here — Motion has no third verdict. human_review_required const true.",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "route_back_to",
+        "reel_ref",
+        "cost_incurred_usd",
+        "metadata",
+        "human_review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict":     { "type": "string", "const": "fail" },
+        "failure_code": {
+          "type": "string",
+          "enum": [
+            "upstream_audio_not_ready",
+            "upstream_not_success",
+            "v2_edit_unresolved",
+            "text_asset_unresolved",
+            "motion_marker_out_of_range",
+            "motion_token_out_of_spec",
+            "typography_out_of_spec",
+            "spec_fidelity_breach",
+            "motion_firewall_breach",
+            "motion_lineage_failure",
+            "motion_agent_failed"
+          ],
+          "description": "The §6.3 LOCKED-as-drafted namespace: 10 substantive codes + slot-11 catch-all motion_agent_failed (Cross-SPEC §3.6). v2_edit_unresolved (route Sound) + text_asset_unresolved (route Editor) are kept SPLIT (distinct route-back targets — inherits Sound's split posture). motion_token_out_of_spec + typography_out_of_spec are kept SPLIT (the TWO distinct brand-policy surfaces — the structural reason Motion's namespace is one larger than Sound's). spec_fidelity_breach is FOLDED (hash-tamper + duration + non-byte-faithful end-card route to Editor). motion_firewall_breach (forensic — the 12th-pass typography leak) + motion_lineage_failure (forensic — audit-trail break, Check #10) route null. motion_agent_failed accompanies attempts==2 (self-QC 2-strike exhaustion). NO 'revise' — Motion is two-verdict."
+        },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 11,
+          "description": "Which §6.1 self-QC check produced the verdict (1..11 — the 11-check list, bipartite-covering the 10 codes + slot-11)."
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC 2-strike ceiling (§6 retry policy). attempts==2 accompanies motion_agent_failed (slot-11). No third attempt."
+        },
+        "route_back_to": {
+          "description": "§3.2 / §12.2 verdict<->route map. Computed (NOT a per-code const — see the spec_fidelity_breach dual-route asymmetry note). sound-agent on the v2-edit resolution gap (v2_edit_unresolved — the audio-final cut handle); editor-agent on a finish-vs-EDL defect needing a re-cut/re-conform or a text/typography/brand-policy defect (text_asset_unresolved, motion_marker_out_of_range, motion_token_out_of_spec, typography_out_of_spec, spec_fidelity_breach — the timeline/committed-text surface is Editor's); null on a halt no upstream is at fault for (the precondition halts upstream_audio_not_ready + upstream_not_success, the forensic motion_firewall_breach + motion_lineage_failure, and slot-11 motion_agent_failed — the agent's own self-QC failure).",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": [
+                "editor-agent",
+                "sound-agent"
+              ]
+            }
+          ]
+        },
+        "reel_ref":          { "$ref": "#/$defs/reelRefMinimal" },
+        "cost_incurred_usd": { "type": "number", "minimum": 0.0, "maximum": 0.10 },
+        "detail": {
+          "type": "object",
+          "description": "Free-form failure context (the specific violation, affected markers, recovery_path, upstream_failure, the unresolved v2 edit on a v2_edit_unresolved, the empty text field on a text_asset_unresolved, the offending marker + timeline bound on a motion_marker_out_of_range, the offending token or colliding reveal pair on a motion_token_out_of_spec, the offending element on a typography_out_of_spec, the leaking typography field + banned token on a motion_firewall_breach, etc.). Advisory recovery_path is surfaced, NOT auto-executed (v1.0 routes; it does not re-finish).",
+          "additionalProperties": true,
+          "properties": {
+            "recovery_path": { "type": "string", "minLength": 4, "maxLength": 1024 },
+            "violation":     { "type": "string", "minLength": 2, "maxLength": 1024 }
+          }
+        },
+        "mode_blind_confirm":    { "$ref": "#/$defs/modeBlindConfirm" },
+        "metadata":              { "$ref": "#/$defs/metadataBlock" },
+        "human_review_required": { "type": "boolean", "const": true }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "failure_code": { "const": "motion_agent_failed" } },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": {
+              "attempts":      { "const": 2 },
+              "route_back_to": { "const": null }
+            },
+            "required": ["attempts"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["upstream_audio_not_ready", "upstream_not_success", "motion_firewall_breach", "motion_lineage_failure"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": null } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": { "const": "v2_edit_unresolved" }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "sound-agent" } }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "failure_code": {
+                "enum": ["text_asset_unresolved", "motion_marker_out_of_range", "motion_token_out_of_spec", "typography_out_of_spec", "spec_fidelity_breach"]
+              }
+            },
+            "required": ["failure_code"]
+          },
+          "then": {
+            "properties": { "route_back_to": { "const": "editor-agent" } }
+          }
+        }
+      ]
+    },
+
+    "modeBlindConfirm": {
+      "type": "object",
+      "description": "Root-level mode-blind self-attestation (§16 companion — NOT in metadata). Motion is the FOURTH contractually mode-blind agent — the proof Ingest's convergence seam holds FOUR stages deep (Edit Director -> Editor -> Sound -> Motion), completing the mode-agnosticism proof across the entire post-production tail. production_mode_read const false (Hard Rule #7); consumed const 'mode_agnostic_v2_edit'.",
+      "required": ["production_mode_read", "consumed"],
+      "additionalProperties": false,
+      "properties": {
+        "production_mode_read": { "type": "boolean", "const": false },
+        "consumed":             { "type": "string", "const": "mode_agnostic_v2_edit" }
+      }
+    },
+    "finishTarget": {
+      "type": "object",
+      "description": "Root-level finish-target self-attestation (§16 companion — NOT in metadata). The machine-checkable no-render / human-in-the-loop guarantee at the typography-executor seam (the direct analog of Sound's audio_processed block and Editor's render_dispatched block — v1.0 keeps motion_processed false). motion_processed const false (Hard Rule #3/#12); finish_mode const 'human_in_the_loop'; v3_final_uri reserved (the human writes the v3-final.mp4 path on finish — active write deferred to v1.1 Week 4-5 render automation).",
+      "required": ["motion_processed", "finish_mode"],
+      "additionalProperties": false,
+      "properties": {
+        "motion_processed": { "type": "boolean", "const": false, "description": "const false in v1.0 — Motion authors a motion spec, renders no frame (no composite, no rasterize, no caption burn-in, no decode); the human finishes (Hard Rule #3/#12). A motion spec claiming a burn-in it never rendered is forged provenance. Automation is v1.1." },
+        "finish_mode":      { "type": "string", "const": "human_in_the_loop", "description": "const 'human_in_the_loop' in v1.0; 'automated' reserved v1.1 Week 4-5." },
+        "v3_final_uri":     { "type": ["string", "null"], "description": "RESERVED v1.0 (null/placeholder — the human writes the v3-final.mp4 here on finish). Populated as a real render handle only when Week 4-5 render automation ships (v1.1). Platform-relative ars:// when present." }
+      }
+    },
+    "handoffTargets": {
+      "type": "array",
+      "description": "§7 Step 10 — the downstream handoff. v1.0 = ['qc-agent'] (Motion hands the finished-typography v3 master spec to full QC #13 for the final gate). D15 (PRELIMINARY): full QC does not exist yet, so the handoff target is drafted to Donna's recommended Drive /reels/[reel_id]/ finish-queue holding store to prevent an audit-trail break; operator ratifies at the Motion LOCK walk (Item 8 / D15).",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "string",
+        "enum": ["qc-agent"]
+      }
+    },
+    "reelRefFull": {
+      "type": "object",
+      "description": "§10 — the derived reel reference triple (the cross-record audit join keys). motion_spec_id is this agent's emitted identity.",
+      "required": ["brand_id", "audio_spec_id", "motion_spec_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":       { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "edl_id":         { "$ref": "#/$defs/edlId" },
+        "audio_spec_id":  { "$ref": "#/$defs/audioSpecId" },
+        "motion_spec_id": { "$ref": "#/$defs/motionSpecId" }
+      }
+    },
+    "reelRefMinimal": {
+      "type": "object",
+      "description": "Minimal reel reference on the errorEnvelope branch (§3.2) — at minimum the emitting agent's own identity.",
+      "required": ["motion_spec_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id":       { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$" },
+        "edl_id":         { "$ref": "#/$defs/edlId" },
+        "audio_spec_id":  { "$ref": "#/$defs/audioSpecId" },
+        "motion_spec_id": { "$ref": "#/$defs/motionSpecId" }
+      }
+    },
+    "edlId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Editor's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — the consumed EDL + parent_chain[8] (the 9-tuple element). UUIDv7 validates under the uuid format."
+    },
+    "audioSpecId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Sound's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — the consumed audio spec + parent_chain[9] (the 10-tuple element, Sound's append). UUIDv7 validates under the uuid format."
+    },
+    "motionSpecId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "This agent's emitted identity (UUIDv7 per Cross-SPEC §3.9 ID canon) — also appended at parent_chain[10] (the 11-tuple extension, held additively). UUIDv7 validates under the uuid format."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted identity + the 6th parent_chain element. v1.0: ^preflight-REINVENTED-YYYY-MM-DD-NNN$ (multi-brand v1.1+ widens the prefix)."
+    },
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Motion's own emitted predicates (§3.7 snake_case, >=4 — Check #11). e.g. motion_tokens_in_brand_set, reveal_cadence_in_spec, motion_firewall_clean_pass_12, mode_blind_finished. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,63}$"
+      }
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "Accepts Cross-SPEC §3.9 UUID(-v7) canon OR the established ars-/sess- prefixed forms (additive, backward-compatible). Single combined pattern avoids oneOf/format ambiguity (format is annotation-only under Draft 2020-12 default assertion behavior).",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|(ars|sess)-[A-Za-z0-9_-]{4,})$"
+    },
+
+    "parentChainHeld": {
+      "type": "array",
+      "description": "SEXTUPLY-DEFERRED (Decision D7 / §10.4 / §16 addition 1). The 11-tuple, HELD ADDITIVELY: prefixItems positions 0-10 = [brief_id, script_id, storyboard_id, production_plan_id|rendered_shots_set_id|mode-c-direct, replication_set_id, preflight_report_id, asset_manifest_id, edit_plan_id, edl_id, audio_spec_id, motion_spec_id]. minItems 5 ACCEPTS the 5-tuple inbound canon (pre-hardening); maxItems 11 ACCEPTS the 6-tuple QC extension preview, the 7-tuple Ingest, the 8-tuple Edit Director, the 9-tuple Editor, the 10-tuple Sound append, AND the 11-tuple Motion append; items false. REJECTS a 4-tuple. positions 0-9 inherit the Sound parentChainHeld verbatim; position 10 is Motion's append (motion_spec_id, UUIDv7). TODO@exact-n-hardening-migration: flip to minItems 11 (exact-11) ONLY inside the single separately-validated hardening migration, once the Sound 10-tuple LOCKs. This is the one item NOT auto-advanced this run (Motion is the SIXTH forcing function for the amendment). The Cross-SPEC §3.9 n-tuple amendment itself is RATIFIED (Day 79) — this is a fixture-compatibility deferral, not an unratified-design deferral.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 11
+    },
+
+    "metadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + 6 Motion additions (§16): motion_spec_class, motion_spec_evidence_hash, motion_processed (const false), finish_mode (human_in_the_loop), runtime_environment_class, motion_spec_id. human_review_required const true (Hard Rule #13). motion_processed const false is the declared-no-render honesty contract — a motion spec CLAIMING a burn-in it never rendered is forged provenance (Hard Rule #3/#12). production_mode is PRESENT for audit lineage but the sibling root-level mode_blind_confirm attests it was never READ (Hard Rule #7 — the FOURTH mode-blind agent).",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "production_mode",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "motion_spec_class",
+        "motion_spec_evidence_hash",
+        "motion_processed",
+        "finish_mode",
+        "runtime_environment_class",
+        "motion_spec_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "agent_id":      { "type": "string", "const": "motion-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "session_id":    { "$ref": "#/$defs/sessionId" },
+        "trace_id":      { "type": ["string", "null"] },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "PRESENT for audit lineage; NOT read as a branch (Hard Rule #7). The sibling root-level mode_blind_confirm.production_mode_read:false attests it was never consulted — the FOURTH mode-blind agent."
+        },
+        "brand_id":      { "type": "string", "pattern": "^[A-Z0-9_]{2,32}$", "description": "v1.0 expected value REINVENTED." },
+        "parent_chain":  { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.10,
+          "description": "~$0 — finish reasoning + motion-spec authoring only (Cross-SPEC §3.9). $0 engine + $0 render + $0 compositing + $0 frame-decode invariant (ties Ingest / QC Pre-flight / Edit Director / Editor / Sound for lightest in the fleet)."
+        },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "lever_state":   { "type": "string", "enum": ["lever-1", "lever-2", "lever-3"] },
+        "tier":          { "type": "string", "enum": ["pilot", "starter", "pro", "enterprise"] },
+        "self_qc_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "self_qc_failed_check_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "integer", "minimum": 1, "maximum": 11 }
+          ],
+          "description": "null on success, 1..11 on failure."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reasoning-only; target p50 <= 22000 / p95 <= 70000 (§8 — lighter than an authoring agent; ties Sound / Ingest for a finish-spec surface)."
+        },
+
+        "motion_spec_class": {
+          "type": "string",
+          "enum": ["primary_master_9x16"],
+          "description": "Addition 1. v1.0 = primary_master_9x16; variant_master_1x1 (the LinkedIn cutdown) reserved v1.1+ (§16 / D13)."
+        },
+        "motion_spec_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Addition 2. SHA-256 (lowercase hex, 64) over the motion_spec + motion_conform_check + spec_fidelity_check block (§6.1 #11 / §3.2). Tamper-evident finish; the audit anchor + recomputability basis for recommend-don't-render."
+        },
+        "motion_processed": {
+          "type": "boolean",
+          "const": false,
+          "description": "Addition 3. const false in v1.0 — the declared-no-render honesty contract (Hard Rule #3/#12). Motion authors a motion spec, renders no frame; the human finishes. Mirrors the root-level finish_target.motion_processed."
+        },
+        "finish_mode": {
+          "type": "string",
+          "enum": ["human_in_the_loop"],
+          "description": "Addition 4. const-equivalent ['human_in_the_loop'] in v1.0; 'automated' reserved v1.1 Week 4-5. Mirrors the root-level finish_target.finish_mode."
+        },
+        "runtime_environment_class": {
+          "type": "string",
+          "enum": ["dev", "staging", "production"],
+          "description": "Addition 5. Inherited from AI Video Gen §16."
+        },
+        "motion_spec_id": {
+          "$ref": "#/$defs/motionSpecId",
+          "description": "Addition 6. This agent's emitted identity (UUIDv7) — mirrors reel_ref.motion_spec_id and parent_chain[10]."
+        }
+      }
+    }
+  }
+}
