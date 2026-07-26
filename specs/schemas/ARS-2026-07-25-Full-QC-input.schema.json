@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/qc-agent/input.schema.json",
+  "title": "ARS Full QC Agent — Input (terminal ship-safety adjudication · mode-convergent)",
+  "description": "Validates the v1.0 input of the Full QC Agent (Agent #13 of 17 — the TERMINAL adjudicator, the 13th and final defense-in-depth firewall pass, and the FIFTH contractually mode-BLIND agent, proving Ingest's mode-convergence seam holds FIVE stages deep, Edit Director -> Editor -> Sound -> Motion -> full QC, completing the mode-agnosticism proof from ingest to the publish gate). Authored Day 97 (Sat Jul 25 2026) from SPEC §2 Inputs (Day 92 outline §2.1/§2.2/§2.3/§2.4) + §10 Field Map + §10.3 no-touch rows + §10.4 schema authoring note (Day 94 partial 1) + §16 metadata block (Day 95 partial 2) + the Day 96 v1.0 LOCK CANDIDATE reconciliation. DEFINING INPUT CHARACTERISTICS (inherited from the proven Motion + QC Pre-flight input shapes — 9th reuse of the precondition-gate + mode-blind pattern): (1) the Motion precondition gate — full QC reads the consumed motion_spec verdict FIRST and NEVER gates an unfinished master (Hard Rule / Step 1 / §6 Check #1): the runtime gate is motion_spec.verdict == 'motion_ready' AND output_type == 'successMotionSpec', else halt upstream_motion_not_ready; a consumed errorEnvelope (output_type != successMotionSpec) halts upstream_not_success (§6 Check #2). A consumed 'fail'/'reshoot'/errorEnvelope motion spec is NOT auto-resolved and NEVER patched — full QC inherits the recommend-don't-override discipline DOUBLED: it is an adjudicator and NEVER authors. (2) mode-BLINDNESS — production_mode is PRESENT in metadata for audit lineage but is a strict no-touch field (§10.3): full QC NEVER reads it as a verdict discriminator (Hard Rule #7 / D4), and its output attests mode_blind_confirm.production_mode_read:false. There is NO polymorphic-source oneOf split on the input: the v3 finished master is already mode-converged (one shape for all three production modes — the TC-01/TC-02 convergence proof FIVE stages deep), so full QC consumes ONE source shape for all modes. Like every prior ARS schema this is single-file (no external $ref resolution): the consumed motion_spec deep internals are validated by the LOCKED-as-drafted Motion output.schema.json (read-only), and the accumulated qc_pre_flags per-agent internals by their LOCKED producer schemas (read-only); all are left permissive here (additionalProperties true) to avoid canon drift; this schema constrains the QC-relevant envelope + the fields the 13-check self-QC adjudicates. A consumed errorEnvelope is a runtime halt (upstream_not_success — §6 Check #2), NOT a schema rejection. parent_chain inbound = Motion's 11-tuple, HELD ADDITIVELY (minItems 5 accepts the 5-tuple pre-ratification canon; maxItems 11 accepts the QC 6-tuple + Ingest 7-tuple + Edit Director 8-tuple + Editor 9-tuple + Sound 10-tuple + Motion 11-tuple extension previews; items false). Full QC appends its own qc_report_id at position 11 on OUTPUT (see output.schema.json — 12-tuple, also held additively). TODO@exact-n-hardening-migration: flip inbound to minItems 11 (exact-11) ONLY inside the single separately-validated hardening migration, once the Sound 10-tuple + Motion 11-tuple LOCK. The Cross-SPEC §3.9 n-tuple amendment itself is RATIFIED (Day 79); what remains is the exact-N tightening, deferred to a single migration (Decision D7 — SEVENTH-deferred; full QC is the SEVENTH forcing function). The 11-tuple inbound + 12-tuple outbound are NOT auto-advanced this run.",
+
+  "type": "object",
+  "required": [
+    "motion_spec",
+    "declared_format",
+    "caption_passthrough",
+    "cost_ledger",
+    "evidence_hashes",
+    "tier_richness_echo",
+    "accumulated_qc_pre_flags",
+    "brief_ref",
+    "metadata"
+  ],
+  "additionalProperties": false,
+
+  "properties": {
+    "motion_spec": {
+      "type": "object",
+      "description": "§2.1 precondition input — the consumed Motion successMotionSpec envelope (the finished master to gate). Deep internals enforced by the LOCKED-as-drafted Motion output.schema.json (read-only, additionalProperties true here to avoid canon drift); QC-relevant fields constrained. Hard gate: output_type == successMotionSpec AND verdict == motion_ready, else runtime halt (upstream_motion_not_ready / upstream_not_success — §6 Checks #1/#2). A consumed errorEnvelope is a runtime halt, NOT a schema rejection.",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "motion_self_check",
+        "motion_conform_check",
+        "spec_fidelity_check",
+        "finish_target"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "output_type": {
+          "type": "string",
+          "const": "successMotionSpec",
+          "description": "Success-branch discriminator. An errorEnvelope on this field is a runtime halt (upstream_not_success), never schema-valid on the consumed branch."
+        },
+        "verdict": {
+          "type": "string",
+          "const": "motion_ready",
+          "description": "The Motion ready gate. Any other value halts upstream_motion_not_ready (§6 Check #1) — full QC never gates an unfinished master."
+        },
+        "reel_ref": {
+          "type": "object",
+          "required": ["brand_id", "motion_spec_id"],
+          "additionalProperties": true,
+          "properties": {
+            "brand_id": { "$ref": "#/$defs/brandId" },
+            "audio_spec_id": { "type": "string", "format": "uuid" },
+            "motion_spec_id": { "type": "string", "format": "uuid" }
+          }
+        },
+        "motion_self_check": {
+          "type": "object",
+          "description": "Motion's declared self-check. Echoed VERBATIM into the report's motion_self_check_adjudication (§10 row 21) and adjudicated against full QC's independent re-derivation (§6 Check #11). banned_vocab_hits is the decisive value — Check #6 re-derives its own count and does NOT trust this declaration.",
+          "required": ["voice_markers_in_captions", "truth_echoes", "banned_vocab_hits", "motion_tokens_applied"],
+          "additionalProperties": false,
+          "properties": {
+            "voice_markers_in_captions": { "type": "integer", "minimum": 0 },
+            "truth_echoes": { "type": "integer", "minimum": 0 },
+            "banned_vocab_hits": { "type": "integer", "minimum": 0 },
+            "motion_tokens_applied": { "type": "boolean" }
+          }
+        },
+        "motion_conform_check": {
+          "type": "object",
+          "description": "Motion's declared conform result — trusted (NOT re-derived; §2.3 / Cross-SPEC §3.10 no double-enforcement). Full QC re-verifies only the evidence-hash chain (§6 Check #3) and re-derives only the firewall count (§6 Check #6).",
+          "additionalProperties": true
+        },
+        "spec_fidelity_check": {
+          "type": "object",
+          "description": "Motion's declared fidelity result incl. the inbound evidence-hash-verified booleans. The hash VALUES full QC recomputes live in Check #3 come from evidence_hashes (below); this block is the upstream attestation carried for the adjudication join.",
+          "additionalProperties": true
+        },
+        "finish_target": {
+          "type": "object",
+          "description": "§2.1 — carries the finished-master handle. motion_processed:false + finish_mode human_in_the_loop is Motion's recommend-don't-render honesty contract; v3_final_uri is the handle full QC resolves (handle-existence only — NO frame decoded, the measured probe is v1.1) and echoes into the publish handle (must stay platform-relative ars://).",
+          "required": ["v3_final_uri"],
+          "additionalProperties": true,
+          "properties": {
+            "v3_final_uri": { "$ref": "#/$defs/arsUri" },
+            "motion_processed": { "type": "boolean" },
+            "finish_mode": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "declared_format": {
+      "type": "object",
+      "description": "§2.2 primary input — the finished master's declared format surface (declared, NOT decoded). Adjudicated in §6 Check #7 against BOTH the tier promise (tier_richness_echo) AND the brand format spec (Brand Voice Intake §8: 9:16 / 1080x1920 / 30fps / burned-in captions). duration_ms is re-asserted from the declared value, never re-derived by decode.",
+      "required": ["aspect", "resolution", "duration_ms", "caption_burn_in", "platform_variants"],
+      "additionalProperties": false,
+      "properties": {
+        "aspect": { "type": "string", "description": "Brand spec target 9:16 (Check #7 asserts equality; a mismatch => format_spec_mismatch)." },
+        "resolution": { "type": "string", "description": "Brand spec target 1080x1920 (Check #7)." },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Brand spec band 45000..75000 asserted in Check #7 (duration_in_band); re-asserted from the declared value, not decoded."
+        },
+        "caption_burn_in": { "type": "boolean", "description": "Brand spec requires burned-in captions (Check #7 caption_burn_in_ok)." },
+        "platform_variants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "description": "The delivered variant set. Its length must equal tier_richness_echo.platform_variants_promised (Check #7 Side 1 — the delivery-promise gap only full QC reads) and every entry must satisfy the brand format spec (Side 2).",
+          "items": { "$ref": "#/$defs/platformVariant" }
+        }
+      }
+    },
+
+    "caption_passthrough": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 240,
+      "description": "§2.2 — the burned-in caption lines. Adjudicated in §6 Check #8 (byte parity with the EDL passthrough — NOT similarity; a 'cleaned up' caption is a silent finish-layer copy edit and a hard fail) and re-scanned in the §6 Check #6 terminal firewall (13th pass).",
+      "items": {
+        "type": "object",
+        "required": ["at_ms", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "at_ms": { "type": "integer", "minimum": 0 },
+          "text": { "type": "string" }
+        }
+      }
+    },
+
+    "cost_ledger": {
+      "type": "object",
+      "description": "§2.2 — accumulated cumulative spend + declared tier + the tier's combined envelope. §6 Check #9 asserts (Part 1) cost_ledger.tier == metadata.tier == tier_richness_echo.tier AND (Part 2) cumulative_usd <= combined_envelope_usd. Full QC reads the accumulated value and checks the envelope; it does NOT re-derive the cost (derivation is QC Pre-flight's authority — Cross-SPEC §3.10, no double-enforcement).",
+      "required": ["cumulative_usd", "tier", "combined_envelope_usd"],
+      "additionalProperties": false,
+      "properties": {
+        "cumulative_usd": { "type": "number", "minimum": 0.0 },
+        "tier": { "$ref": "#/$defs/tierName" },
+        "combined_envelope_usd": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "The reel's declared-tier envelope. Cross-checked against metadata.tier + tier_richness_echo.tier (Check #9 Part 1); a tier disagreement across the three surfaces is itself a fail."
+        }
+      }
+    },
+
+    "evidence_hashes": {
+      "type": "object",
+      "description": "§2.2 — the three post-tail evidence anchors. §6 Check #3 recomputes each (SHA-256, over its source block) and matches byte-for-byte; chain_intact is the AND of the three and is never asserted true on an uncomputed leg. The only place in the fleet where all THREE post-tail anchors are verified in one pass. Any single mismatch => evidence_hash_break, routed to the agent whose anchor broke.",
+      "required": ["motion_spec_evidence_hash", "audio_spec_evidence_hash", "edl_evidence_hash"],
+      "additionalProperties": false,
+      "properties": {
+        "motion_spec_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "audio_spec_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "edl_evidence_hash": { "$ref": "#/$defs/sha256Hex" }
+      }
+    },
+
+    "tier_richness_echo": {
+      "type": "object",
+      "description": "§2.4 — the tier's platform-variant expectation. platform_variants_promised is the count full QC validates the delivered declared_format.platform_variants[] against (Check #7 Side 1). tier is the third surface of the Check #9 Part-1 three-way tier agreement. Tier-FLAT gate / tier-AWARE ledger: this is one of exactly two tier-varying field groups (both quantity-of-promise), never quality-of-brand (§10.5).",
+      "required": ["tier", "platform_variants_promised", "primary_aspect"],
+      "additionalProperties": false,
+      "properties": {
+        "tier": { "$ref": "#/$defs/tierName" },
+        "platform_variants_promised": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "primary_aspect": { "type": "string" }
+      }
+    },
+
+    "accumulated_qc_pre_flags": {
+      "type": "object",
+      "description": "§2.2 / §2.4 — the union of qc_pre_flags[] from ALL 12 upstream agents (the accumulation floor the whole fleet provisioned). §6 Check #10 is the terminal-gate closure NO other agent can perform: Part 1 (completeness) every one of the 12 agents reports with >=4 snake_case predicates (a missing agent or short surface => qc_flag_surface_incomplete); Part 2 (closure) every flag across the full surface is resolved (any unresolved => unresolved_upstream_flag). The 12 agents ARE required keys; each per-agent array deep-item shape is validated by that agent's LOCKED producer schema (read-only) — constrained here to the minItems-4 floor + snake_case pattern.",
+      "required": [
+        "brief-agent",
+        "script-agent",
+        "storyboard-agent",
+        "production-coord-agent",
+        "ai-video-gen-agent",
+        "style-replication-agent",
+        "qc-preflight-agent",
+        "ingest-agent",
+        "edit-director-agent",
+        "editor-agent",
+        "sound-agent",
+        "motion-agent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brief-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "script-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "storyboard-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "production-coord-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "ai-video-gen-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "style-replication-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "qc-preflight-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "ingest-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "edit-director-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "editor-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "sound-agent": { "$ref": "#/$defs/agentFlagFloor" },
+        "motion-agent": { "$ref": "#/$defs/agentFlagFloor" }
+      }
+    },
+
+    "brief_ref": {
+      "type": "object",
+      "description": "The originating brief join key (lineage position 0 / audit anchor).",
+      "required": ["brief_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brief_id": {
+          "type": "string",
+          "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+        }
+      }
+    },
+
+    "metadata": { "$ref": "#/$defs/inboundMetadataBlock" }
+  },
+
+  "$defs": {
+    "brandId": {
+      "type": "string",
+      "description": "v1.0 pilot brand = REINVENTED. Cross-SPEC fixture-canon brand anchor (Sequel Digital entity scope). The HC/NPOX tokens are the firewall BLOCK-list, never a cross-entity reference.",
+      "const": "REINVENTED"
+    },
+    "tierName": {
+      "type": "string",
+      "enum": ["pilot", "starter", "pro", "enterprise"],
+      "description": "The four service tiers. The gate runs identically across all four (tier-FLAT); only the cost envelope + the promised-variant count vary (tier-AWARE ledger, §10.5)."
+    },
+    "arsUri": {
+      "type": "string",
+      "pattern": "^ars://",
+      "description": "Platform-relative handle (Hard Rule #8 inherit). NO absolute URL is permitted anywhere full QC echoes into a publish-queue artifact (§6 Check #4 Part 2 — asset_uri_integrity_failure)."
+    },
+    "sha256Hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Lowercase SHA-256 hex digest (64 chars). The tri-anchor evidence-chain leg format (§6 Check #3)."
+    },
+    "platformVariant": {
+      "type": "object",
+      "description": "One delivered platform variant. §6 Check #7 Side 2 asserts each is 9:16 / 1080x1920 / burned-in captions and within the 45000..75000 duration band; declared surface only (no decode).",
+      "required": ["platform", "aspect"],
+      "additionalProperties": true,
+      "properties": {
+        "platform": { "type": "string" },
+        "aspect": { "type": "string" },
+        "resolution": { "type": "string" },
+        "duration_ms": { "type": "integer", "minimum": 0 },
+        "caption_burn_in": { "type": "boolean" }
+      }
+    },
+    "snakeCaseFlag": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$",
+      "description": "Cross-SPEC §3.7 snake_case predicate."
+    },
+    "agentFlagFloor": {
+      "type": "array",
+      "description": "One upstream agent's qc_pre_flags contribution. Cross-SPEC §3.4 accumulation floor: minItems 4 snake_case predicates. A shorter array => qc_flag_surface_incomplete at runtime (§6 Check #10 Part 1). Deep resolution-state internals are validated by the agent's LOCKED producer schema (read-only); Part 2 closure (every flag resolved) is a runtime adjudication, not a schema constraint.",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/snakeCaseFlag" }
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "QC Pre-flight's emitted id (lineage position 5). Inherited verbatim from the Motion chain."
+    },
+    "parentChainInbound": {
+      "type": "array",
+      "description": "Inbound lineage = Motion's 11-tuple, HELD ADDITIVELY (Decision D7 — SEVENTH-deferred; §10.4 / §16 addition 1). positions 0-9 inherit the Motion inbound chain verbatim; position 10 = the Motion extension (motion_spec_id, UUIDv7). minItems 5 ACCEPTS the 5-tuple pre-ratification canon; maxItems 11 ACCEPTS the QC 6-tuple, Ingest 7-tuple, Edit Director 8-tuple, Editor 9-tuple, Sound 10-tuple AND Motion 11-tuple extension previews; items false. REJECTS a 4-tuple. Full QC validates a well-formed inbound chain (§6 Check #12); malformed => qc_lineage_failure at runtime. Full QC appends its own qc_report_id at position 11 on OUTPUT (see output.schema.json — 12-tuple, also held additively). TODO@exact-n-hardening-migration: flip to minItems 11 (exact-11) inside the single separately-validated hardening migration, once the Sound 10-tuple + Motion 11-tuple LOCK (Decision D7 — NOT auto-advanced this run; full QC is the SEVENTH forcing function). The Cross-SPEC §3.9 n-tuple amendment itself is RATIFIED (Day 79) — this is a fixture-compatibility deferral, not an unratified-design deferral.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 11
+    },
+    "inboundMetadataBlock": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical inbound block carried from Motion. production_mode is PRESENT for audit lineage but is a strict no-touch field (§10.3 / D4) — full QC never reads it as a verdict discriminator. tier must agree with cost_ledger.tier + tier_richness_echo.tier (§6 Check #9 Part 1).",
+      "required": ["tier", "brand_id", "parent_chain"],
+      "additionalProperties": true,
+      "properties": {
+        "tier": { "$ref": "#/$defs/tierName" },
+        "brand_id": { "$ref": "#/$defs/brandId" },
+        "production_mode": {
+          "type": "string",
+          "enum": ["A", "B", "C"],
+          "description": "PRESENT for lineage; NEVER read as a verdict branch (Hard Rule #7 / D4). full QC is the FIFTH contractually mode-blind agent."
+        },
+        "lever_state": { "type": "object", "additionalProperties": true },
+        "session_id": { "type": "string" },
+        "parent_chain": { "$ref": "#/$defs/parentChainInbound" }
+      }
+    }
+  }
+}
