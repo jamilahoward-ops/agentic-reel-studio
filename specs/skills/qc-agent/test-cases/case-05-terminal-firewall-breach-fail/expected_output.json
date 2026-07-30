@@ -1,0 +1,70 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "qc_firewall_breach",
+  "failed_check_id": 6,
+  "route_back_to": "motion-agent",
+  "detail": {
+    "leaking_fields": [
+      {
+        "field": "caption_passthrough[0].text",
+        "firewall_rule": "4821 main"
+      },
+      {
+        "field": "lower_third.text",
+        "firewall_rule": "principal holdco"
+      }
+    ],
+    "entity_firewall_pass_13": {
+      "status": "breach",
+      "text_fields_scanned": 6,
+      "metadata_fields_scanned": 4,
+      "hits": 2
+    },
+    "self_check_disagreement": {
+      "motion_declared_banned_vocab_hits": 0,
+      "qc_rederived_hits": 2
+    },
+    "escalate_to": "editor-agent"
+  },
+  "attempts": 1,
+  "qc_pre_flags": [
+    "terminal_firewall_clean_pass_13",
+    "flag_surface_closed",
+    "evidence_chain_verified",
+    "mode_blind_gated"
+  ],
+  "qc_report_evidence_hash": "d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00112233",
+  "cost_incurred_usd": 0.02,
+  "human_review_required": true,
+  "metadata": {
+    "agent_id": "qc-agent",
+    "agent_version": "1.0",
+    "brand_id": "REINVENTED",
+    "production_mode": "B",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-01-001",
+      "script-REINVENTED-2026-05-01-001",
+      "storyboard-REINVENTED-2026-05-01-001",
+      "productionplan-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a64",
+      "preflight-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a66",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a67",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a68",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a69",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71"
+    ],
+    "cost_incurred_usd": 0.02,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-28T05:30:00Z",
+    "qc_report_class": "terminal_preflight_fail",
+    "qc_report_evidence_hash": "d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00112233",
+    "auto_published": false,
+    "publish_mode": "human_in_the_loop",
+    "qc_measured_probe_run": false,
+    "runtime_environment_class": "production",
+    "qc_report_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71"
+  }
+}

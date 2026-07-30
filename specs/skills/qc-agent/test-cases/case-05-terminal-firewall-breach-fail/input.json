@@ -1,0 +1,173 @@
+{
+  "motion_spec": {
+    "output_type": "successMotionSpec",
+    "verdict": "motion_ready",
+    "reel_ref": {
+      "brand_id": "REINVENTED",
+      "audio_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a69",
+      "motion_spec_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70"
+    },
+    "motion_self_check": {
+      "voice_markers_in_captions": 5,
+      "truth_echoes": 2,
+      "banned_vocab_hits": 0,
+      "motion_tokens_applied": true
+    },
+    "motion_conform_check": {
+      "total_timeline_ms": 60000,
+      "duration_in_band": true
+    },
+    "spec_fidelity_check": {
+      "audio_spec_evidence_hash_verified": true,
+      "edl_evidence_hash_verified": true
+    },
+    "finish_target": {
+      "motion_processed": false,
+      "finish_mode": "human_in_the_loop",
+      "v3_final_uri": "ars://reels/reinvented-001/v3-final.mp4"
+    }
+  },
+  "declared_format": {
+    "aspect": "9:16",
+    "resolution": "1080x1920",
+    "duration_ms": 60000,
+    "caption_burn_in": true,
+    "platform_variants": [
+      {
+        "platform": "instagram",
+        "aspect": "9:16",
+        "resolution": "1080x1920",
+        "duration_ms": 60000,
+        "caption_burn_in": true
+      },
+      {
+        "platform": "tiktok",
+        "aspect": "9:16",
+        "resolution": "1080x1920",
+        "duration_ms": 60000,
+        "caption_burn_in": true
+      }
+    ]
+  },
+  "caption_passthrough": [
+    {
+      "at_ms": 1000,
+      "text": "built at 4821 main"
+    },
+    {
+      "at_ms": 31000,
+      "text": "principal holdco shows you how"
+    }
+  ],
+  "cost_ledger": {
+    "cumulative_usd": 0.02,
+    "tier": "pro",
+    "combined_envelope_usd": 4.5
+  },
+  "evidence_hashes": {
+    "motion_spec_evidence_hash": "a1b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00",
+    "audio_spec_evidence_hash": "b2c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff0011",
+    "edl_evidence_hash": "c3d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff001122"
+  },
+  "tier_richness_echo": {
+    "tier": "pro",
+    "platform_variants_promised": 2,
+    "primary_aspect": "9:16"
+  },
+  "accumulated_qc_pre_flags": {
+    "brief-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "script-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "storyboard-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "production-coord-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "ai-video-gen-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "style-replication-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "qc-preflight-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "ingest-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "edit-director-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "editor-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "sound-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ],
+    "motion-agent": [
+      "clarity_ok",
+      "hype_absent",
+      "voice_on_brand",
+      "vocab_clean"
+    ]
+  },
+  "brief_ref": {
+    "brief_id": "brief-REINVENTED-2026-05-01-001"
+  },
+  "metadata": {
+    "tier": "pro",
+    "brand_id": "REINVENTED",
+    "production_mode": "B",
+    "session_id": "sess-qc-001",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-01-001",
+      "script-REINVENTED-2026-05-01-001",
+      "storyboard-REINVENTED-2026-05-01-001",
+      "productionplan-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a64",
+      "preflight-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a66",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a67",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a68",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a69",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70"
+    ]
+  }
+}

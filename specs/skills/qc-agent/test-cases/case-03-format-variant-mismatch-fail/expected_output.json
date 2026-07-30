@@ -1,0 +1,62 @@
+{
+  "output_type": "errorEnvelope",
+  "verdict": "fail",
+  "failure_code": "format_spec_mismatch",
+  "failed_check_id": 7,
+  "route_back_to": "motion-agent",
+  "detail": {
+    "platform_variants_promised": 2,
+    "platform_variants_delivered": 1,
+    "missing": [
+      "tiktok"
+    ],
+    "escalate_to": null,
+    "format_sub_status": {
+      "aspect_ok": true,
+      "resolution_ok": true,
+      "duration_in_band": true,
+      "caption_burn_in_ok": true,
+      "variants_match_promise": false
+    }
+  },
+  "attempts": 1,
+  "qc_pre_flags": [
+    "terminal_firewall_clean_pass_13",
+    "flag_surface_closed",
+    "evidence_chain_verified",
+    "mode_blind_gated"
+  ],
+  "qc_report_evidence_hash": "d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00112233",
+  "cost_incurred_usd": 0.02,
+  "human_review_required": true,
+  "metadata": {
+    "agent_id": "qc-agent",
+    "agent_version": "1.0",
+    "brand_id": "REINVENTED",
+    "production_mode": "A",
+    "parent_chain": [
+      "brief-REINVENTED-2026-05-01-001",
+      "script-REINVENTED-2026-05-01-001",
+      "storyboard-REINVENTED-2026-05-01-001",
+      "productionplan-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a64",
+      "preflight-REINVENTED-2026-05-01-001",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a66",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a67",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a68",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a69",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a70",
+      "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71"
+    ],
+    "cost_incurred_usd": 0.02,
+    "human_review_required": true,
+    "timestamp_utc": "2026-07-28T05:30:00Z",
+    "qc_report_class": "terminal_preflight_fail",
+    "qc_report_evidence_hash": "d4e5f60718293a4b5c6d7e8f90112233445566778899aabbccddeeff00112233",
+    "auto_published": false,
+    "publish_mode": "human_in_the_loop",
+    "qc_measured_probe_run": false,
+    "runtime_environment_class": "production",
+    "qc_report_id": "018f9a1b-2c3d-7e4f-8a1b-2c3d4e5f6a71"
+  }
+}

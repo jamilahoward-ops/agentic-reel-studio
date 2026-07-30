@@ -1,0 +1,477 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ars.sequeldigital.solutions/schemas/qc-agent/output.schema.json",
+  "title": "ARS Full QC Agent — Output (successQcReport | errorEnvelope · the terminal 3-verdict adjudicator)",
+  "description": "Validates the polymorphic v1.0 output of the Full QC Agent (Agent #13 of 17 — the TERMINAL ADJUDICATOR: the last gate before a reel reaches a client's live surface, the 13th and final defense-in-depth firewall pass (the ONLY pass that re-DERIVES rather than verifies), and the FIFTH contractually mode-BLIND agent — completing the mode-agnosticism proof across the entire post tail, ingest -> publish gate). Authored Day 97 (Sat Jul 25 2026) from SPEC §3 Outputs (Day 92 outline) + §6.3 12-named-code/slot errorEnvelope mapping (Day 94 partial 1) + §10 Field Map (26 rows) + §10.4 schema authoring note (Day 94) + §12 deterministic verdict math (Day 95 partial 2) + §16 metadata block + §16 schema-day checklist (Day 95) + the Day 96 v1.0 LOCK CANDIDATE reconciliation. Polymorphism via top-level oneOf (mirrors AI Video Gen Day 14 + Style Replication Day 33 + QC Pre-flight Day 45 + Ingest Day 54 + Edit Director Day 62 + Editor Day 71 + Sound Day 79 + Motion Day 87 pattern — 9th reuse). DEFINING POSTURE — RESTORES the third verdict (D3): verdict enum is the FULL three-value set. On success the branch pins verdict const 'pass'; on error the branch pins verdict enum ['fail','reshoot'] — full QC is the terminal adjudicator, the ONLY post agent positioned to declare a defect un-fixable in post ('reshoot'). The pass/fail split is fully DETERMINISTIC (any §12 AND-term false => not a pass); the fail-vs-reshoot determination is the SINGLE judgment slot in the whole agent, isolated to non-pass routing so it can NEVER produce a false pass. Mirrors QC Pre-flight exactly — full QC is its TERMINAL TWIN. successQcReport <=> verdict 'pass'; errorEnvelope <=> verdict in {fail, reshoot}. Human deferral lives in human_review_required const true + publish_target.auto_published const false + publish_target.publish_mode const 'human_in_the_loop' + qc_measured_probe_run const false on EVERY emission (recommend-don't-publish, D14), NOT in a verdict branch. The success branch encodes the §12.1 15-term AND-of-gates HARD terms as const invariants — making a false-PASS STRUCTURALLY IMPOSSIBLE (false-PASS tolerance ZERO target, §8.2 / §12.3 property 4; a report that violates any gate term cannot even serialize as successQcReport): entity_firewall_pass_13.hits const 0 + status const pass (the re-DERIVED count — Check #6 does NOT trust Motion's declared 0), brand_voice_11_point.points_total const 11 + points_passed const 11 + per_point_evidence all result 'pass', format_spec all 5 booleans const true, caption_spec both booleans const true, cost_ledger.in_envelope const true, flag_adjudication.agents_reporting const 12 + unresolved const 0 + surface_complete const true (the accumulation-floor terminal closure NO other agent can perform), evidence_hash_chain all 4 booleans const true (the tri-anchor motion/audio/edl chain — the only pass that verifies all THREE at once), motion_self_check_adjudication.self_check_consistent_with_gate const true, mode_blind_confirm.production_mode_read const false, publish_target.auto_published const false, qc_measured_probe_run const false, route_back_to const null. 12 named failure codes (§6.3, D8 confirmed as-drafted two-above the 8-10 target — the arithmetic of the terminal position: THREE brand surfaces + TWO cross-agent closures + a THIRD verdict) + slot-catch-all qc_agent_failed enumerated via enum — the LARGEST namespace in the fleet. The two routed pairs are enumerated as DISTINCT strings, NOT folded (master_unresolved + asset_uri_integrity_failure at Check #4; unresolved_upstream_flag + qc_flag_surface_incomplete as the Check #10 completeness-vs-closure routed family) — the D8 reduction (fold asset_uri_integrity_failure -> master_unresolved) is the operator's call and is NOT applied this run. qc_reshoot_required (the third-verdict code) + qc_lineage_failure are enumerated for schema-presence (exercised schema-only + runbook-probe per §9.1 fixture economy). route_back_to is a COMPUTED field (D8b), NOT a per-code const — three source-dependent route asymmetries (evidence_hash_break -> the broken anchor's agent; brand_voice_gate_fail -> the responsible authoring agent per failing point; the qc_firewall_breach/caption_spec_breach/format_spec_mismatch finish-vs-source escalation, Motion-first with detail.escalate_to editor-agent). qc_report_evidence_hash SHA-256 over the qc_gate + flag_adjudication + evidence_hash_chain block (^[a-f0-9]{64}$) on EVERY branch — tamper-evident verdict. asset/publish URIs ^ars:// platform-relative (Hard Rule #8 inherit — no absolute URL in a publish-queue artifact). human_review_required const true on EVERY branch (recommend-don't-publish — Hard Rule #13 / D14). SEVENTH-DEFERRED (Decision D7): parent_chain held additively (minItems 5, prefixItems 0-11, maxItems 12, items false) — accepts the 5-tuple through the 12-tuple full-QC append (qc_report_id, position 11). TODO@exact-n-hardening-migration: flip to minItems 12 (exact-12) ONLY inside the single separately-validated hardening migration, once the Sound 10-tuple + Motion 11-tuple LOCK. The 12-tuple is the one item NOT auto-advanced this run (full QC is the SEVENTH forcing function; the §3.9 amendment itself is RATIFIED Day 79).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/successQcReport" },
+    { "$ref": "#/$defs/errorEnvelope" }
+  ],
+
+  "$defs": {
+
+    "successQcReport": {
+      "type": "object",
+      "description": "verdict='pass' branch (§3.1). Emitted iff every §12.1 AND-term is true (deterministic AND-of-gates, zero tunable thresholds): motion precondition ready AND upstream success AND tri-anchor hash chain intact AND master resolved AND 11/11 brand voice AND terminal firewall clean (re-derived hits==0) AND format parity (spec + promise) AND caption parity AND cost within envelope AND flag surface complete + closed (12 agents, 0 unresolved) AND motion-self-check consistent AND lineage valid. The gate terms below are const-pinned so a false-PASS cannot serialize (§8.2 0% false-pass target / §12.3 property 4). human_review_required is const true even on pass (a pass = cleared to advance to the human's publish decision, NOT published — D14).",
+      "required": [
+        "output_type",
+        "verdict",
+        "reel_ref",
+        "qc_gate",
+        "flag_adjudication",
+        "motion_self_check_adjudication",
+        "evidence_hash_chain",
+        "mode_blind_confirm",
+        "publish_target",
+        "tier_richness_echo",
+        "qc_measured_probe_run",
+        "route_back_to",
+        "handoff_targets",
+        "qc_pre_flags",
+        "qc_report_evidence_hash",
+        "cost_incurred_usd",
+        "human_review_required",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "successQcReport" },
+        "verdict": { "type": "string", "const": "pass" },
+        "reel_ref": { "$ref": "#/$defs/reelRefFull" },
+        "qc_gate": {
+          "type": "object",
+          "description": "The five terminal-gate adjudication blocks (§10 rows 6-19). Every sub-status is const-pinned to its PASS value on this branch.",
+          "required": ["brand_voice_11_point", "entity_firewall_pass_13", "format_spec", "caption_spec", "cost_ledger"],
+          "additionalProperties": false,
+          "properties": {
+            "brand_voice_11_point": {
+              "type": "object",
+              "description": "The 11-point Brand Voice QC gate (§10 rows 6-8). points_passed==11 is the gate-pass invariant; per_point_evidence carries exactly 11 rows (populated for pass AND fail — the complete-diagnosis rule), all result 'pass' on this branch.",
+              "required": ["points_total", "points_passed", "per_point_evidence"],
+              "additionalProperties": false,
+              "properties": {
+                "points_total": { "type": "integer", "const": 11 },
+                "points_passed": { "type": "integer", "const": 11 },
+                "per_point_evidence": { "$ref": "#/$defs/perPointEvidenceAllPass" }
+              }
+            },
+            "entity_firewall_pass_13": {
+              "type": "object",
+              "description": "The 13th (terminal) firewall pass (§10 rows 9-12). hits is the ONE re-DERIVED field in the map — full QC computes its own count and does NOT echo Motion's declared banned_vocab_hits. hits const 0 + status const pass on this branch; scan counts equal the true field census.",
+              "required": ["status", "text_fields_scanned", "metadata_fields_scanned", "hits"],
+              "additionalProperties": false,
+              "properties": {
+                "status": { "type": "string", "const": "pass" },
+                "text_fields_scanned": { "type": "integer", "minimum": 0 },
+                "metadata_fields_scanned": { "type": "integer", "minimum": 0 },
+                "hits": { "type": "integer", "const": 0 }
+              }
+            },
+            "format_spec": {
+              "type": "object",
+              "description": "Format parity (§10 rows 13-14). Side 1 (promise): variants_match_promise. Side 2 (spec): aspect/resolution/duration/burn-in. All five const true on a pass.",
+              "required": ["aspect_ok", "resolution_ok", "duration_in_band", "caption_burn_in_ok", "variants_match_promise"],
+              "additionalProperties": false,
+              "properties": {
+                "aspect_ok": { "type": "boolean", "const": true },
+                "resolution_ok": { "type": "boolean", "const": true },
+                "duration_in_band": { "type": "boolean", "const": true },
+                "caption_burn_in_ok": { "type": "boolean", "const": true },
+                "variants_match_promise": { "type": "boolean", "const": true }
+              }
+            },
+            "caption_spec": {
+              "type": "object",
+              "description": "Caption parity (§10 rows 15-16). parity_with_edl is BYTE parity (a near-match is a fail — an unlogged finish-layer copy edit). burn_in_text_firewall_clean is the caption-scoped slice of the re-derived firewall. Both const true on a pass.",
+              "required": ["parity_with_edl", "burn_in_text_firewall_clean"],
+              "additionalProperties": false,
+              "properties": {
+                "parity_with_edl": { "type": "boolean", "const": true },
+                "burn_in_text_firewall_clean": { "type": "boolean", "const": true }
+              }
+            },
+            "cost_ledger": {
+              "type": "object",
+              "description": "Cost-ledger closure (§10 rows 17-19). cumulative_usd echoed (NOT re-derived — Cross-SPEC §3.10). in_envelope const true on a pass. The ONE tier-aware surface (§10.5).",
+              "required": ["cumulative_usd", "combined_envelope_usd", "in_envelope"],
+              "additionalProperties": false,
+              "properties": {
+                "cumulative_usd": { "type": "number", "minimum": 0.0 },
+                "combined_envelope_usd": { "type": "number", "minimum": 0.0 },
+                "in_envelope": { "type": "boolean", "const": true }
+              }
+            }
+          }
+        },
+        "flag_adjudication": {
+          "type": "object",
+          "description": "The accumulation-floor terminal closure (§10 row 20) — the check NO other agent in the fleet can perform. agents_reporting const 12, unresolved const 0, surface_complete const true on a pass. predicates_total is the TRUE counted census (>=48, the minItems-4 floor x 12 agents is the minimum, not the cap).",
+          "required": ["agents_reporting", "predicates_total", "unresolved", "surface_complete"],
+          "additionalProperties": false,
+          "properties": {
+            "agents_reporting": { "type": "integer", "const": 12 },
+            "predicates_total": { "type": "integer", "minimum": 48 },
+            "unresolved": { "type": "integer", "const": 0 },
+            "surface_complete": { "type": "boolean", "const": true }
+          }
+        },
+        "motion_self_check_adjudication": {
+          "type": "object",
+          "description": "Motion's declared self-check echoed VERBATIM (§10 row 21) + the consistency verdict (row 22). self_check_consistent_with_gate const true on a pass — full QC's re-derived firewall count agrees with Motion's declared banned_vocab_hits. Never asserted true unverified.",
+          "required": ["voice_markers_in_captions", "truth_echoes", "banned_vocab_hits", "motion_tokens_applied", "self_check_consistent_with_gate"],
+          "additionalProperties": false,
+          "properties": {
+            "voice_markers_in_captions": { "type": "integer", "minimum": 0 },
+            "truth_echoes": { "type": "integer", "minimum": 0 },
+            "banned_vocab_hits": { "type": "integer", "minimum": 0 },
+            "motion_tokens_applied": { "type": "boolean" },
+            "self_check_consistent_with_gate": { "type": "boolean", "const": true }
+          }
+        },
+        "evidence_hash_chain": { "$ref": "#/$defs/evidenceHashChainIntact" },
+        "mode_blind_confirm": { "$ref": "#/$defs/modeBlindConfirm" },
+        "publish_target": { "$ref": "#/$defs/publishTarget" },
+        "tier_richness_echo": {
+          "type": "object",
+          "description": "Tier echo extended with platform_variants_validated (§10 row 26) — the count full QC actually checked, which equals platform_variants_promised on a pass.",
+          "required": ["tier", "platform_variants_promised", "platform_variants_validated", "primary_aspect"],
+          "additionalProperties": false,
+          "properties": {
+            "tier": { "$ref": "#/$defs/tierName" },
+            "platform_variants_promised": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "platform_variants_validated": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "primary_aspect": { "type": "string" }
+          }
+        },
+        "qc_measured_probe_run": {
+          "type": "boolean",
+          "const": false,
+          "description": "The honest declaration that no frame was measured (v1.0 adjudicates the declared surface; the measured pixel/LUFS/fps probe is v1.1). const false makes a measured-probe claim UNREPRESENTABLE."
+        },
+        "route_back_to": {
+          "type": "null",
+          "description": "const null on a pass — a cleared reel routes forward to handoff_targets, not back. On the errorEnvelope branch this is a COMPUTED field (D8b)."
+        },
+        "handoff_targets": {
+          "type": "array",
+          "description": "Forward handoff on a pass — the Localization Agent (#14) via the Drive publish queue holding store (D15 default). const single-element ['localization-agent'] in v1.0.",
+          "const": ["localization-agent"]
+        },
+        "qc_pre_flags": { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "qc_report_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "cost_incurred_usd": { "$ref": "#/$defs/costIncurred" },
+        "human_review_required": { "type": "boolean", "const": true },
+        "metadata": { "$ref": "#/$defs/metadataBlockPass" }
+      }
+    },
+
+    "errorEnvelope": {
+      "type": "object",
+      "description": "verdict in {fail, reshoot} branch (§3.2 / §6.3). failure_code is the 12-named + slot enum. verdict is enum ['fail','reshoot'] — 'reshoot' (the third verdict, D3) is emitted ONLY for a source-material defect un-fixable in post (routed to production-coord-agent); every post-fixable defect is 'fail'. route_back_to is COMPUTED (D8b) — the source determines the route; null only for the forensic-held lineage break (Check #12). human_review_required + qc_report_evidence_hash carried on this branch too (a routed verdict is still a tamper-evident, human-reviewed artifact).",
+      "required": [
+        "output_type",
+        "verdict",
+        "failure_code",
+        "failed_check_id",
+        "route_back_to",
+        "detail",
+        "attempts",
+        "qc_pre_flags",
+        "qc_report_evidence_hash",
+        "cost_incurred_usd",
+        "human_review_required",
+        "metadata"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "output_type": { "type": "string", "const": "errorEnvelope" },
+        "verdict": {
+          "type": "string",
+          "enum": ["fail", "reshoot"],
+          "description": "§10.4 — the errorEnvelope branch verdict. 'reshoot' <=> failure_code qc_reshoot_required (the one judgment slot, §6.4, biased toward 'fail' on ambiguity); every other code => 'fail'."
+        },
+        "failure_code": { "$ref": "#/$defs/failureCode" },
+        "failed_check_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 13,
+          "description": "The §6.1 self-QC check id that produced the verdict (1-13). qc_reshoot_required carries failed_check_id 11 (the §6.4 fail-vs-reshoot slot); the slot qc_agent_failed may carry the terminal construction-integrity check id 13."
+        },
+        "route_back_to": {
+          "type": ["string", "null"],
+          "description": "COMPUTED (D8b) — NOT a per-code const. The source determines the route: evidence_hash_break -> the broken anchor's agent (motion/sound/editor per detail.broken_anchor); brand_voice_gate_fail -> the responsible authoring agent per failing point; qc_firewall_breach/caption_spec_breach/format_spec_mismatch -> motion-agent (finish layer) with detail.escalate_to editor-agent if the defect originates in the EDL source; cost_ledger_overrun -> production-coord-agent; qc_reshoot_required -> production-coord-agent; unresolved_upstream_flag/qc_flag_surface_incomplete -> the named agent(s). null for qc_lineage_failure (held for forensic review, no ship verdict) and the generic slot catch-all.",
+          "enum": [
+            "brief-agent",
+            "script-agent",
+            "storyboard-agent",
+            "production-coord-agent",
+            "ai-video-gen-agent",
+            "style-replication-agent",
+            "qc-preflight-agent",
+            "ingest-agent",
+            "edit-director-agent",
+            "editor-agent",
+            "sound-agent",
+            "motion-agent",
+            null
+          ]
+        },
+        "detail": {
+          "type": "object",
+          "description": "The per-code diagnostic payload (failing_points[], broken_anchor, unresolved[], missing_agents[], short_surfaces[], escalate_to, reshoot_considered, self_check_disagreement, promised-vs-delivered delta, etc.). Kept permissive — the fields present depend on the code.",
+          "additionalProperties": true
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2,
+          "description": "Self-QC retry count (§6 retry policy — 2-strike, no third attempt). qc_agent_failed carries attempts==2."
+        },
+        "qc_pre_flags": { "$ref": "#/$defs/qcPreFlagsEmitted" },
+        "qc_report_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "cost_incurred_usd": { "$ref": "#/$defs/costIncurred" },
+        "human_review_required": { "type": "boolean", "const": true },
+        "metadata": { "$ref": "#/$defs/metadataBlockError" }
+      }
+    },
+
+    "failureCode": {
+      "type": "string",
+      "description": "The v1.0 LOCKED-as-drafted namespace: 12 named codes (§6.3, D8 confirmed two-above the 8-10 target) + the qc_agent_failed slot catch-all. The two routed pairs are enumerated as DISTINCT strings, NOT folded (D8 reduction is an operator call, not applied): master_unresolved + asset_uri_integrity_failure (Check #4); unresolved_upstream_flag + qc_flag_surface_incomplete (Check #10 completeness-vs-closure). qc_reshoot_required (the third-verdict code) + qc_lineage_failure are enumerated for schema-presence (exercised schema-only / runbook-probe per §9.1). Slot naming: agent_id qc-agent -> qc_agent_failed (Cross-SPEC §3.6).",
+      "enum": [
+        "upstream_motion_not_ready",
+        "upstream_not_success",
+        "evidence_hash_break",
+        "master_unresolved",
+        "asset_uri_integrity_failure",
+        "brand_voice_gate_fail",
+        "qc_firewall_breach",
+        "format_spec_mismatch",
+        "caption_spec_breach",
+        "cost_ledger_overrun",
+        "unresolved_upstream_flag",
+        "qc_flag_surface_incomplete",
+        "qc_reshoot_required",
+        "qc_lineage_failure",
+        "qc_agent_failed"
+      ]
+    },
+
+    "reelRefFull": {
+      "type": "object",
+      "description": "§10 rows 3-5 — the cross-record audit join triple. qc_report_id is this agent's emitted identity (UUIDv7), also parent_chain[11].",
+      "required": ["brand_id", "motion_spec_id", "qc_report_id"],
+      "additionalProperties": false,
+      "properties": {
+        "brand_id": { "$ref": "#/$defs/brandId" },
+        "motion_spec_id": { "type": "string", "format": "uuid" },
+        "qc_report_id": { "type": "string", "format": "uuid" }
+      }
+    },
+
+    "perPointEvidenceAllPass": {
+      "type": "array",
+      "description": "§10 row 8 — exactly 11 rows (minItems 11 / maxItems 11 — the gate size is canon, the array is exhaustive, the completeness rule at the type layer). Every row result 'pass' on the success branch.",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "type": "object",
+        "required": ["point_id", "point_name", "result", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "point_id": { "type": "integer", "minimum": 1, "maximum": 11 },
+          "point_name": { "$ref": "#/$defs/snakeCaseFlag" },
+          "result": { "type": "string", "const": "pass" },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+
+    "evidenceHashChainIntact": {
+      "type": "object",
+      "description": "§10 rows 23-24 — the tri-anchor hash chain (motion/audio/edl), the only place in the fleet all three are verified in one pass. All three legs + chain_intact const true on a pass; chain_intact is the AND of the three, never true on an uncomputed leg.",
+      "required": ["motion_spec_evidence_hash_verified", "audio_spec_evidence_hash_verified", "edl_evidence_hash_verified", "chain_intact"],
+      "additionalProperties": false,
+      "properties": {
+        "motion_spec_evidence_hash_verified": { "type": "boolean", "const": true },
+        "audio_spec_evidence_hash_verified": { "type": "boolean", "const": true },
+        "edl_evidence_hash_verified": { "type": "boolean", "const": true },
+        "chain_intact": { "type": "boolean", "const": true }
+      }
+    },
+
+    "modeBlindConfirm": {
+      "type": "object",
+      "description": "The FIFTH mode-blind self-attestation (D4 / §16 companion) — convergence FIVE stages deep, at the terminal gate. production_mode_read const false makes a mode-branching verdict UNREPRESENTABLE; consumed const 'mode_agnostic_v3_master'.",
+      "required": ["production_mode_read", "consumed"],
+      "additionalProperties": false,
+      "properties": {
+        "production_mode_read": { "type": "boolean", "const": false },
+        "consumed": { "type": "string", "const": "mode_agnostic_v3_master" }
+      }
+    },
+
+    "publishTarget": {
+      "type": "object",
+      "description": "§10 row 25 / §16 companion — the no-publish / human-in-the-loop guarantee made machine-checkable at the terminal boundary (D14). auto_published const false makes an auto-publish forgery UNREPRESENTABLE; publish_mode const 'human_in_the_loop' ('automated' reserved for the v1.1 Publishing agent #16); the queue URI is platform-relative ars://.",
+      "required": ["auto_published", "publish_mode", "publish_queue_uri"],
+      "additionalProperties": false,
+      "properties": {
+        "auto_published": { "type": "boolean", "const": false },
+        "publish_mode": { "type": "string", "const": "human_in_the_loop" },
+        "publish_queue_uri": { "$ref": "#/$defs/arsUri" }
+      }
+    },
+
+    "qcPreFlagsEmitted": {
+      "type": "array",
+      "description": "Full QC's own emitted predicates (§3.7 snake_case, >=4 — §6 Check #13). e.g. terminal_firewall_clean_pass_13, flag_surface_closed, evidence_chain_verified, mode_blind_gated. Appended to the upstream union without modifying it (§10.3).",
+      "minItems": 4,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/snakeCaseFlag" }
+    },
+
+    "costIncurred": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 0.5,
+      "description": "§11 — the SEVENTH consecutive $0 agent. No engine/render/decode/measured-probe/publish surface; ~ $0.00-0.02 adjudication reasoning + optional hash re-verify only. No tier ceiling owned (the cost ledger it CHECKS is the reel's cumulative, not full QC's own)."
+    },
+
+    "brandId": {
+      "type": "string",
+      "const": "REINVENTED",
+      "description": "v1.0 pilot brand (Sequel Digital entity scope). The HC/NPOX firewall BLOCK-list tokens are never a cross-entity reference."
+    },
+    "tierName": {
+      "type": "string",
+      "enum": ["pilot", "starter", "pro", "enterprise"]
+    },
+    "arsUri": {
+      "type": "string",
+      "pattern": "^ars://",
+      "description": "Platform-relative handle (Hard Rule #8 inherit) — no absolute URL in a publish-queue artifact (§6 Check #4 Part 2)."
+    },
+    "sha256Hex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "qc_report_evidence_hash — SHA-256 over the qc_gate + flag_adjudication + evidence_hash_chain block. The tamper-evident verdict, emitted on EVERY branch."
+    },
+    "snakeCaseFlag": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$",
+      "description": "Cross-SPEC §3.7 snake_case predicate."
+    },
+    "preflightReportId": {
+      "type": "string",
+      "pattern": "^preflight-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$"
+    },
+    "parentChainHeld": {
+      "type": "array",
+      "description": "SEVENTH-DEFERRED (Decision D7 / §10.4 / §16 addition 1). The 12-tuple, HELD ADDITIVELY: prefixItems positions 0-11 = [brief_id, script_id, storyboard_id, production_plan_id|ai-video-gen|mode-c-direct, replication_set_id, preflight_report_id, asset_manifest_id, edit_plan_id, edl_id, audio_spec_id, motion_spec_id, qc_report_id]. positions 0-10 inherit the Motion parentChainHeld verbatim; position 11 is full QC's append (qc_report_id, UUIDv7). minItems 5 ACCEPTS the 5-tuple inbound canon (pre-hardening); maxItems 12 ACCEPTS the 6-tuple through the 12-tuple full-QC append; items false. REJECTS a 4-tuple. TODO@exact-n-hardening-migration: flip to minItems 12 (exact-12) ONLY inside the single separately-validated hardening migration, once the Sound 10-tuple + Motion 11-tuple LOCK. This is the one item NOT auto-advanced this run (full QC is the SEVENTH forcing function). The Cross-SPEC §3.9 n-tuple amendment itself is RATIFIED (Day 79) — this is a fixture-compatibility deferral, not an unratified-design deferral.",
+      "prefixItems": [
+        { "type": "string", "pattern": "^brief-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^script-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        { "type": "string", "pattern": "^storyboard-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+        {
+          "oneOf": [
+            { "type": "string", "pattern": "^ai-video-gen-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "pattern": "^productionplan-[A-Z0-9_-]+-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$" },
+            { "type": "string", "const": "mode-c-direct" }
+          ]
+        },
+        { "type": "string", "format": "uuid" },
+        { "$ref": "#/$defs/preflightReportId" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" },
+        { "type": "string", "format": "uuid" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 12
+    },
+    "metadataBlockPass": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + the 7 full-QC additions (§16). On the pass branch qc_report_class is const 'terminal_preflight_pass'. production_mode is PRESENT for lineage; the sibling root mode_blind_confirm attests it was never READ (D4). human_review_required const true; auto_published const false; qc_measured_probe_run const false.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "qc_report_class",
+        "qc_report_evidence_hash",
+        "auto_published",
+        "publish_mode",
+        "qc_measured_probe_run",
+        "runtime_environment_class",
+        "qc_report_id"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "agent_id": { "type": "string", "const": "qc-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "brand_id": { "$ref": "#/$defs/brandId" },
+        "parent_chain": { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": { "$ref": "#/$defs/costIncurred" },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "qc_report_class": { "type": "string", "const": "terminal_preflight_pass" },
+        "qc_report_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "auto_published": { "type": "boolean", "const": false },
+        "publish_mode": { "type": "string", "const": "human_in_the_loop" },
+        "qc_measured_probe_run": { "type": "boolean", "const": false },
+        "runtime_environment_class": { "type": "string", "enum": ["dev", "staging", "production"] },
+        "qc_report_id": { "type": "string", "format": "uuid" }
+      }
+    },
+    "metadataBlockError": {
+      "type": "object",
+      "description": "Cross-SPEC §3.9 canonical block + the 7 full-QC additions (§16), error branch. qc_report_class is enum ['terminal_preflight_fail','terminal_preflight_reshoot'] (matches verdict). auto_published const false + qc_measured_probe_run const false + human_review_required const true carried on this branch too.",
+      "required": [
+        "agent_id",
+        "agent_version",
+        "brand_id",
+        "parent_chain",
+        "cost_incurred_usd",
+        "human_review_required",
+        "timestamp_utc",
+        "qc_report_class",
+        "qc_report_evidence_hash",
+        "auto_published",
+        "publish_mode",
+        "qc_measured_probe_run",
+        "runtime_environment_class",
+        "qc_report_id"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "agent_id": { "type": "string", "const": "qc-agent" },
+        "agent_version": { "type": "string", "const": "1.0" },
+        "production_mode": { "type": "string", "enum": ["A", "B", "C"] },
+        "brand_id": { "$ref": "#/$defs/brandId" },
+        "parent_chain": { "$ref": "#/$defs/parentChainHeld" },
+        "cost_incurred_usd": { "$ref": "#/$defs/costIncurred" },
+        "human_review_required": { "type": "boolean", "const": true },
+        "timestamp_utc": { "type": "string", "format": "date-time" },
+        "qc_report_class": {
+          "type": "string",
+          "enum": ["terminal_preflight_fail", "terminal_preflight_reshoot"]
+        },
+        "qc_report_evidence_hash": { "$ref": "#/$defs/sha256Hex" },
+        "auto_published": { "type": "boolean", "const": false },
+        "publish_mode": { "type": "string", "const": "human_in_the_loop" },
+        "qc_measured_probe_run": { "type": "boolean", "const": false },
+        "runtime_environment_class": { "type": "string", "enum": ["dev", "staging", "production"] },
+        "qc_report_id": { "type": "string", "format": "uuid" }
+      }
+    }
+  }
+}
