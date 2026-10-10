@@ -1,5 +1,9 @@
 # Agentic Reel Studio (ARS)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23272164.svg)](https://doi.org/10.5281/zenodo.23272164)
+
+Technical report: Howard, J. (2026). *Specification-First Design of a Multi-Agent Short-Form Video Production Pipeline.* Zenodo. https://doi.org/10.5281/zenodo.23272164
+
 **A multi-agent AI production system that takes a short-form video reel from strategy to publish-ready master, with a human approval gate wherever it matters.**
 
 Designed and directed by **Jamila Howard** (AI systems builder, creative executive) for Sequel Digital Solutions, piloted on her personal brand REINVENTED. The specs, schemas, validators and runbooks in this repo were produced across a 100+ day build (April 20 to July 30, 2026), most of it in nightly autonomous build sessions run by Claude-based agents under her direction and review.
